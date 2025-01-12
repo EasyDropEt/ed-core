@@ -5,6 +5,9 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from src.application.common.responses.base_response import BaseResponse
+from src.application.contracts.infrastructure.message_queue.abc_producer import (
+    ABCProducer,
+)
 from src.application.contracts.infrastructure.persistence.abc_unit_of_work import (
     ABCUnitOfWork,
 )
@@ -14,14 +17,16 @@ from src.application.features.order.dtos.validators import CreateOrderDtoValidat
 from src.application.features.order.requests.commands import CreateOrderCommand
 from src.common.generic_helpers import get_new_id
 from src.common.logging_helpers import get_logger
+from src.common.typing.config import TestMessage
 
 LOG = get_logger()
 
 
 @request_handler(CreateOrderCommand, BaseResponse[OrderDto])
 class CreateOrderCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCUnitOfWork, producer: ABCProducer[TestMessage]):
         self._uow = uow
+        self._producer = producer
 
     async def handle(self, request: CreateOrderCommand) -> BaseResponse[OrderDto]:
         business_id = request.business_id
@@ -70,6 +75,8 @@ class CreateOrderCommandHandler(RequestHandler):
                 "order_status": OrderStatus.PENDING,
             }
         )
+
+        self._producer.publish({"title": str(created_order["id"])})
 
         return BaseResponse[OrderDto].success(
             "Order created successfully.",

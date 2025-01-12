@@ -1,5 +1,14 @@
+from typing import Annotated
+
+from fastapi import Depends
 from rmediator.mediator import Mediator
 
+from src.application.contracts.infrastructure.message_queue.abc_producer import (
+    ABCProducer,
+)
+from src.application.contracts.infrastructure.persistence.abc_unit_of_work import (
+    ABCUnitOfWork,
+)
 from src.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler,
 )
@@ -21,27 +30,42 @@ from src.application.features.driver.requests.commands import CreateDriverComman
 from src.application.features.order.handlers.commands import CreateOrderCommandHandler
 from src.application.features.order.requests.commands import CreateOrderCommand
 from src.common.generic_helpers import get_config
+from src.common.typing.config import Config, TestMessage
 from src.infrastructure.persistence.db_client import DbClient
 from src.infrastructure.persistence.unit_of_work import UnitOfWork
+from src.infrastructure.rabbitmq.producer import RabbitMQProducer
 
 
-def mediator() -> Mediator:
-    # Dependencies
-    config = get_config()
-    print(config)
-
-    db_client = DbClient(
+def get_db_client(config: Annotated[Config, Depends(get_config)]) -> DbClient:
+    return DbClient(
         config["mongo_db_connection_string"],
         config["db_name"],
     )
-    uow = UnitOfWork(db_client)
 
-    # Setup
+
+def get_uow(db_client: Annotated[DbClient, Depends(get_db_client)]) -> ABCUnitOfWork:
+    return UnitOfWork(db_client)
+
+
+def get_producer(config: Annotated[Config, Depends(get_config)]) -> ABCProducer:
+    producer = RabbitMQProducer[TestMessage](
+        config["rabbitmq_url"],
+        "test",
+    )
+    producer.start()
+
+    return producer
+
+
+def mediator(
+    uow: Annotated[ABCUnitOfWork, Depends(get_uow)],
+    producer: Annotated[ABCProducer, Depends(get_producer)],
+) -> Mediator:
     mediator = Mediator()
 
     handlers = [
         # Order handler
-        (CreateOrderCommand, CreateOrderCommandHandler(uow)),
+        (CreateOrderCommand, CreateOrderCommandHandler(uow, producer)),
         # Driver handlers
         (CreateDriverCommand, CreateDriverCommandHandler(uow)),
         # Business handlers
@@ -54,5 +78,4 @@ def mediator() -> Mediator:
     for command, handler in handlers:
         mediator.register_handler(command, handler)
 
-    db_client.start()
     return mediator
