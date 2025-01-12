@@ -54,7 +54,7 @@ def get_uow(db_client: Annotated[DbClient, Depends(get_db_client)]) -> ABCUnitOf
 def get_producer(config: Annotated[Config, Depends(get_config)]) -> ABCProducer:
     producer = RabbitMQProducer[TestMessage](
         config["rabbitmq_url"],
-        "test",
+        config["rabbitmq_queue"],
     )
     producer.start()
 
@@ -64,7 +64,7 @@ def get_producer(config: Annotated[Config, Depends(get_config)]) -> ABCProducer:
 def get_subscriber(config: Annotated[Config, Depends(get_config)]) -> ABCSubscriber:
     subscriber = RabbitMQSubscriber[TestMessage](
         config["rabbitmq_url"],
-        "test",
+        config["rabbitmq_queue"],
         lambda x: print(x),
     )
     subscriber.start()

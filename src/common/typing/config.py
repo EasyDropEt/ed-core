@@ -5,6 +5,7 @@ class Config(TypedDict):
     mongo_db_connection_string: str
     db_name: str
     rabbitmq_url: str
+    rabbitmq_queue: str
 
 
 class TestMessage(TypedDict):
