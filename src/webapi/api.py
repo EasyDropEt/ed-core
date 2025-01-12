@@ -6,14 +6,18 @@ from src.common.exception_helpers import ApplicationException
 from src.common.logging_helpers import get_logger
 from src.common.singleton_helpers import SingletonMeta
 from src.webapi.common.helpers import GenericResponse
-from src.webapi.controllers import some_feature_controller
+from src.webapi.controllers import (
+    business_controller,
+    driver_controller,
+    order_controller,
+)
 
 LOG = get_logger()
 
 
 class API(metaclass=SingletonMeta):
     def __init__(self) -> None:
-        self._app = FastAPI()
+        self._app = FastAPI(title="Orders System")
 
     @property
     def app(self):
@@ -31,7 +35,9 @@ class API(metaclass=SingletonMeta):
 
     def _include_routers(self) -> None:
         LOG.info("Including routers...")
-        self._app.include_router(some_feature_controller.router)
+        self._app.include_router(business_controller.router)
+        self._app.include_router(driver_controller.router)
+        self._app.include_router(order_controller.router)
 
     def _contain_exceptions(self) -> None:
         @self._app.exception_handler(ApplicationException)
