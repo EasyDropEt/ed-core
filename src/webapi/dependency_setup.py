@@ -3,7 +3,19 @@ from rmediator.mediator import Mediator
 from src.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler,
 )
+from src.application.features.business.handlers.queries import (
+    GetAllBusinessesQueryHandler,
+    GetBusinessByUserIdQueryHandler,
+    GetBusinessOrdersQueryHandler,
+    GetBusinessQueryHandler,
+)
 from src.application.features.business.requests.commands import CreateBusinessCommand
+from src.application.features.business.requests.queries import (
+    GetAllBusinessQuery,
+    GetBusinessByUserIdQuery,
+    GetBusinessOrdersQuery,
+    GetBusinessQuery,
+)
 from src.application.features.driver.handlers.commands import CreateDriverCommandHandler
 from src.application.features.driver.requests.commands import CreateDriverCommand
 from src.application.features.order.handlers.commands import CreateOrderCommandHandler
@@ -34,6 +46,10 @@ def mediator() -> Mediator:
         (CreateDriverCommand, CreateDriverCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
+        (GetBusinessQuery, GetBusinessQueryHandler(uow)),
+        (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
+        (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),
+        (GetAllBusinessQuery, GetAllBusinessesQueryHandler(uow)),
     ]
     for command, handler in handlers:
         mediator.register_handler(command, handler)

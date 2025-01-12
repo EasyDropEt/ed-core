@@ -39,16 +39,16 @@ class CreateOrderDtoValidator(ABCDtoValidator[CreateOrderDto]):
         if dto["latest_time_of_delivery"] <= datetime.now(UTC):
             errors.append("Latest time of delivery must be in the future.")
 
-        if not dto["parcel"]["weight"]:
+        if dto["parcel"]["weight"] <= 0:
             errors.append("Weight of parcel is required.")
 
-        if not dto["parcel"]["dimensions"]["height"]:
+        if dto["parcel"]["dimensions"]["height"] <= 0:
             errors.append("Height dimension of parcel is required.")
 
-        if not dto["parcel"]["dimensions"]["width"]:
+        if dto["parcel"]["dimensions"]["width"] <= 0:
             errors.append("Width dimension of parcel is required.")
 
-        if not dto["parcel"]["dimensions"]["length"]:
+        if dto["parcel"]["dimensions"]["length"] <= 0:
             errors.append("Length dimension of parcel is required.")
 
         if not isinstance(dto["parcel"]["size"], ParcelSize):

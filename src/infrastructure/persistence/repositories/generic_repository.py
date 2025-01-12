@@ -18,7 +18,7 @@ class GenericRepository(Generic[TEntity], ABCGenericRepository[TEntity]):
         self._collection = f"{collection[0].upper()}{collection[1:].lower()}"
 
     def get_all(self, **filters: Any) -> list[TEntity]:
-        return self._db.find(filters)  # type: ignore
+        return list(self._db.find(filters))
 
     def get(self, **filters: Any) -> TEntity | None:
         if entity := self._db.find_one(filters):

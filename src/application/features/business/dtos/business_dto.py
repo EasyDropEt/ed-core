@@ -1,4 +1,5 @@
 from typing import TypedDict
+from uuid import UUID
 
 from ed_domain_model.entities.business import BillingDetail
 
@@ -12,6 +13,7 @@ class LocationDto(TypedDict):
 
 
 class BusinessDto(TypedDict):
+    id: UUID
     business_name: str
     owner_first_name: str
     owner_last_name: str
