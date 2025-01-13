@@ -1,6 +1,6 @@
-import json
 from typing import Generic, TypeVar
 
+import jsons
 from pika.adapters import BlockingConnection
 from pika.connection import ConnectionParameters, URLParameters
 
@@ -30,10 +30,15 @@ class RabbitMQProducer(Generic[TMessageSchema], ABCProducer[TMessageSchema]):
 
     def publish(self, message: TMessageSchema) -> None:
         assert "_channel" in self.__dict__, "Producer has not been started"
-        self._channel.basic_publish(
-            exchange="", routing_key=self._queue, body=json.dumps(message)
-        )
-        LOG.info(f" [x] Sent '{message}'")
+
+        try:
+            body = jsons.dumps(message)  # type: ignore
+            self._channel.basic_publish(exchange="", routing_key=self._queue, body=body)
+            LOG.info(f" [x] Sent '{message}'")
+        except jsons.SerializationError as e:
+            LOG.error(f"Error serializing message: {e}")
+        except Exception as e:
+            LOG.error(f"Error publishing message: {e}")
 
     def _connect_with_connection_parameters(
         self, host: str, port: int

@@ -14,9 +14,10 @@ websockets = "^14.1"
 rmediator = "^0.2.3"
 sqlalchemy = "^2.0.36"
 psycopg2 = "^2.9.10"
-ed-domain-model = "^0.0.9"
+ed-domain-model = "^0.0.11"
 pymongo = "^4.10.1"
 python-dotenv = "^1.0.1"
+jsons = "^1.6.3"
 
 
 [tool.poetry.group.test.dependencies]

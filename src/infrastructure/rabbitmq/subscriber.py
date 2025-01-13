@@ -64,6 +64,8 @@ class RabbitMQSubscriber(Generic[TMessageSchema], ABCSubscriber[TMessageSchema])
 
         except json.JSONDecodeError as e:
             LOG.error(f"Failed to decode message: {e}")
+            raise e
 
         except KeyError as e:
             LOG.error(f"Missing key in message: {e}")
+            raise e
