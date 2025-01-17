@@ -4,16 +4,22 @@ from fastapi import APIRouter, Depends
 from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
-from src.application.features.business.dtos import BusinessDto, CreateBusinessDto
-from src.application.features.business.requests.commands import CreateBusinessCommand
+from src.application.features.business.dtos import (
+    BusinessDto,
+    CreateBusinessDto,
+    CreateOrdersDto,
+    OrderDto,
+)
+from src.application.features.business.requests.commands import (
+    CreateBusinessCommand,
+    CreateOrdersCommand,
+)
 from src.application.features.business.requests.queries import (
     GetAllBusinessQuery,
     GetBusinessByUserIdQuery,
     GetBusinessOrdersQuery,
     GetBusinessQuery,
 )
-from src.application.features.order.dtos import CreateOrderDto, OrderDto
-from src.application.features.order.requests.commands import CreateOrderCommand
 from src.common.logging_helpers import get_logger
 from src.webapi.common.helpers import GenericResponse, rest_endpoint
 from src.webapi.dependency_setup import mediator
@@ -67,14 +73,14 @@ async def get_business_orders(
     return await mediator.send(GetBusinessOrdersQuery(business_id=business_id))
 
 
-@router.post("/{business_id}/orders", response_model=GenericResponse[OrderDto])
+@router.post("/{business_id}/orders", response_model=GenericResponse[list[OrderDto]])
 @rest_endpoint
 async def create_order(
     business_id: UUID,
-    request_dto: CreateOrderDto,
+    request_dto: CreateOrdersDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     LOG.info(f"Satisfying request {request_dto}")
     return await mediator.send(
-        CreateOrderCommand(business_id=business_id, dto=request_dto)
+        CreateOrdersCommand(business_id=business_id, dto=request_dto)
     )

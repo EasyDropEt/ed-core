@@ -2,13 +2,14 @@ from datetime import UTC, datetime
 
 from ed_domain_model.entities.order import ParcelSize
 
+from src.application.features.business.dtos.create_orders_dto import (
+    CreateConsumerDto,
+    CreateOrderDto,
+    CreateOrdersDto,
+)
 from src.application.features.common.dto.abc_dto_validator import (
     ABCDtoValidator,
     ValidationResponse,
-)
-from src.application.features.order.dtos.create_order_dto import (
-    CreateConsumerDto,
-    CreateOrderDto,
 )
 
 
@@ -55,6 +56,19 @@ class CreateOrderDtoValidator(ABCDtoValidator[CreateOrderDto]):
             errors.append(
                 f"Parcel size has to be one of {ParcelSize.SMALL}, {ParcelSize.MEDIUM} or {ParcelSize.LARGE}."
             )
+
+        if len(errors):
+            return ValidationResponse.invalid(errors)
+
+        return ValidationResponse.valid()
+
+
+class CreateOrdersDtoValidator(ABCDtoValidator[CreateOrdersDto]):
+    def validate(self, dto: CreateOrdersDto) -> ValidationResponse:
+        errors = []
+        for order in dto["orders"]:
+            order_dto_validation = CreateOrderDtoValidator().validate(order)
+            errors.extend(order_dto_validation.errors)
 
         if len(errors):
             return ValidationResponse.invalid(errors)

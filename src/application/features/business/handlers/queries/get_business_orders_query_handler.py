@@ -5,8 +5,8 @@ from src.application.common.responses.base_response import BaseResponse
 from src.application.contracts.infrastructure.persistence.abc_unit_of_work import (
     ABCUnitOfWork,
 )
+from src.application.features.business.dtos.order_dto import ConsumerDto, OrderDto
 from src.application.features.business.requests.queries import GetBusinessOrdersQuery
-from src.application.features.order.dtos.order_dto import ConsumerDto, OrderDto
 
 
 @request_handler(GetBusinessOrdersQuery, BaseResponse[list[OrderDto]])

@@ -15,3 +15,7 @@ class CreateOrderDto(TypedDict):
     consumer: CreateConsumerDto
     latest_time_of_delivery: datetime
     parcel: Parcel
+
+
+class CreateOrdersDto(TypedDict):
+    orders: list[CreateOrderDto]

@@ -15,6 +15,9 @@ from src.application.contracts.infrastructure.persistence.abc_unit_of_work impor
 from src.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler,
 )
+from src.application.features.business.handlers.commands.create_orders_command_handler import (
+    CreateOrdersCommandHandler,
+)
 from src.application.features.business.handlers.queries import (
     GetAllBusinessesQueryHandler,
     GetBusinessByUserIdQueryHandler,
@@ -22,6 +25,9 @@ from src.application.features.business.handlers.queries import (
     GetBusinessQueryHandler,
 )
 from src.application.features.business.requests.commands import CreateBusinessCommand
+from src.application.features.business.requests.commands.create_orders_command import (
+    CreateOrdersCommand,
+)
 from src.application.features.business.requests.queries import (
     GetAllBusinessQuery,
     GetBusinessByUserIdQuery,
@@ -30,8 +36,6 @@ from src.application.features.business.requests.queries import (
 )
 from src.application.features.driver.handlers.commands import CreateDriverCommandHandler
 from src.application.features.driver.requests.commands import CreateDriverCommand
-from src.application.features.order.handlers.commands import CreateOrderCommandHandler
-from src.application.features.order.requests.commands import CreateOrderCommand
 from src.common.generic_helpers import get_config
 from src.common.typing.config import Config, TestMessage
 from src.infrastructure.persistence.db_client import DbClient
@@ -79,12 +83,11 @@ def mediator(
     mediator = Mediator()
 
     handlers = [
-        # Order handler
-        (CreateOrderCommand, CreateOrderCommandHandler(uow, producer)),
         # Driver handlers
         (CreateDriverCommand, CreateDriverCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
+        (CreateOrdersCommand, CreateOrdersCommandHandler(uow, producer)),
         (GetBusinessQuery, GetBusinessQueryHandler(uow)),
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),

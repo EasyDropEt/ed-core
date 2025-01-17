@@ -4,7 +4,6 @@ from uuid import UUID
 from src.application.contracts.infrastructure.persistence.abc_generic_repository import (
     ABCGenericRepository,
 )
-from src.common.exception_helpers import ApplicationException, Exceptions
 from src.infrastructure.persistence.db_client import DbClient
 from src.infrastructure.persistence.helpers import repository_class
 
@@ -27,15 +26,12 @@ class GenericRepository(Generic[TEntity], ABCGenericRepository[TEntity]):
         return None
 
     def create(self, entity: TEntity) -> TEntity:
-        if exists := self._db.find_one(entity):
-            raise ApplicationException(
-                Exceptions.BadRequestException,
-                message=f"{self._collection} already exists.",
-                errors=[f"{self._collection}: {exists} already exists"],
-            )
-
         self._db.insert_one(entity)
         return entity
+
+    def create_many(self, entities: list[TEntity]) -> list[TEntity]:
+        self._db.insert_many(entities)
+        return entities
 
     def update(self, id: UUID, entity: TEntity) -> bool:
         status = self._db.update_one({"id": id}, {"$set": entity})
