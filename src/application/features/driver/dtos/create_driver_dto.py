@@ -1,4 +1,4 @@
-from typing import NotRequired, TypedDict
+from typing import TypedDict
 from uuid import UUID
 
 
@@ -17,7 +17,6 @@ class CreateLocationDto(TypedDict):
     latitude: float
     longitude: float
     postal_code: str
-    city: str
 
 
 class CreateDriverDto(TypedDict):
@@ -26,7 +25,6 @@ class CreateDriverDto(TypedDict):
     last_name: str
     profile_image: str
     phone_number: str
-    email: NotRequired[str]
-    password: str
+    email: str
     location: CreateLocationDto
     car: CreateCarDto

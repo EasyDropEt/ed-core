@@ -1,11 +1,16 @@
 from datetime import UTC, datetime
 
+from ed_domain_model.entities import Car, Driver, Location
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from src.application.common.responses.base_response import BaseResponse
 from src.application.contracts.infrastructure.persistence import ABCUnitOfWork
 from src.application.features.driver.dtos import CreateDriverDto, DriverDto
+from src.application.features.driver.dtos.create_driver_dto import (
+    CreateCarDto,
+    CreateLocationDto,
+)
 from src.application.features.driver.dtos.driver_dto import CarDto, LocationDto
 from src.application.features.driver.dtos.validators import CreateDriverDtoValidator
 from src.application.features.driver.requests.commands import CreateDriverCommand
@@ -30,51 +35,26 @@ class CreateDriverCommandHandler(RequestHandler):
 
         dto: CreateDriverDto = request.dto
 
-        car = self._uow.car_repository.create(
-            {
-                "id": get_new_id(),
-                "driver_id": get_new_id(),
-                "make": dto["car"]["make"],
-                "model": dto["car"]["model"],
-                "year": dto["car"]["year"],
-                "registration_number": dto["car"]["registration_number"],
-                "license_plate_number": dto["car"]["license_plate"],
-                "color": dto["car"]["color"],
-                "capacity": dto["car"]["seats"],
-            }
-        )
-
-        location = self._uow.location_repository.create(
-            {
-                "id": get_new_id(),
-                "latitude": dto["location"]["latitude"],
-                "longitude": dto["location"]["longitude"],
-                "address": dto["location"]["address"],
-                "city": dto["location"]["city"],
-                "postal_code": dto["location"]["postal_code"],
-                "country": "Ethiopia",
-            }
-        )
-
+        car = await self._create_car(dto["car"])
+        location = await self._create_location(dto["location"])
         driver = self._uow.driver_repository.create(
-            {
-                "id": get_new_id(),
-                "first_name": dto["first_name"],
-                "last_name": dto["last_name"],
-                "profile_picture": dto["profile_image"],
-                "phone_number": dto["phone_number"],
-                "email": dto.get("email", ""),
-                "location_id": location["id"],
-                "car_id": car["id"],
-                "delivery_job_ids": [],
-                "payment_ids": [],
-                #
-                "user_id": dto["user_id"],
-                "notification_ids": [],
-                "active_status": True,
-                "created_datetime": datetime.now(UTC),
-                "updated_datetime": datetime.now(UTC),
-            }
+            Driver(
+                user_id=dto["user_id"],
+                first_name=dto["first_name"],
+                last_name=dto["last_name"],
+                phone_number=dto["phone_number"],
+                email=dto["email"],
+                profile_image=dto["profile_image"],
+                id=get_new_id(),
+                car_id=car["id"],
+                location_id=location["id"],
+                notification_ids=[],
+                delivery_job_ids=[],
+                payment_ids=[],
+                active_status=True,
+                created_datetime=datetime.now(UTC),
+                updated_datetime=datetime.now(UTC),
+            )
         )
 
         return BaseResponse[DriverDto].success(
@@ -84,4 +64,22 @@ class CreateDriverCommandHandler(RequestHandler):
                 car=CarDto(**car),  # type: ignore
                 location=LocationDto(**location),  # type: ignore
             ),
+        )
+
+    async def _create_car(self, car: CreateCarDto) -> Car:
+        return self._uow.car_repository.create(
+            Car(
+                **car,  # type: ignore
+                id=get_new_id(),
+            )
+        )
+
+    async def _create_location(self, location: CreateLocationDto) -> Location:
+        return self._uow.location_repository.create(
+            Location(
+                **location,
+                id=get_new_id(),
+                city="Addis Ababa",
+                country="Ethiopia",
+            )
         )

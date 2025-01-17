@@ -22,9 +22,6 @@ class CreateLocationDtoValidator(ABCDtoValidator[CreateLocationDto]):
         if not dto["address"]:
             errors.append("Address is required")
 
-        if not dto["city"]:
-            errors.append("City is required")
-
         if not dto["postal_code"]:
             errors.append("Postal code is required")
 
@@ -75,9 +72,6 @@ class CreateDriverDtoValidator(ABCDtoValidator[CreateDriverDto]):
 
         if not dto["phone_number"]:
             errors.append("Phone number is required")
-
-        if not dto["password"]:
-            errors.append("Password is required")
 
         if not dto["profile_image"]:
             errors.append("Profile image is required")

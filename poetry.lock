@@ -207,12 +207,12 @@ wmi = ["wmi (>=1.5.1)"]
 
 [[package]]
 name = "ed-domain-model"
-version = "0.0.11"
+version = "0.0.16"
 description = "EasyDrop domain model Package"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "ed_domain_model-0.0.11-py3-none-any.whl", hash = "sha256:b3524ebdda60d6d4ceeb959106067c315ad4e89c13dc3a71edab1b085ed643bf"},
+    {file = "ed_domain_model-0.0.16-py3-none-any.whl", hash = "sha256:cfff147897a17f027efc8ce6f1f440560982da1efc3a4318cbb781b07db78f60"},
 ]
 
 [package.extras]
@@ -1577,4 +1577,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "2d33db1734dde2b099b13c8b19e4fc6d10c843d84254d3407441df3692fafe73"
+content-hash = "f1f716686fd3aed889f2f289a0023a90332eb731210d5f446fd65984ae02ad90"

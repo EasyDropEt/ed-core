@@ -1,11 +1,16 @@
 from datetime import UTC, datetime
 
+from ed_domain_model.entities import Business, Location
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from src.application.common.responses.base_response import BaseResponse
 from src.application.contracts.infrastructure.persistence import ABCUnitOfWork
-from src.application.features.business.dtos import BusinessDto, CreateBusinessDto
+from src.application.features.business.dtos import (
+    BusinessDto,
+    CreateBusinessDto,
+    CreateLocationDto,
+)
 from src.application.features.business.dtos.business_dto import LocationDto
 from src.application.features.business.dtos.validators import CreateBusinessDtoValidator
 from src.application.features.business.requests.commands import CreateBusinessCommand
@@ -30,35 +35,19 @@ class CreateBusinessCommandHandler(RequestHandler):
 
         dto: CreateBusinessDto = request.dto
 
-        location = self._uow.location_repository.create(
-            {
-                "id": get_new_id(),
-                "latitude": dto["location"]["latitude"],
-                "longitude": dto["location"]["longitude"],
-                "address": dto["location"]["address"],
-                "city": dto["location"]["city"],
-                "postal_code": dto["location"]["postal_code"],
-                "country": "Ethiopia",
-            }
-        )
+        location = await self._create_location(dto["location"])
 
         business = self._uow.business_repository.create(
-            {
-                "id": get_new_id(),
-                "business_name": dto["business_name"],
-                "owner_first_name": dto["owner_first_name"],
-                "owner_last_name": dto["owner_last_name"],
-                "phone_number": dto["phone_number"],
-                "email": dto.get("email", ""),
-                "location_id": location["id"],
-                "billing_details": dto["billing_details"],
-                #
-                "user_id": dto["user_id"],
-                "notification_ids": [],
-                "active_status": True,
-                "created_datetime": datetime.now(UTC),
-                "updated_datetime": datetime.now(UTC),
-            }
+            Business(
+                **dto,  # type: ignore
+                id=get_new_id(),
+                location_id=location["id"],
+                user_id=dto["user_id"],
+                notification_ids=[],
+                active_status=True,
+                created_datetime=datetime.now(UTC),
+                updated_datetime=datetime.now(UTC),
+            )
         )
 
         return BaseResponse[BusinessDto].success(
@@ -67,4 +56,14 @@ class CreateBusinessCommandHandler(RequestHandler):
                 **business,
                 location=LocationDto(**location),  # type: ignore
             ),
+        )
+
+    async def _create_location(self, location: CreateLocationDto) -> Location:
+        return self._uow.location_repository.create(
+            Location(
+                **location,
+                id=get_new_id(),
+                city="Addis Ababa",
+                country="Ethiopia",
+            )
         )

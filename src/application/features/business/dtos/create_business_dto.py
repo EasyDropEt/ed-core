@@ -3,13 +3,7 @@ from uuid import UUID
 
 from ed_domain_model.entities.business import BillingDetail
 
-
-class CreateLocationDto(TypedDict):
-    address: str
-    latitude: float
-    longitude: float
-    postal_code: str
-    city: str
+from src.application.features.business.dtos.create_location_dto import CreateLocationDto
 
 
 class CreateBusinessDto(TypedDict):

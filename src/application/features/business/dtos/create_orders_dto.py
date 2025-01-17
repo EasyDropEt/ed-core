@@ -1,14 +1,17 @@
 from datetime import datetime
-from typing import NotRequired, TypedDict
+from typing import TypedDict
 
 from ed_domain_model.entities.order import Parcel
+
+from src.application.features.business.dtos.create_location_dto import CreateLocationDto
 
 
 class CreateConsumerDto(TypedDict):
     first_name: str
     last_name: str
     phone_number: str
-    email: NotRequired[str]
+    email: str
+    location: CreateLocationDto
 
 
 class CreateOrderDto(TypedDict):

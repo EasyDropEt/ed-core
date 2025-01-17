@@ -11,6 +11,9 @@ from src.application.features.common.dto.abc_dto_validator import (
     ABCDtoValidator,
     ValidationResponse,
 )
+from src.application.features.driver.dtos.validators.create_driver_dto_validator import (
+    CreateLocationDtoValidator,
+)
 
 
 class CreateConsumerDtoValidator(ABCDtoValidator[CreateConsumerDto]):
@@ -25,6 +28,10 @@ class CreateConsumerDtoValidator(ABCDtoValidator[CreateConsumerDto]):
 
         if not dto["phone_number"]:
             errors.append("Phone number of consmer is required")
+
+        errors.extend(
+            CreateLocationDtoValidator().validate(dto["location"]).errors,
+        )
 
         if len(errors):
             return ValidationResponse.invalid(errors)
