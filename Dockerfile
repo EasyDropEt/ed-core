@@ -2,7 +2,7 @@ FROM python:3.12
 
 WORKDIR /app
 
-RUN pip install poetry
+RUN pip install --root-user-action=ignore poetry
 
 COPY pyproject.toml poetry.lock /app/
 
