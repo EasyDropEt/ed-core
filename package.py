@@ -6,7 +6,9 @@ LOG = get_logger()
 
 class Package:
     def __init__(self) -> None:
-        self._api = API()
+        self._api = API(
+            title="Core Service", description="Core Service API Documentation"
+        )
 
     def start(self) -> None:
         self._api.start()
