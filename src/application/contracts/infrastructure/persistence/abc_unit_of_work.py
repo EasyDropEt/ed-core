@@ -24,6 +24,9 @@ from src.application.contracts.infrastructure.persistence.abc_location_repositor
 from src.application.contracts.infrastructure.persistence.abc_order_repository import (
     ABCOrderRepository,
 )
+from src.application.contracts.infrastructure.persistence.abc_route_repository import (
+    ABCRouteRepository,
+)
 
 
 class ABCUnitOfWork(metaclass=ABCMeta):
@@ -65,4 +68,9 @@ class ABCUnitOfWork(metaclass=ABCMeta):
     @property
     @abstractmethod
     def order_repository(self) -> ABCOrderRepository:
+        pass
+
+    @property
+    @abstractmethod
+    def route_repository(self) -> ABCRouteRepository:
         pass

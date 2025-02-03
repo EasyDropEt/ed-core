@@ -22,6 +22,9 @@ from src.application.contracts.infrastructure.persistence.abc_location_repositor
 from src.application.contracts.infrastructure.persistence.abc_order_repository import (
     ABCOrderRepository,
 )
+from src.application.contracts.infrastructure.persistence.abc_route_repository import (
+    ABCRouteRepository,
+)
 from src.application.contracts.infrastructure.persistence.abc_unit_of_work import (
     ABCUnitOfWork,
 )
@@ -35,5 +38,6 @@ __all__ = [
     "ABCDriverRepository",
     "ABCLocationRepository",
     "ABCOrderRepository",
+    "ABCRouteRepository",
     "ABCUnitOfWork",
 ]

@@ -1,8 +1,6 @@
 from ed_domain_model.entities.location import Location
 
-from src.application.contracts.infrastructure.persistence.abc_location_repository import (
-    ABCLocationRepository,
-)
+from src.application.contracts.infrastructure.persistence import ABCLocationRepository
 from src.infrastructure.persistence.db_client import DbClient
 from src.infrastructure.persistence.repositories.generic_repository import (
     GenericRepository,

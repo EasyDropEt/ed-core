@@ -10,9 +10,8 @@ from src.application.features.common.dtos.route_dto import RouteDto
 
 class DeliveryJobDto(TypedDict):
     id: UUID
-    order_ids: list[UUID]
+    orders: list[UUID]
     route: RouteDto
-    driver_id: NotRequired[UUID]
     driver_payment: NotRequired[DriverPaymentDto]
     status: DeliveryJobStatus
     estimated_payment: float

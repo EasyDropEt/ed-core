@@ -14,8 +14,6 @@ from src.application.contracts.infrastructure.persistence.abc_unit_of_work impor
 )
 from src.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler,
-)
-from src.application.features.business.handlers.commands.create_orders_command_handler import (
     CreateOrdersCommandHandler,
 )
 from src.application.features.business.handlers.queries import (
@@ -24,8 +22,8 @@ from src.application.features.business.handlers.queries import (
     GetBusinessOrdersQueryHandler,
     GetBusinessQueryHandler,
 )
-from src.application.features.business.requests.commands import CreateBusinessCommand
-from src.application.features.business.requests.commands.create_orders_command import (
+from src.application.features.business.requests.commands import (
+    CreateBusinessCommand,
     CreateOrdersCommand,
 )
 from src.application.features.business.requests.queries import (
@@ -34,8 +32,22 @@ from src.application.features.business.requests.queries import (
     GetBusinessOrdersQuery,
     GetBusinessQuery,
 )
+from src.application.features.delivery_job.handlers.commands import (
+    CreateDeliveryJobCommandHandler,
+)
+from src.application.features.delivery_job.handlers.queries import (
+    GetDeliveryJobsQueryHandler,
+)
+from src.application.features.delivery_job.requests.commands import (
+    CreateDeliveryJobCommand,
+)
+from src.application.features.delivery_job.requests.queries import GetDeliveryJobsQuery
 from src.application.features.driver.handlers.commands import CreateDriverCommandHandler
+from src.application.features.driver.handlers.queries import (
+    GetDriverDeliveryJobsQueryHandler,
+)
 from src.application.features.driver.requests.commands import CreateDriverCommand
+from src.application.features.driver.requests.queries import GetDriverDeliveryJobsQuery
 from src.common.generic_helpers import get_config
 from src.common.typing.config import Config, TestMessage
 from src.infrastructure.persistence.db_client import DbClient
@@ -83,8 +95,12 @@ def mediator(
     mediator = Mediator()
 
     handlers = [
+        # Delivery job handler
+        (CreateDeliveryJobCommand, CreateDeliveryJobCommandHandler(uow)),
+        (GetDeliveryJobsQuery, GetDeliveryJobsQueryHandler(uow)),
         # Driver handlers
         (CreateDriverCommand, CreateDriverCommandHandler(uow)),
+        (GetDriverDeliveryJobsQuery, GetDriverDeliveryJobsQueryHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
         (CreateOrdersCommand, CreateOrdersCommandHandler(uow, producer)),

@@ -3,13 +3,12 @@ from src.application.contracts.infrastructure.persistence import (
     ABCBusinessRepository,
     ABCCarRepository,
     ABCConsumerRepository,
+    ABCDeliveryJobRepository,
     ABCDriverRepository,
     ABCLocationRepository,
     ABCOrderRepository,
+    ABCRouteRepository,
     ABCUnitOfWork,
-)
-from src.application.contracts.infrastructure.persistence.abc_delivery_job_repository import (
-    ABCDeliveryJobRepository,
 )
 from src.infrastructure.persistence.db_client import DbClient
 from src.infrastructure.persistence.repositories import (
@@ -22,6 +21,7 @@ from src.infrastructure.persistence.repositories import (
     LocationRepository,
     OrderRepository,
 )
+from src.infrastructure.persistence.repositories.route_repository import RouteRepository
 
 
 class UnitOfWork(ABCUnitOfWork):
@@ -34,6 +34,7 @@ class UnitOfWork(ABCUnitOfWork):
         self._driver_repository = DriverRepository(db_client)
         self._location_repository = LocationRepository(db_client)
         self._order_repository = OrderRepository(db_client)
+        self._route_repository = RouteRepository(db_client)
 
     @property
     def bill_repository(self) -> ABCBillRepository:
@@ -66,3 +67,7 @@ class UnitOfWork(ABCUnitOfWork):
     @property
     def order_repository(self) -> ABCOrderRepository:
         return self._order_repository
+
+    @property
+    def route_repository(self) -> ABCRouteRepository:
+        return self._route_repository

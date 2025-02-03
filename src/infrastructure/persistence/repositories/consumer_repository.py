@@ -1,8 +1,6 @@
 from ed_domain_model.entities import Consumer
 
-from src.application.contracts.infrastructure.persistence.abc_consumer_repository import (
-    ABCConsumerRepository,
-)
+from src.application.contracts.infrastructure.persistence import ABCConsumerRepository
 from src.infrastructure.persistence.db_client import DbClient
 from src.infrastructure.persistence.repositories.generic_repository import (
     GenericRepository,

@@ -1,8 +1,6 @@
 from ed_domain_model.entities.order import Order
 
-from src.application.contracts.infrastructure.persistence.abc_order_repository import (
-    ABCOrderRepository,
-)
+from src.application.contracts.infrastructure.persistence import ABCOrderRepository
 from src.infrastructure.persistence.db_client import DbClient
 from src.infrastructure.persistence.repositories.generic_repository import (
     GenericRepository,

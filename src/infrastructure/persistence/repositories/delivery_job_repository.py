@@ -1,6 +1,6 @@
 from ed_domain_model.entities import DeliveryJob
 
-from src.application.contracts.infrastructure.persistence.abc_delivery_job_repository import (
+from src.application.contracts.infrastructure.persistence import (
     ABCDeliveryJobRepository,
 )
 from src.infrastructure.persistence.db_client import DbClient
