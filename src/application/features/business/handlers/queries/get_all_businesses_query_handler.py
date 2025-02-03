@@ -5,9 +5,8 @@ from src.application.common.responses.base_response import BaseResponse
 from src.application.contracts.infrastructure.persistence.abc_unit_of_work import (
     ABCUnitOfWork,
 )
-from src.application.features.business.dtos.business_dto import BusinessDto
 from src.application.features.business.requests.queries import GetBusinessQuery
-from src.application.features.driver.dtos.driver_dto import LocationDto
+from src.application.features.common.dtos import BusinessDto, LocationDto
 
 
 @request_handler(GetBusinessQuery, BaseResponse[list[BusinessDto]])

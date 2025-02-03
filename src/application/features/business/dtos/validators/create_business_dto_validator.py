@@ -1,5 +1,5 @@
 from src.application.features.business.dtos.create_business_dto import CreateBusinessDto
-from src.application.features.common.dto.abc_dto_validator import (
+from src.application.features.common.dtos.validators.abc_dto_validator import (
     ABCDtoValidator,
     ValidationResponse,
 )

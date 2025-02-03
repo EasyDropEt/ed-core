@@ -12,6 +12,9 @@ from src.application.contracts.infrastructure.persistence.abc_car_repository imp
 from src.application.contracts.infrastructure.persistence.abc_consumer_repository import (
     ABCConsumerRepository,
 )
+from src.application.contracts.infrastructure.persistence.abc_delivery_job_repository import (
+    ABCDeliveryJobRepository,
+)
 from src.application.contracts.infrastructure.persistence.abc_driver_repository import (
     ABCDriverRepository,
 )
@@ -42,6 +45,11 @@ class ABCUnitOfWork(metaclass=ABCMeta):
     @property
     @abstractmethod
     def consumer_repository(self) -> ABCConsumerRepository:
+        pass
+
+    @property
+    @abstractmethod
+    def delivery_job_repository(self) -> ABCDeliveryJobRepository:
         pass
 
     @property

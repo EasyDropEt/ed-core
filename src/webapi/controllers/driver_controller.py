@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends
 from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
-from src.application.features.driver.dtos import CreateDriverDto, DriverDto
+from src.application.features.common.dtos.driver_dto import DriverDto
+from src.application.features.driver.dtos import CreateDriverDto
 from src.application.features.driver.requests.commands import CreateDriverCommand
 from src.common.logging_helpers import get_logger
 from src.webapi.common.helpers import GenericResponse, rest_endpoint

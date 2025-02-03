@@ -10,6 +10,9 @@ from src.application.contracts.infrastructure.persistence.abc_car_repository imp
 from src.application.contracts.infrastructure.persistence.abc_consumer_repository import (
     ABCConsumerRepository,
 )
+from src.application.contracts.infrastructure.persistence.abc_delivery_job_repository import (
+    ABCDeliveryJobRepository,
+)
 from src.application.contracts.infrastructure.persistence.abc_driver_repository import (
     ABCDriverRepository,
 )
@@ -28,6 +31,7 @@ __all__ = [
     "ABCBusinessRepository",
     "ABCCarRepository",
     "ABCConsumerRepository",
+    "ABCDeliveryJobRepository",
     "ABCDriverRepository",
     "ABCLocationRepository",
     "ABCOrderRepository",

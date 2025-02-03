@@ -6,6 +6,9 @@ from src.infrastructure.persistence.repositories.car_repository import CarReposi
 from src.infrastructure.persistence.repositories.consumer_repository import (
     ConsumerRepository,
 )
+from src.infrastructure.persistence.repositories.delivery_job_repository import (
+    DeliveryJobRepository,
+)
 from src.infrastructure.persistence.repositories.driver_repository import (
     DriverRepository,
 )
@@ -19,6 +22,7 @@ __all__ = [
     "BusinessRepository",
     "CarRepository",
     "ConsumerRepository",
+    "DeliveryJobRepository",
     "DriverRepository",
     "LocationRepository",
     "OrderRepository",

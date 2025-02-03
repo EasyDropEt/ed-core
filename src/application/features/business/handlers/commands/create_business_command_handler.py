@@ -6,14 +6,10 @@ from rmediator.types import RequestHandler
 
 from src.application.common.responses.base_response import BaseResponse
 from src.application.contracts.infrastructure.persistence import ABCUnitOfWork
-from src.application.features.business.dtos import (
-    BusinessDto,
-    CreateBusinessDto,
-    CreateLocationDto,
-)
-from src.application.features.business.dtos.business_dto import LocationDto
+from src.application.features.business.dtos import CreateBusinessDto, CreateLocationDto
 from src.application.features.business.dtos.validators import CreateBusinessDtoValidator
 from src.application.features.business.requests.commands import CreateBusinessCommand
+from src.application.features.common.dtos.business_dto import BusinessDto, LocationDto
 from src.common.generic_helpers import get_new_id
 from src.common.logging_helpers import get_logger
 

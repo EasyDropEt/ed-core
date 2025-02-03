@@ -1,4 +1,3 @@
-from src.application.features.business.dtos.business_dto import BusinessDto
 from src.application.features.business.dtos.create_business_dto import CreateBusinessDto
 from src.application.features.business.dtos.create_location_dto import CreateLocationDto
 from src.application.features.business.dtos.create_orders_dto import CreateOrdersDto
@@ -8,6 +7,5 @@ __all__ = [
     "CreateBusinessDto",
     "CreateLocationDto",
     "CreateOrdersDto",
-    "BusinessDto",
     "OrderDto",
 ]

@@ -5,7 +5,6 @@ from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
 from src.application.features.business.dtos import (
-    BusinessDto,
     CreateBusinessDto,
     CreateOrdersDto,
     OrderDto,
@@ -20,6 +19,7 @@ from src.application.features.business.requests.queries import (
     GetBusinessOrdersQuery,
     GetBusinessQuery,
 )
+from src.application.features.common.dtos import BusinessDto
 from src.common.logging_helpers import get_logger
 from src.webapi.common.helpers import GenericResponse, rest_endpoint
 from src.webapi.dependency_setup import mediator

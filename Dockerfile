@@ -2,11 +2,7 @@ FROM python:3.12
 
 WORKDIR /app
 
-RUN pip install --root-user-action=ignore poetry
-
-COPY pyproject.toml poetry.lock /app/
-
-RUN poetry export --without-hashes --format=requirements.txt > requirements.txt
+COPY requirements.txt /app/
 
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 

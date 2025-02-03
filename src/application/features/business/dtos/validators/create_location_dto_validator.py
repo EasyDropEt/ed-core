@@ -1,5 +1,5 @@
 from src.application.features.business.dtos.create_location_dto import CreateLocationDto
-from src.application.features.common.dto.abc_dto_validator import (
+from src.application.features.common.dtos.validators.abc_dto_validator import (
     ABCDtoValidator,
     ValidationResponse,
 )
@@ -17,9 +17,6 @@ class CreateLocationDtoValidator(ABCDtoValidator[CreateLocationDto]):
 
         if not dto["address"]:
             errors.append("Address is required")
-
-        if not dto["city"]:
-            errors.append("City is required")
 
         if not dto["postal_code"]:
             errors.append("Postal code is required")
