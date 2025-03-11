@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "py"
+name = "ed-core"
 version = "0.1.0"
 description = ""
 authors = ["ffekirnew <ffekirnew0808@gmail.com>"]
@@ -19,6 +19,8 @@ ed-domain-model = "^0.0.17"
 pymongo = "^4.10.1"
 python-dotenv = "^1.0.1"
 jsons = "^1.6.3"
+cloudinary = "^1.42.2"
+python-multipart = "^0.0.20"
 
 
 [tool.poetry.group.test.dependencies]

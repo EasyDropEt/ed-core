@@ -6,18 +6,15 @@ from rmediator.types import RequestHandler
 
 from src.application.common.responses.base_response import BaseResponse
 from src.application.contracts.infrastructure.persistence import ABCUnitOfWork
-from src.application.features.common.dtos.driver_dto import (
-    CarDto,
-    DriverDto,
-    LocationDto,
-)
+from src.application.features.common.dtos.driver_dto import (CarDto, DriverDto,
+                                                             LocationDto)
 from src.application.features.driver.dtos import CreateDriverDto
 from src.application.features.driver.dtos.create_driver_dto import (
-    CreateCarDto,
-    CreateLocationDto,
-)
-from src.application.features.driver.dtos.validators import CreateDriverDtoValidator
-from src.application.features.driver.requests.commands import CreateDriverCommand
+    CreateCarDto, CreateLocationDto)
+from src.application.features.driver.dtos.validators import \
+    CreateDriverDtoValidator
+from src.application.features.driver.requests.commands import \
+    CreateDriverCommand
 from src.common.generic_helpers import get_new_id
 from src.common.logging_helpers import get_logger
 

@@ -6,28 +6,25 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from src.application.common.responses.base_response import BaseResponse
-from src.application.contracts.infrastructure.persistence.abc_unit_of_work import (
-    ABCUnitOfWork,
-)
+from src.application.contracts.infrastructure.persistence.abc_unit_of_work import \
+    ABCUnitOfWork
 from src.application.features.common.dtos import DeliveryJobDto
 from src.application.features.common.dtos.route_dto import RouteDto
-from src.application.features.delivery_job.dtos.create_delivery_job_dto import (
-    CreateDeliveryJobDto,
-)
-from src.application.features.delivery_job.requests.commands.create_delivery_job_command import (
-    CreateDeliveryJobCommand,
-)
+from src.application.features.delivery_job.dtos.create_delivery_job_dto import \
+    CreateDeliveryJobDto
+from src.application.features.delivery_job.requests.commands.create_delivery_job_command import \
+    CreateDeliveryJobCommand
 from src.common.generic_helpers import get_new_id
 
 
-@request_handler(CreateDeliveryJobCommand, BaseResponse[list[DeliveryJobDto]])
+@request_handler(CreateDeliveryJobCommand, BaseResponse[DeliveryJobDto])
 class CreateDeliveryJobCommandHandler(RequestHandler):
     def __init__(self, uow: ABCUnitOfWork):
         self._uow = uow
 
     async def handle(
         self, request: CreateDeliveryJobCommand
-    ) -> BaseResponse[list[DeliveryJobDto]]:
+    ) -> BaseResponse[DeliveryJobDto]:
         dto: CreateDeliveryJobDto = request.dto
         route = self._uow.route_repository.create(
             Route(

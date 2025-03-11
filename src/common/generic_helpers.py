@@ -18,4 +18,10 @@ def get_config() -> Config:
         "db_name": os.getenv("DB_NAME") or "",
         "rabbitmq_url": os.getenv("RABBITMQ_URL") or "",
         "rabbitmq_queue": os.getenv("RABBITMQ_QUEUE") or "",
+        "cloudinary": {
+            "cloud_name": os.getenv("CLOUDINARY_CLOUD_NAME") or "",
+            "api_key": os.getenv("CLOUDINARY_API_KEY") or "",
+            "api_secret": os.getenv("CLOUDINARY_API_SECRET") or "",
+            "env_variable": os.getenv("CLOUDINARY_ENV_VARIABLE") or "",
+        }
     }
