@@ -2,15 +2,13 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from src.application.common.responses.base_response import BaseResponse
-from src.application.contracts.infrastructure.persistence.abc_unit_of_work import (
-    ABCUnitOfWork,
-)
+from src.application.contracts.infrastructure.persistence.abc_unit_of_work import \
+    ABCUnitOfWork
 from src.application.features.business.dtos.order_dto import OrderDto
 from src.application.features.common.dtos import DeliveryJobDto
 from src.application.features.common.dtos.route_dto import RouteDto
-from src.application.features.driver.requests.queries.get_driver_delivery_jobs_query import (
-    GetDriverDeliveryJobsQuery,
-)
+from src.application.features.driver.requests.queries.get_driver_delivery_jobs_query import \
+    GetDriverDeliveryJobsQuery
 
 
 @request_handler(GetDriverDeliveryJobsQuery, BaseResponse[list[DeliveryJobDto]])
