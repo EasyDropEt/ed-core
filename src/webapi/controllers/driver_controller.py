@@ -14,12 +14,24 @@ from src.application.features.driver.requests.commands import (
     CreateDriverCommand, UploadDriverProfilePictureCommand)
 from src.application.features.driver.requests.queries import (
     GetDriverDeliveryJobsQuery, GetDriverQuery)
+from src.application.features.driver.requests.queries.get_all_drivers_query import \
+    GetAllDriversQuery
 from src.common.logging_helpers import get_logger
 from src.webapi.common.helpers import GenericResponse, rest_endpoint
 from src.webapi.dependency_setup import mediator
 
 LOG = get_logger()
 router = APIRouter(prefix="/drivers", tags=["Driver Feature"])
+
+
+
+@router.get("", response_model=GenericResponse[list[DriverDto]])
+@rest_endpoint
+async def get_all_drivers(
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    LOG.info("Satisfying get_all_drivers request")
+    return await mediator.send(GetAllDriversQuery())
 
 
 @router.post("", response_model=GenericResponse[DriverDto])
@@ -32,7 +44,7 @@ async def create_driver(
     return await mediator.send(CreateDriverCommand(dto=request_dto))
 
 
-@router.post(
+@router.get(
     "/{driver_id}/delivery-jobs", response_model=GenericResponse[list[DeliveryJobDto]]
 )
 @rest_endpoint
