@@ -32,11 +32,12 @@ from src.application.features.delivery_job.requests.queries import \
 from src.application.features.driver.handlers.commands import (
     CreateDriverCommandHandler, UploadDriverProfilePictureCommandHandler)
 from src.application.features.driver.handlers.queries import (
-    GetDriverDeliveryJobsQueryHandler, GetDriverQueryHandler)
+    GetAllDriversQueryHandler, GetDriverDeliveryJobsQueryHandler,
+    GetDriverQueryHandler)
 from src.application.features.driver.requests.commands import (
     CreateDriverCommand, UploadDriverProfilePictureCommand)
 from src.application.features.driver.requests.queries import (
-    GetDriverDeliveryJobsQuery, GetDriverQuery)
+    GetAllDriversQuery, GetDriverDeliveryJobsQuery, GetDriverQuery)
 from src.common.generic_helpers import get_config
 from src.common.typing.config import Config, TestMessage
 from src.infrastructure.files.image_uploader import ImageUploader
@@ -99,6 +100,7 @@ def mediator(
         (CreateDriverCommand, CreateDriverCommandHandler(uow)),
         (GetDriverDeliveryJobsQuery, GetDriverDeliveryJobsQueryHandler(uow)),
         (GetDriverQuery, GetDriverQueryHandler(uow)),
+        (GetAllDriversQuery, GetAllDriversQueryHandler(uow)),
         (UploadDriverProfilePictureCommand, UploadDriverProfilePictureCommandHandler(uow, image_uploader)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),

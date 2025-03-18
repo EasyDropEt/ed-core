@@ -6,11 +6,8 @@ from src.common.exception_helpers import ApplicationException
 from src.common.logging_helpers import get_logger
 from src.common.singleton_helpers import SingletonMeta
 from src.webapi.common.helpers import GenericResponse
-from src.webapi.controllers import (
-    business_controller,
-    delivery_job_controller,
-    driver_controller,
-)
+from src.webapi.controllers import (business_controller,
+                                    delivery_job_controller, driver_controller)
 
 LOG = get_logger()
 
