@@ -3,32 +3,26 @@ from uuid import UUID
 
 from ed_domain.entities import Bill, Consumer, Location, Order
 from ed_domain.entities.order import OrderStatus
-from ed_domain.queues.order.order_model import (
-    BusinessModel,
-    ConsumerModel,
-    OrderModel,
-)
+from ed_domain.queues.order.order_model import (BusinessModel, ConsumerModel,
+                                                OrderModel)
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.contracts.infrastructure.message_queue.abc_producer import (
-    ABCProducer,
-)
-from ed_core.application.contracts.infrastructure.persistence.abc_unit_of_work import (
-    ABCUnitOfWork,
-)
-from ed_core.application.features.business.dtos import (
-    CreateLocationDto,
-    CreateOrdersDto,
-    OrderDto,
-)
-from ed_core.application.features.business.dtos.create_orders_dto import CreateConsumerDto
+from ed_core.application.contracts.infrastructure.message_queue.abc_producer import \
+    ABCProducer
+from ed_core.application.contracts.infrastructure.persistence.abc_unit_of_work import \
+    ABCUnitOfWork
+from ed_core.application.features.business.dtos import (CreateLocationDto,
+                                                        CreateOrdersDto,
+                                                        OrderDto)
+from ed_core.application.features.business.dtos.create_orders_dto import \
+    CreateConsumerDto
 from ed_core.application.features.business.dtos.order_dto import ConsumerDto
-from ed_core.application.features.business.dtos.validators.create_orders_dto_validator import (
-    CreateOrdersDtoValidator,
-)
-from ed_core.application.features.business.requests.commands import CreateOrdersCommand
+from ed_core.application.features.business.dtos.validators.create_orders_dto_validator import \
+    CreateOrdersDtoValidator
+from ed_core.application.features.business.requests.commands import \
+    CreateOrdersCommand
 from ed_core.common.generic_helpers import get_new_id
 from ed_core.common.logging_helpers import get_logger
 
@@ -45,7 +39,7 @@ class CreateOrdersCommandHandler(RequestHandler):
         self, request: CreateOrdersCommand
     ) -> BaseResponse[list[OrderDto]]:
         business_id = request.business_id
-        dto: CreateOrdersDto = request.dto
+        dto = request.dto
         dto_validator = CreateOrdersDtoValidator().validate(request.dto)
 
         if not dto_validator.is_valid:
@@ -94,7 +88,10 @@ class CreateOrdersCommandHandler(RequestHandler):
                 OrderModel(
                     **order,  # type: ignore
                     consumer=ConsumerModel(**consumer),  # type: ignore
-                    business=BusinessModel(**self._uow.business_repository.get(id=order["business_id"])),  # type: ignore
+                    business=BusinessModel(
+                        # type: ignore
+                        **self._uow.business_repository.get(id=order["business_id"])
+                    ),
                 )
             )
 
@@ -111,7 +108,8 @@ class CreateOrdersCommandHandler(RequestHandler):
         self, consumers: list[CreateConsumerDto]
     ) -> list[Consumer]:
         return [
-            self._uow.consumer_repository.get(phone_number=consumer["phone_number"])
+            self._uow.consumer_repository.get(
+                phone_number=consumer["phone_number"])
             or self._uow.consumer_repository.create(
                 Consumer(
                     **consumer,  # type: ignore
