@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import NotRequired, TypedDict
 from uuid import UUID
 
-from ed_domain.entities.order import OrderStatus, Parcel
+from ed_domain.core.entities.order import OrderStatus, Parcel
 
 
 class ConsumerDto(TypedDict):

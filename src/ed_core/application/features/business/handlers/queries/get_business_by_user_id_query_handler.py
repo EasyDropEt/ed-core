@@ -1,12 +1,12 @@
+from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.contracts.infrastructure.persistence.abc_unit_of_work import (
-    ABCUnitOfWork,
-)
-from ed_core.application.features.business.requests.queries import GetBusinessQuery
-from ed_core.application.features.common.dtos.business_dto import BusinessDto, LocationDto
+from ed_core.application.features.business.requests.queries import \
+    GetBusinessQuery
+from ed_core.application.features.common.dtos.business_dto import (BusinessDto,
+                                                                   LocationDto)
 
 
 @request_handler(GetBusinessQuery, BaseResponse[BusinessDto])
@@ -15,13 +15,15 @@ class GetBusinessByUserIdQueryHandler(RequestHandler):
         self._uow = uow
 
     async def handle(self, request: GetBusinessQuery) -> BaseResponse[BusinessDto]:
-        if business := self._uow.business_repository.get(user_id=request.user_id):
+        if business := self._uow.business_repository.get(user_id=request.business_id):
             return BaseResponse[BusinessDto].success(
                 "Business fetched successfully.",
                 BusinessDto(
                     **business,
                     location=LocationDto(
-                        **self._uow.location_repository.get(id=business["location_id"]),  # type: ignore
+                        **self._uow.location_repository.get(
+                            id=business["location_id"],
+                        )  # type: ignore
                     ),
                 ),
             )

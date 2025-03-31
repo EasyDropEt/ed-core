@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import TypedDict
 from uuid import UUID
 
-from ed_domain.entities.route import WayPoint
+from ed_domain.core.entities.route import WayPoint
 
 
 class CreateRouteDto(TypedDict):
