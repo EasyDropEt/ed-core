@@ -20,8 +20,9 @@ python-dotenv = "^1.0.1"
 jsons = "^1.6.3"
 cloudinary = "^1.42.2"
 python-multipart = "^0.0.20"
-ed-domain = "^0.1.14"
+ed-domain = "^0.2.5"
 twine = "^6.1.0"
+ed-utility = "^0.1.0"
 
 
 [tool.poetry.group.test.dependencies]

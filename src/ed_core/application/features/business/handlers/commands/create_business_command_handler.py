@@ -1,15 +1,19 @@
 from datetime import UTC, datetime
 
-from ed_domain.entities import Business, Location
+from ed_domain.core.entities import Business, Location
+from ed_domain.core.repositories import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.contracts.infrastructure.persistence import ABCUnitOfWork
-from ed_core.application.features.business.dtos import CreateBusinessDto, CreateLocationDto
-from ed_core.application.features.business.dtos.validators import CreateBusinessDtoValidator
-from ed_core.application.features.business.requests.commands import CreateBusinessCommand
-from ed_core.application.features.common.dtos.business_dto import BusinessDto, LocationDto
+from ed_core.application.features.business.dtos import (CreateBusinessDto,
+                                                        CreateLocationDto)
+from ed_core.application.features.business.dtos.validators import \
+    CreateBusinessDtoValidator
+from ed_core.application.features.business.requests.commands import \
+    CreateBusinessCommand
+from ed_core.application.features.common.dtos.business_dto import (BusinessDto,
+                                                                   LocationDto)
 from ed_core.common.generic_helpers import get_new_id
 from ed_core.common.logging_helpers import get_logger
 
@@ -38,7 +42,6 @@ class CreateBusinessCommandHandler(RequestHandler):
                 **dto,  # type: ignore
                 id=get_new_id(),
                 location_id=location["id"],
-                user_id=dto["user_id"],
                 notification_ids=[],
                 active_status=True,
                 created_datetime=datetime.now(UTC),
@@ -61,5 +64,8 @@ class CreateBusinessCommandHandler(RequestHandler):
                 id=get_new_id(),
                 city="Addis Ababa",
                 country="Ethiopia",
+                create_datetime=datetime.now(UTC),
+                update_datetime=datetime.now(UTC),
+                deleted=False,
             )
         )

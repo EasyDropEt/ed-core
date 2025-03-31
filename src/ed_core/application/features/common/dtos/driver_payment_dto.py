@@ -2,7 +2,8 @@ from datetime import datetime
 from typing import TypedDict
 from uuid import UUID
 
-from ed_domain.entities.driver_payment import Detail, DriverPaymentStatus
+from ed_domain.core.entities.driver_payment import (DriverPaymentDetail,
+                                                    DriverPaymentStatus)
 
 
 class DriverPaymentDto(TypedDict):
@@ -10,4 +11,4 @@ class DriverPaymentDto(TypedDict):
     amount: float
     status: DriverPaymentStatus
     date: datetime
-    detail: Detail
+    detail: DriverPaymentDetail

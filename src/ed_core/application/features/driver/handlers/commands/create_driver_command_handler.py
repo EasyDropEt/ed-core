@@ -1,13 +1,14 @@
 from datetime import UTC, datetime
 
-from ed_domain.entities import Car, Driver, Location
+from ed_domain.core.entities import Car, Driver, Location
+from ed_domain.core.repositories import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.contracts.infrastructure.persistence import ABCUnitOfWork
-from ed_core.application.features.common.dtos.driver_dto import (CarDto, DriverDto,
-                                                             LocationDto)
+from ed_core.application.features.common.dtos.driver_dto import (CarDto,
+                                                                 DriverDto,
+                                                                 LocationDto)
 from ed_core.application.features.driver.dtos import CreateDriverDto
 from ed_core.application.features.driver.dtos.create_driver_dto import (
     CreateCarDto, CreateLocationDto)
@@ -53,8 +54,9 @@ class CreateDriverCommandHandler(RequestHandler):
                 delivery_job_ids=[],
                 payment_ids=[],
                 active_status=True,
-                created_datetime=datetime.now(UTC),
-                updated_datetime=datetime.now(UTC),
+                create_datetime=datetime.now(UTC),
+                update_datetime=datetime.now(UTC),
+                deleted=False,
             )
         )
 
@@ -82,5 +84,8 @@ class CreateDriverCommandHandler(RequestHandler):
                 id=get_new_id(),
                 city="Addis Ababa",
                 country="Ethiopia",
+                create_datetime=datetime.now(UTC),
+                update_datetime=datetime.now(UTC),
+                deleted=False,
             )
         )

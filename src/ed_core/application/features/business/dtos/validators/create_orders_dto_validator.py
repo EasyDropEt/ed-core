@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from ed_domain.entities.order import ParcelSize
+from ed_domain.core.entities.order import ParcelSize
 
 from ed_core.application.features.business.dtos.create_orders_dto import (
     CreateConsumerDto, CreateOrderDto, CreateOrdersDto)
