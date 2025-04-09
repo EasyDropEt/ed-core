@@ -23,6 +23,7 @@ class GetDriverQueryHandler(RequestHandler):
             return BaseResponse[DriverDto].success(
                 "Driver fetched successfully.",
                 DriverDto(
+                    id=driver["id"],
                     first_name=driver["first_name"],
                     last_name=driver["last_name"],
                     profile_image=driver["profile_image"],
