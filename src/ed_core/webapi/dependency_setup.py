@@ -1,5 +1,8 @@
 from typing import Annotated
 
+from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_utility.persistence.mongo_db.db_client import DbClient
+from ed_utility.persistence.mongo_db.unit_of_work import UnitOfWork
 from fastapi import Depends
 from rmediator.mediator import Mediator
 
@@ -9,8 +12,6 @@ from ed_core.application.contracts.infrastructure.message_queue.abc_producer imp
     ABCProducer
 from ed_core.application.contracts.infrastructure.message_queue.abc_subscriber import \
     ABCSubscriber
-from ed_core.application.contracts.infrastructure.persistence.abc_unit_of_work import \
-    ABCUnitOfWork
 from ed_core.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler, CreateOrdersCommandHandler)
 from ed_core.application.features.business.handlers.queries import (
@@ -41,16 +42,14 @@ from ed_core.application.features.driver.requests.queries import (
 from ed_core.common.generic_helpers import get_config
 from ed_core.common.typing.config import Config, TestMessage
 from ed_core.infrastructure.files.image_uploader import ImageUploader
-from ed_core.infrastructure.persistence.db_client import DbClient
-from ed_core.infrastructure.persistence.unit_of_work import UnitOfWork
 from ed_core.infrastructure.rabbitmq.producer import RabbitMQProducer
 from ed_core.infrastructure.rabbitmq.subscriber import RabbitMQSubscriber
 
 
-def get_image_uploader(config: Annotated[Config, Depends(get_config)]) -> ABCImageUploader:
-    return ImageUploader(
-        config["cloudinary"]
-    )
+def get_image_uploader(
+    config: Annotated[Config, Depends(get_config)],
+) -> ABCImageUploader:
+    return ImageUploader(config["cloudinary"])
 
 
 def get_db_client(config: Annotated[Config, Depends(get_config)]) -> DbClient:
@@ -102,7 +101,10 @@ def mediator(
         (GetDriverDeliveryJobsQuery, GetDriverDeliveryJobsQueryHandler(uow)),
         (GetDriverQuery, GetDriverQueryHandler(uow)),
         (GetAllDriversQuery, GetAllDriversQueryHandler(uow)),
-        (UploadDriverProfilePictureCommand, UploadDriverProfilePictureCommandHandler(uow, image_uploader)),
+        (
+            UploadDriverProfilePictureCommand,
+            UploadDriverProfilePictureCommandHandler(uow, image_uploader),
+        ),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
         (CreateOrdersCommand, CreateOrdersCommandHandler(uow, producer)),

@@ -1,7 +1,7 @@
 from typing import TypedDict
 from uuid import UUID
 
-from ed_domain.entities.business import BillingDetail
+from ed_domain.core.entities.business import BillingDetail
 
 from ed_core.application.features.business.dtos.create_location_dto import \
     CreateLocationDto

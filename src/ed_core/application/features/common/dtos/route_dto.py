@@ -1,13 +1,14 @@
 from datetime import datetime
 from typing import TypedDict
-from uuid import UUID
 
-from ed_domain.entities.route import WayPointAction
+from ed_domain.core.entities.route import WayPointType
+
+from ed_core.application.features.business.dtos.order_dto import OrderDto
 
 
 class WayPointDto(TypedDict):
-    location_id: UUID
-    action: WayPointAction
+    order: OrderDto
+    type: WayPointType
     eta: datetime
     sequence: int
 

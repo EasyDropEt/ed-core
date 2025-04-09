@@ -1,13 +1,12 @@
 from datetime import UTC, datetime
 
-from ed_domain.entities import DeliveryJob, Route
-from ed_domain.entities.delivery_job import DeliveryJobStatus
+from ed_domain.core.entities import DeliveryJob, Route
+from ed_domain.core.entities.delivery_job import DeliveryJobStatus
+from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.contracts.infrastructure.persistence.abc_unit_of_work import \
-    ABCUnitOfWork
 from ed_core.application.features.common.dtos import DeliveryJobDto
 from ed_core.application.features.common.dtos.route_dto import RouteDto
 from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
@@ -34,17 +33,20 @@ class CreateDeliveryJobCommandHandler(RequestHandler):
                 estimated_time_in_minutes=dto["route"]["estimated_time_in_minutes"],
                 create_datetime=datetime.now(UTC),
                 update_datetime=datetime.now(UTC),
+                deleted=False,
             )
         )
 
         delivery_job = self._uow.delivery_job_repository.create(
             DeliveryJob(
                 id=get_new_id(),
-                order_ids=dto["order_ids"],
                 route_id=route["id"],
                 status=DeliveryJobStatus.IN_PROGRESS,
                 estimated_payment=dto["estimated_payment"],
                 estimated_completion_time=dto["estimated_completion_time"],
+                create_datetime=datetime.now(UTC),
+                update_datetime=datetime.now(UTC),
+                deleted=False,
             )
         )
 
@@ -52,7 +54,6 @@ class CreateDeliveryJobCommandHandler(RequestHandler):
             "Delivery jobs created successfully.",
             DeliveryJobDto(
                 **delivery_job,  # type: ignore
-                orders=delivery_job["order_ids"],
                 route=RouteDto(**route),  # type: ignore
             ),
         )

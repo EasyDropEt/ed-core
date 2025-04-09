@@ -1,20 +1,19 @@
 from datetime import UTC, datetime
-from uuid import UUID
 
-from ed_domain.entities import Bill, Consumer, Location, Order
-from ed_domain.entities.order import OrderStatus
-from ed_domain.queues.order.order_model import (BusinessModel, ConsumerModel,
-                                                OrderModel)
+from ed_domain.core.entities import Bill, Consumer, Location, Order
+from ed_domain.core.entities.order import OrderStatus
+from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.core.value_objects.money import Currency, Money
+from ed_domain.queues.ed_optimization.order_model import (BusinessModel,
+                                                          ConsumerModel,
+                                                          OrderModel)
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.contracts.infrastructure.message_queue.abc_producer import \
     ABCProducer
-from ed_core.application.contracts.infrastructure.persistence.abc_unit_of_work import \
-    ABCUnitOfWork
 from ed_core.application.features.business.dtos import (CreateLocationDto,
-                                                        CreateOrdersDto,
                                                         OrderDto)
 from ed_core.application.features.business.dtos.create_orders_dto import \
     CreateConsumerDto
@@ -51,18 +50,21 @@ class CreateOrdersCommandHandler(RequestHandler):
         consumers = await self._create_or_get_consumers(
             [order["consumer"] for order in dto["orders"]]
         )
-        bill = await self._create_bill(business_id)
+        bill = await self._create_bill()
         created_orders = self._uow.order_repository.create_many(
             [
-                {
-                    "id": get_new_id(),
-                    "consumer_id": consumer["id"],
-                    "business_id": business_id,
-                    "bill_id": bill["id"],
-                    "latest_time_of_delivery": order["latest_time_of_delivery"],
-                    "parcel": order["parcel"],
-                    "order_status": OrderStatus.PENDING,
-                }
+                Order(
+                    id=get_new_id(),
+                    consumer_id=consumer["id"],
+                    business_id=business_id,
+                    bill_id=bill["id"],
+                    latest_time_of_delivery=order["latest_time_of_delivery"],
+                    parcel=order["parcel"],
+                    order_status=OrderStatus.PENDING,
+                    create_datetime=datetime.now(UTC),
+                    update_datetime=datetime.now(UTC),
+                    deleted=False,
+                )
                 for consumer, order in zip(consumers, dto["orders"])
             ]
         )
@@ -89,18 +91,25 @@ class CreateOrdersCommandHandler(RequestHandler):
                     **order,  # type: ignore
                     consumer=ConsumerModel(**consumer),  # type: ignore
                     business=BusinessModel(
-                        # type: ignore
-                        **self._uow.business_repository.get(id=order["business_id"])
+                        **self._uow.business_repository.get(
+                            id=order["business_id"],
+                        )  # type: ignore
                     ),
                 )
             )
 
-    async def _create_bill(self, business_id: UUID) -> Bill:
+    async def _create_bill(self) -> Bill:
         return self._uow.bill_repository.create(
             Bill(
                 id=get_new_id(),
-                business_id=business_id,
-                amount=10.0,
+                amount=Money(
+                    amount=10,
+                    currency=Currency.ETB,
+                ),
+                create_datetime=datetime.now(UTC),
+                update_datetime=datetime.now(UTC),
+                deleted=False,
+                paid=False,
             )
         )
 
@@ -134,5 +143,8 @@ class CreateOrdersCommandHandler(RequestHandler):
                 id=get_new_id(),
                 city="Addis Ababa",
                 country="Ethiopia",
+                create_datetime=datetime.now(UTC),
+                update_datetime=datetime.now(UTC),
+                deleted=False,
             )
         )
