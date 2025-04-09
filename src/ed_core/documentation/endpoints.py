@@ -77,6 +77,13 @@ class CoreEndpoint(BaseEndpoint):
                 "path_params": {"driver_id": str},
                 "response_model": DriverDto,
             },
+            {
+                "name": "claim_delivery_job",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/{{driver_id}}/claim/{{delivery_job_id}}",
+                "path_params": {"driver_id": str, "delivery_job_id": str},
+                "response_model": DeliveryJobDto,
+            },
             # Delivery job endpoints
             {
                 "name": "get_delivery_jobs",

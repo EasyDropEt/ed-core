@@ -28,7 +28,7 @@ async def get_delivery_jobs(
     return result
 
 
-@router.get("/{delivery_job_id}", response_model=GenericResponse[list[DeliveryJobDto]])
+@router.get("/{delivery_job_id}", response_model=GenericResponse[DeliveryJobDto])
 @rest_endpoint
 async def get_delivery_job(
     delivery_job_id: UUID,
