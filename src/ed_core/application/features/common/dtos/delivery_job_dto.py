@@ -12,6 +12,7 @@ from ed_core.application.features.common.dtos.route_dto import RouteDto
 class DeliveryJobDto(TypedDict):
     id: UUID
     route: RouteDto
+    driver_id: NotRequired[UUID]
     driver_payment: NotRequired[DriverPaymentDto]
     status: DeliveryJobStatus
     estimated_payment: float

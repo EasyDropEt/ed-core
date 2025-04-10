@@ -22,12 +22,12 @@ from ed_core.application.features.business.requests.commands import (
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
     GetBusinessQuery)
-from ed_core.application.features.delivery_job.handlers.commands import \
-    CreateDeliveryJobCommandHandler
+from ed_core.application.features.delivery_job.handlers.commands import (
+    ClaimDeliveryJobCommandHandler, CreateDeliveryJobCommandHandler)
 from ed_core.application.features.delivery_job.handlers.queries import (
     GetDeliveryJobQueryHandler, GetDeliveryJobsQueryHandler)
-from ed_core.application.features.delivery_job.requests.commands import \
-    CreateDeliveryJobCommand
+from ed_core.application.features.delivery_job.requests.commands import (
+    ClaimDeliveryJobCommand, CreateDeliveryJobCommand)
 from ed_core.application.features.delivery_job.requests.queries import (
     GetDeliveryJobQuery, GetDeliveryJobsQuery)
 from ed_core.application.features.driver.handlers.commands import (
@@ -94,6 +94,7 @@ def mediator(
     handlers = [
         # Delivery job handler
         (CreateDeliveryJobCommand, CreateDeliveryJobCommandHandler(uow)),
+        (ClaimDeliveryJobCommand, ClaimDeliveryJobCommandHandler(uow)),
         (GetDeliveryJobsQuery, GetDeliveryJobsQueryHandler(uow)),
         (GetDeliveryJobQuery, GetDeliveryJobQueryHandler(uow)),
         # Driver handlers
