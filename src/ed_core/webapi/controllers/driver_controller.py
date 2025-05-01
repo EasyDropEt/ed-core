@@ -15,7 +15,8 @@ from ed_core.application.features.driver.dtos import CreateDriverDto
 from ed_core.application.features.driver.requests.commands import (
     CreateDriverCommand, UploadDriverProfilePictureCommand)
 from ed_core.application.features.driver.requests.queries import (
-    GetAllDriversQuery, GetDriverDeliveryJobsQuery, GetDriverQuery)
+    GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
+    GetDriverQuery)
 from ed_core.common.logging_helpers import get_logger
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
@@ -67,13 +68,22 @@ async def upload_image(
     )
 
 
-@router.get("/{user_id}", response_model=GenericResponse[DriverDto])
+@router.get("/{driver_id}", response_model=GenericResponse[DriverDto])
+@rest_endpoint
+async def get_driver(
+    driver_id: UUID,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(GetDriverQuery(driver_id=driver_id))
+
+
+@router.get("/users/{user_id}", response_model=GenericResponse[DriverDto])
 @rest_endpoint
 async def get_driver_by_user_id(
     user_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetDriverQuery(user_id=user_id))
+    return await mediator.send(GetDriverByUserIdQuery(user_id=user_id))
 
 
 @router.post(

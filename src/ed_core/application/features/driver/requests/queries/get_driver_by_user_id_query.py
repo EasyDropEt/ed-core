@@ -10,5 +10,5 @@ from ed_core.application.features.common.dtos import DriverDto
 
 @request(BaseResponse[DriverDto])
 @dataclass
-class GetDriverQuery(Request):
-    driver_id: UUID
+class GetDriverByUserIdQuery(Request):
+    user_id: UUID
