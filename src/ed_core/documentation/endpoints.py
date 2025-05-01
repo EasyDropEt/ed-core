@@ -1,10 +1,14 @@
 from ed_domain.services.common.base_endpoint import BaseEndpoint
 from ed_domain.services.common.endpoint_description import EndpointDescription
 from ed_domain.services.common.http_method import HttpMethod
-from ed_domain.services.core.dtos import (BusinessDto, CreateBusinessDto,
-                                          CreateDriverDto, CreateOrderDto,
-                                          DeliveryJobDto, DriverDto, OrderDto)
-from ed_domain.services.core.dtos.create_delivery_job_dto import \
+
+from ed_core.application.features.business.dtos import (CreateBusinessDto,
+                                                        CreateOrderDto,
+                                                        OrderDto)
+from ed_core.application.features.common.dtos import (BusinessDto,
+                                                      DeliveryJobDto,
+                                                      DriverDto)
+from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
     CreateDeliveryJobDto
 
 
