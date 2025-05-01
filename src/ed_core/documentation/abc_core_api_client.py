@@ -65,8 +65,8 @@ class ABCCoreApiClient(metaclass=ABCMeta):
         self, business_id: str) -> ApiResponse[list[OrderDto]]: ...
 
     @abstractmethod
-    def create_business_order(
-        self, business_id: str, create_order_dto: CreateOrdersDto
+    def create_business_orders(
+        self, business_id: str, create_orders_dto: CreateOrdersDto
     ) -> ApiResponse[list[OrderDto]]: ...
 
     # Delivery job features
