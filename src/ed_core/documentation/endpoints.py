@@ -52,7 +52,7 @@ class CoreEndpoint(BaseEndpoint):
                 "response_model": list[OrderDto],
             },
             {
-                "name": "create_business_order",
+                "name": "create_business_orders",
                 "method": HttpMethod.POST,
                 "path": f"{self._base_url}/businesses/{{business_id}}/orders",
                 "path_params": {"business_id": str},

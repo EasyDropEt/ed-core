@@ -96,13 +96,14 @@ class CoreApiClient(ABCCoreApiClient):
         api_client = ApiClient[list[OrderDto]](endpoint)
         return api_client({"path_params": {"business_id": business_id}})
 
-    def create_business_order(
-        self, business_id: str, create_order_dto: CreateOrdersDto
-    ) -> ApiResponse[OrderDto]:
+    def create_business_orders(
+        self, business_id: str, create_orders_dto: CreateOrdersDto
+    ) -> ApiResponse[list[OrderDto]]:
         endpoint = self._endpoints.get_description("create_business_order")
-        api_client = ApiClient[OrderDto](endpoint)
+        api_client = ApiClient[list[OrderDto]](endpoint)
         return api_client(
-            {"path_params": {"business_id": business_id}, "request": create_order_dto}
+            {"path_params": {"business_id": business_id},
+                "request": create_orders_dto}
         )
 
     def get_delivery_jobs(self) -> ApiResponse[list[DeliveryJobDto]]:
