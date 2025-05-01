@@ -8,8 +8,9 @@ from ed_core.application.features.business.dtos import (CreateBusinessDto,
 from ed_core.application.features.common.dtos import (BusinessDto,
                                                       DeliveryJobDto,
                                                       DriverDto)
-from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
-    CreateDeliveryJobDto
+from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
+from src.ed_core.application.features.driver.dtos.create_driver_dto import \
+    CreateDriverDto
 
 
 class CoreEndpoint(BaseEndpoint):
@@ -54,6 +55,12 @@ class CoreEndpoint(BaseEndpoint):
             },
             # Driver endpoints
             {
+                "name": "get_drivers",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/drivers",
+                "response_model": list[DriverDto],
+            },
+            {
                 "name": "create_driver",
                 "method": HttpMethod.POST,
                 "path": f"{self._base_url}/drivers",
@@ -79,6 +86,13 @@ class CoreEndpoint(BaseEndpoint):
                 "method": HttpMethod.GET,
                 "path": f"{self._base_url}/drivers/{{driver_id}}",
                 "path_params": {"driver_id": str},
+                "response_model": DriverDto,
+            },
+            {
+                "name": "get_driver_by_user_id",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/drivers/users/{{user_id}}",
+                "path_params": {"user_id": str},
                 "response_model": DriverDto,
             },
             {

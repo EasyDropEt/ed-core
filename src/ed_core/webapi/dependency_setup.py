@@ -35,10 +35,14 @@ from ed_core.application.features.driver.handlers.commands import (
 from ed_core.application.features.driver.handlers.queries import (
     GetAllDriversQueryHandler, GetDriverDeliveryJobsQueryHandler,
     GetDriverQueryHandler)
+from ed_core.application.features.driver.handlers.queries.get_driver_by_user_id_query_handler import \
+    GetDriverByUserIdQueryHandler
 from ed_core.application.features.driver.requests.commands import (
     CreateDriverCommand, UploadDriverProfilePictureCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverDeliveryJobsQuery, GetDriverQuery)
+from ed_core.application.features.driver.requests.queries.get_driver_by_user_id_query import \
+    GetDriverByUserIdQuery
 from ed_core.common.generic_helpers import get_config
 from ed_core.common.typing.config import Config, TestMessage
 from ed_core.infrastructure.files.image_uploader import ImageUploader
@@ -101,6 +105,7 @@ def mediator(
         (CreateDriverCommand, CreateDriverCommandHandler(uow)),
         (GetDriverDeliveryJobsQuery, GetDriverDeliveryJobsQueryHandler(uow)),
         (GetDriverQuery, GetDriverQueryHandler(uow)),
+        (GetDriverByUserIdQuery, GetDriverByUserIdQueryHandler(uow)),
         (GetAllDriversQuery, GetAllDriversQueryHandler(uow)),
         (
             UploadDriverProfilePictureCommand,

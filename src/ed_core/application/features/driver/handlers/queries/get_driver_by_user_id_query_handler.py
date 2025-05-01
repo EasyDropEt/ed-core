@@ -8,18 +8,18 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.common.dtos import DriverDto
 from ed_core.application.features.common.dtos.business_dto import LocationDto
 from ed_core.application.features.common.dtos.car_dto import CarDto
-from ed_core.application.features.driver.requests.queries.get_driver_query import \
-    GetDriverQuery
+from ed_core.application.features.driver.requests.queries import \
+    GetDriverByUserIdQuery
 
 
-@request_handler(GetDriverQuery, BaseResponse[DriverDto])
+@request_handler(GetDriverByUserIdQuery, BaseResponse[DriverDto])
 @dataclass
-class GetDriverQueryHandler(RequestHandler):
+class GetDriverByUserIdQueryHandler(RequestHandler):
     def __init__(self, uow: ABCUnitOfWork):
         self._uow = uow
 
-    async def handle(self, request: GetDriverQuery) -> BaseResponse[DriverDto]:
-        if driver := self._uow.driver_repository.get(user_id=request.driver_id):
+    async def handle(self, request: GetDriverByUserIdQuery) -> BaseResponse[DriverDto]:
+        if driver := self._uow.driver_repository.get(user_id=request.user_id):
             return BaseResponse[DriverDto].success(
                 "Driver fetched successfully.",
                 DriverDto(
@@ -44,5 +44,5 @@ class GetDriverQueryHandler(RequestHandler):
 
         return BaseResponse[DriverDto].error(
             "Driver couldn't be fetched.",
-            [f"Driver with id {request.driver_id} does not exist."],
+            [f"Driver with id {request.user_id} does not exist."],
         )
