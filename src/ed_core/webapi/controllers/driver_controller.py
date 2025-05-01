@@ -68,7 +68,7 @@ async def upload_image(
     )
 
 
-@router.get("/{user_id}", response_model=GenericResponse[DriverDto])
+@router.get("/{driver_id}", response_model=GenericResponse[DriverDto])
 @rest_endpoint
 async def get_driver(
     driver_id: UUID,

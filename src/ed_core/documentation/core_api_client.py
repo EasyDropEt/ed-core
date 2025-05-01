@@ -46,7 +46,7 @@ class CoreApiClient(ABCCoreApiClient):
     def get_driver_by_user_id(self, user_id: str) -> ApiResponse[DriverDto]:
         endpoint = self._endpoints.get_description("get_driver_by_user_id")
         api_client = ApiClient[DriverDto](endpoint)
-        return api_client({"path_params": {"path_params": {"user_id": user_id}}})
+        return api_client({"path_params": {"user_id": user_id}})
 
     def get_driver(self, driver_id: str) -> ApiResponse[DriverDto]:
         endpoint = self._endpoints.get_description("get_driver")
@@ -61,10 +61,8 @@ class CoreApiClient(ABCCoreApiClient):
         return api_client(
             {
                 "path_params": {
-                    "path_params": {
-                        "driver_id": driver_id,
-                        "delivery_job_id": delivery_job_id,
-                    }
+                    "driver_id": driver_id,
+                    "delivery_job_id": delivery_job_id,
                 }
             }
         )
@@ -80,6 +78,11 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("create_business")
         api_client = ApiClient[BusinessDto](endpoint)
         return api_client({"request": create_business_dto})
+
+    def get_business_by_user_id(self, user_id: str) -> ApiResponse[BusinessDto]:
+        endpoint = self._endpoints.get_description("get_business_by_user_id")
+        api_client = ApiClient[BusinessDto](endpoint)
+        return api_client({"path_params": {"path_params": {"user_id": user_id}}})
 
     def get_business(self, business_id: str) -> ApiResponse[BusinessDto]:
         endpoint = self._endpoints.get_description("get_business")

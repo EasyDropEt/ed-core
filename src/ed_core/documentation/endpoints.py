@@ -3,14 +3,13 @@ from ed_domain.services.common.endpoint_description import EndpointDescription
 from ed_domain.services.common.http_method import HttpMethod
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateOrderDto,
+                                                        CreateOrdersDto,
                                                         OrderDto)
 from ed_core.application.features.common.dtos import (BusinessDto,
                                                       DeliveryJobDto,
                                                       DriverDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
-from src.ed_core.application.features.driver.dtos.create_driver_dto import \
-    CreateDriverDto
+from ed_core.application.features.driver.dtos import CreateDriverDto
 
 
 class CoreEndpoint(BaseEndpoint):
@@ -39,6 +38,13 @@ class CoreEndpoint(BaseEndpoint):
                 "response_model": BusinessDto,
             },
             {
+                "name": "get_business_by_user_id",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/businesses/users/{{user_id}}",
+                "path_params": {"user_id": str},
+                "response_model": BusinessDto,
+            },
+            {
                 "name": "get_business_orders",
                 "method": HttpMethod.GET,
                 "path": f"{self._base_url}/businesses/{{business_id}}/orders",
@@ -50,7 +56,7 @@ class CoreEndpoint(BaseEndpoint):
                 "method": HttpMethod.POST,
                 "path": f"{self._base_url}/businesses/{{business_id}}/orders",
                 "path_params": {"business_id": str},
-                "request_model": CreateOrderDto,
+                "request_model": CreateOrdersDto,
                 "response_model": OrderDto,
             },
             # Driver endpoints
