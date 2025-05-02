@@ -19,7 +19,7 @@ class GetDriverQueryHandler(RequestHandler):
         self._uow = uow
 
     async def handle(self, request: GetDriverQuery) -> BaseResponse[DriverDto]:
-        if driver := self._uow.driver_repository.get(user_id=request.driver_id):
+        if driver := self._uow.driver_repository.get(id=request.driver_id):
             return BaseResponse[DriverDto].success(
                 "Driver fetched successfully.",
                 DriverDto(
