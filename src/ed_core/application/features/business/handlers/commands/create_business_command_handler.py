@@ -6,8 +6,7 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateLocationDto)
+from ed_core.application.features.business.dtos import CreateLocationDto
 from ed_core.application.features.business.dtos.validators import \
     CreateBusinessDtoValidator
 from ed_core.application.features.business.requests.commands import \
@@ -33,19 +32,26 @@ class CreateBusinessCommandHandler(RequestHandler):
                 "Create business failed.", dto_validator.errors
             )
 
-        dto: CreateBusinessDto = request.dto
-
+        dto = request.dto
         location = await self._create_location(dto["location"])
 
         business = self._uow.business_repository.create(
             Business(
-                **dto,  # type: ignore
                 id=get_new_id(),
-                location_id=location["id"],
+                create_datetime=datetime.now(UTC),
+                update_datetime=datetime.now(UTC),
+                deleted=False,
+                user_id=dto["user_id"],
                 notification_ids=[],
                 active_status=True,
-                created_datetime=datetime.now(UTC),
-                updated_datetime=datetime.now(UTC),
+                business_name=dto["business_name"],
+                owner_first_name=dto["owner_first_name"],
+                owner_last_name=dto["owner_last_name"],
+                phone_number=dto["phone_number"],
+                email=dto["email"],
+                location_id=location["id"],
+                billing_details=[],
+                bills=[],
             )
         )
 

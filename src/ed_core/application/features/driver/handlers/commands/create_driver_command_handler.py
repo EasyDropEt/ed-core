@@ -9,7 +9,6 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.common.dtos.driver_dto import (CarDto,
                                                                  DriverDto,
                                                                  LocationDto)
-from ed_core.application.features.driver.dtos import CreateDriverDto
 from ed_core.application.features.driver.dtos.create_driver_dto import (
     CreateCarDto, CreateLocationDto)
 from ed_core.application.features.driver.dtos.validators import \
@@ -35,8 +34,7 @@ class CreateDriverCommandHandler(RequestHandler):
                 "Create driver failed.", dto_validator.errors
             )
 
-        dto: CreateDriverDto = request.dto
-
+        dto = request.dto
         car = await self._create_car(dto["car"])
         location = await self._create_location(dto["location"])
         driver = self._uow.driver_repository.create(
