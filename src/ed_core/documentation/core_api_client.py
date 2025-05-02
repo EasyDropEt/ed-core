@@ -51,7 +51,7 @@ class CoreApiClient(ABCCoreApiClient):
     def get_driver(self, driver_id: str) -> ApiResponse[DriverDto]:
         endpoint = self._endpoints.get_description("get_driver")
         api_client = ApiClient[DriverDto](endpoint)
-        return api_client({"path_params": {"path_params": {"driver_id": driver_id}}})
+        return api_client({"path_params": {"driver_id": driver_id}})
 
     def claim_delivery_job(
         self, driver_id: str, delivery_job_id: str
@@ -82,14 +82,12 @@ class CoreApiClient(ABCCoreApiClient):
     def get_business_by_user_id(self, user_id: str) -> ApiResponse[BusinessDto]:
         endpoint = self._endpoints.get_description("get_business_by_user_id")
         api_client = ApiClient[BusinessDto](endpoint)
-        return api_client({"path_params": {"path_params": {"user_id": user_id}}})
+        return api_client({"path_params": {"user_id": user_id}})
 
     def get_business(self, business_id: str) -> ApiResponse[BusinessDto]:
         endpoint = self._endpoints.get_description("get_business")
         api_client = ApiClient[BusinessDto](endpoint)
-        return api_client(
-            {"path_params": {"path_params": {"business_id": business_id}}}
-        )
+        return api_client({"path_params": {"business_id": business_id}})
 
     def get_business_orders(self, business_id: str) -> ApiResponse[list[OrderDto]]:
         endpoint = self._endpoints.get_description("get_business_orders")

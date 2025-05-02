@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
@@ -42,7 +43,8 @@ class GetDriverByUserIdQueryHandler(RequestHandler):
                 ),
             )
 
-        return BaseResponse[DriverDto].error(
-            "Driver couldn't be fetched.",
-            [f"Driver with id {request.user_id} does not exist."],
+        raise ApplicationException(
+            Exceptions.NotFoundException,
+            "Driver not found.",
+            [f"Buisness with id {request.user_id} not found."],
         )
