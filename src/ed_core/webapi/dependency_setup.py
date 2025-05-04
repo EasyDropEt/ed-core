@@ -43,6 +43,10 @@ from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverDeliveryJobsQuery, GetDriverQuery)
 from ed_core.application.features.driver.requests.queries.get_driver_by_user_id_query import \
     GetDriverByUserIdQuery
+from ed_core.application.features.order.handlers.queries import (
+    GetOrderQueryHandler, GetOrdersQueryHandler)
+from ed_core.application.features.order.requests.queries import (
+    GetOrderQuery, GetOrdersQuery)
 from ed_core.common.generic_helpers import get_config
 from ed_core.common.typing.config import Config, TestMessage
 from ed_core.infrastructure.files.image_uploader import ImageUploader
@@ -118,6 +122,9 @@ def mediator(
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),
         (GetAllBusinessQuery, GetAllBusinessesQueryHandler(uow)),
+        # Order handlers
+        (GetOrdersQuery, GetOrdersQueryHandler(uow)),
+        (GetOrderQuery, GetOrderQueryHandler(uow)),
     ]
     for command, handler in handlers:
         mediator.register_handler(command, handler)

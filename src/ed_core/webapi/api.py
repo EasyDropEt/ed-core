@@ -7,7 +7,8 @@ from ed_core.common.logging_helpers import get_logger
 from ed_core.common.singleton_helpers import SingletonMeta
 from ed_core.webapi.common.helpers import GenericResponse
 from ed_core.webapi.controllers import (business_controller,
-                                    delivery_job_controller, driver_controller)
+                                        delivery_job_controller,
+                                        driver_controller, order_controller)
 
 LOG = get_logger()
 
@@ -19,6 +20,12 @@ class API(FastAPI, metaclass=SingletonMeta):
 
     def start(self) -> None:
         LOG.info("Starting api...")
+        self._routers = [
+            business_controller.router,
+            driver_controller.router,
+            delivery_job_controller.router,
+            order_controller.router,
+        ]
         self._include_routers()
         self._contain_exceptions()
 
@@ -29,9 +36,8 @@ class API(FastAPI, metaclass=SingletonMeta):
 
     def _include_routers(self) -> None:
         LOG.info("Including routers...")
-        self.include_router(business_controller.router)
-        self.include_router(driver_controller.router)
-        self.include_router(delivery_job_controller.router)
+        for router in self._routers:
+            self.include_router(router)
 
     def _contain_exceptions(self) -> None:
         @self.exception_handler(ApplicationException)
