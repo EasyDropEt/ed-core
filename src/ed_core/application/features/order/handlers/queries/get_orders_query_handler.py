@@ -35,4 +35,4 @@ class GetOrdersQueryHandler(RequestHandler):
             raise ApplicationException(
                 Exceptions.InternalServerException, "Error fetching orders", [
                     str(e)]
-            )
+            ) from e
