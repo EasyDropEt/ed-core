@@ -33,16 +33,13 @@ from ed_core.application.features.delivery_job.requests.queries import (
 from ed_core.application.features.driver.handlers.commands import (
     CreateDriverCommandHandler, UploadDriverProfilePictureCommandHandler)
 from ed_core.application.features.driver.handlers.queries import (
-    GetAllDriversQueryHandler, GetDriverDeliveryJobsQueryHandler,
-    GetDriverQueryHandler)
-from ed_core.application.features.driver.handlers.queries.get_driver_by_user_id_query_handler import \
-    GetDriverByUserIdQueryHandler
+    GetAllDriversQueryHandler, GetDriverByUserIdQueryHandler,
+    GetDriverDeliveryJobsQueryHandler, GetDriverQueryHandler)
 from ed_core.application.features.driver.requests.commands import (
     CreateDriverCommand, UploadDriverProfilePictureCommand)
 from ed_core.application.features.driver.requests.queries import (
-    GetAllDriversQuery, GetDriverDeliveryJobsQuery, GetDriverQuery)
-from ed_core.application.features.driver.requests.queries.get_driver_by_user_id_query import \
-    GetDriverByUserIdQuery
+    GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
+    GetDriverQuery)
 from ed_core.application.features.order.handlers.queries import (
     GetOrderQueryHandler, GetOrdersQueryHandler)
 from ed_core.application.features.order.requests.queries import (

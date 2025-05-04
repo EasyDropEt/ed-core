@@ -3,10 +3,9 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.business.dtos.order_dto import (ConsumerDto,
-                                                                  OrderDto)
 from ed_core.application.features.business.requests.queries import \
     GetBusinessOrdersQuery
+from ed_core.application.features.common.dtos import ConsumerDto, OrderDto
 
 
 @request_handler(GetBusinessOrdersQuery, BaseResponse[list[OrderDto]])

@@ -3,7 +3,7 @@ from typing import TypedDict
 
 from ed_domain.core.entities.route import WayPointType
 
-from ed_core.application.features.business.dtos.order_dto import OrderDto
+from ed_core.application.features.common.dtos.order_dto import OrderDto
 
 
 class WayPointDto(TypedDict):

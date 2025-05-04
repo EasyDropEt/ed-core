@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
-from ed_core.application.features.order.dtos import OrderDto
+from ed_core.application.features.common.dtos import OrderDto
 from ed_core.application.features.order.requests.queries import (
     GetOrderQuery, GetOrdersQuery)
 from ed_core.common.logging_helpers import get_logger
@@ -17,17 +17,18 @@ router = APIRouter(prefix="/orders", tags=["Order Feature"])
 
 @router.get("", response_model=GenericResponse[list[OrderDto]])
 @rest_endpoint
-async def get_all_orders(
+async def get_orders(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    LOG.info("Satisfying get_all_orders request")
+    LOG.info("Satisfying get_orders request")
     return await mediator.send(GetOrdersQuery())
 
 
 @router.get("/{order_id}", response_model=GenericResponse[OrderDto])
 @rest_endpoint
-async def driver_delivery_jobs(
+async def get_order(
     order_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
+    LOG.info("Satisfying get_order request")
     return await mediator.send(GetOrderQuery(order_id=order_id))

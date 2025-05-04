@@ -1,10 +1,10 @@
+from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.order.dtos import OrderDto
-from ed_core.application.features.order.dtos.order_dto import ConsumerDto
+from ed_core.application.features.common.dtos import ConsumerDto, OrderDto
 from ed_core.application.features.order.requests.queries import GetOrderQuery
 
 
@@ -18,7 +18,7 @@ class GetOrderQueryHandler(RequestHandler):
             return BaseResponse[OrderDto].success(
                 "Order fetched successfully.",
                 OrderDto(
-                    business_id=order["business_id"],
+                    **order,
                     consumer=ConsumerDto(
                         **self._uow.consumer_repository.get(
                             id=order["consumer_id"],
@@ -27,7 +27,8 @@ class GetOrderQueryHandler(RequestHandler):
                 ),
             )
 
-        return BaseResponse[OrderDto].error(
+        raise ApplicationException(
+            Exceptions.NotFoundException,
             "Order not found.",
             [f"Buisness with id {request.order_id} not found."],
         )
