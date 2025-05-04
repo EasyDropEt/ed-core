@@ -3,11 +3,10 @@ from abc import ABCMeta, abstractmethod
 from ed_domain.services.common.api_response import ApiResponse
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateOrdersDto,
-                                                        OrderDto)
+                                                        CreateOrdersDto)
 from ed_core.application.features.common.dtos import (BusinessDto,
                                                       DeliveryJobDto,
-                                                      DriverDto)
+                                                      DriverDto, OrderDto)
 from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
     CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import CreateDriverDto
@@ -81,3 +80,10 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     def create_delivery_job(
         self, create_delivery_job_dto: CreateDeliveryJobDto
     ) -> ApiResponse[DeliveryJobDto]: ...
+
+    # Order features
+    @abstractmethod
+    def get_orders(self) -> ApiResponse[list[OrderDto]]: ...
+
+    @abstractmethod
+    def get_order(self, order_id: str) -> ApiResponse[OrderDto]: ...

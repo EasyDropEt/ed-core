@@ -5,8 +5,7 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.business.dtos.order_dto import OrderDto
-from ed_core.application.features.common.dtos import DeliveryJobDto
+from ed_core.application.features.common.dtos import DeliveryJobDto, OrderDto
 from ed_core.application.features.common.dtos.route_dto import (RouteDto,
                                                                 WayPointDto)
 from ed_core.application.features.delivery_job.requests.queries.get_delivery_jobs_query import \

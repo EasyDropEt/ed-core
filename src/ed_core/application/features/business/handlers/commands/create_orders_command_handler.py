@@ -13,15 +13,14 @@ from rmediator.types import RequestHandler
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.contracts.infrastructure.message_queue.abc_producer import \
     ABCProducer
-from ed_core.application.features.business.dtos import (CreateLocationDto,
-                                                        OrderDto)
+from ed_core.application.features.business.dtos import CreateLocationDto
 from ed_core.application.features.business.dtos.create_orders_dto import \
     CreateConsumerDto
-from ed_core.application.features.business.dtos.order_dto import ConsumerDto
 from ed_core.application.features.business.dtos.validators.create_orders_dto_validator import \
     CreateOrdersDtoValidator
 from ed_core.application.features.business.requests.commands import \
     CreateOrdersCommand
+from ed_core.application.features.common.dtos import ConsumerDto, OrderDto
 from ed_core.common.generic_helpers import get_new_id
 from ed_core.common.logging_helpers import get_logger
 
