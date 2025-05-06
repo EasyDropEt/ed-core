@@ -6,9 +6,11 @@ from ed_core.application.features.common.dtos import (BusinessDto,
                                                       DeliveryJobDto,
                                                       DriverDto, OrderDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
-from ed_core.application.features.driver.dtos import CreateDriverDto
+from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      UpdateDriverDto)
 from ed_core.common.api_helpers import ApiClient
-from ed_core.documentation.abc_core_api_client import ABCCoreApiClient
+from ed_core.documentation.abc_core_api_client import (ABCCoreApiClient,
+                                                       UpdateBusinessDto)
 from ed_core.documentation.endpoints import CoreEndpoint
 
 
@@ -47,6 +49,15 @@ class CoreApiClient(ABCCoreApiClient):
         api_client = ApiClient[DriverDto](endpoint)
         return api_client({"path_params": {"driver_id": driver_id}})
 
+    def update_driver(
+        self, driver_id: str, update_driver_dto: UpdateDriverDto
+    ) -> ApiResponse[DriverDto]:
+        endpoint = self._endpoints.get_description("update_driver")
+        api_client = ApiClient[DriverDto](endpoint)
+        return api_client(
+            {"path_params": {"driver_id": driver_id}, "request": update_driver_dto}
+        )
+
     def claim_delivery_job(
         self, driver_id: str, delivery_job_id: str
     ) -> ApiResponse[DeliveryJobDto]:
@@ -83,6 +94,19 @@ class CoreApiClient(ABCCoreApiClient):
         api_client = ApiClient[BusinessDto](endpoint)
         return api_client({"path_params": {"business_id": business_id}})
 
+    def update_business(
+        self, business_id: str, update_business_dto: UpdateBusinessDto
+    ) -> ApiResponse[BusinessDto]:
+
+        endpoint = self._endpoints.get_description("get_business")
+        api_client = ApiClient[BusinessDto](endpoint)
+        return api_client(
+            {
+                "path_params": {"business_id": business_id},
+                "request": update_business_dto,
+            }
+        )
+
     def get_business_orders(self, business_id: str) -> ApiResponse[list[OrderDto]]:
         endpoint = self._endpoints.get_description("get_business_orders")
         api_client = ApiClient[list[OrderDto]](endpoint)
@@ -114,3 +138,13 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("create_delivery_job")
         api_client = ApiClient[DeliveryJobDto](endpoint)
         return api_client({"request": create_delivery_job_dto})
+
+    def get_order(self, order_id: str) -> ApiResponse[OrderDto]:
+        endpoint = self._endpoints.get_description("get_order")
+        api_client = ApiClient[OrderDto](endpoint)
+        return api_client({"path_params": {"order_id": order_id}})
+
+    def get_orders(self) -> ApiResponse[list[OrderDto]]:
+        endpoint = self._endpoints.get_description("get_orders")
+        api_client = ApiClient[list[OrderDto]](endpoint)
+        return api_client({})
