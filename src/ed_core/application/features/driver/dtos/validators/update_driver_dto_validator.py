@@ -30,7 +30,7 @@ class UpdateCarDtoValidator(ABCDtoValidator[UpdateCarDto]):
     def validate(self, dto: UpdateCarDto) -> ValidationResponse:
         errors = []
 
-        if not dto["model"]:
+        if not dto.get("model"):
             errors.append("Model is required")
 
         if not dto["make"]:
