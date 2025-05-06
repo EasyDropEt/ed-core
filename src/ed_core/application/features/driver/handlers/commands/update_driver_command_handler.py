@@ -63,7 +63,7 @@ class UpdateDriverCommandHandler(RequestHandler):
 
             car = self._uow.car_repository.get(id=driver["car_id"])
             return BaseResponse[DriverDto].success(
-                "Driver created successfully.",
+                "Driver updated successfully.",
                 DriverDto(
                     **driver,  # type: ignore
                     car=CarDto(
