@@ -630,27 +630,27 @@ pgp = ["gpg"]
 
 [[package]]
 name = "ed-domain"
-version = "0.2.5"
+version = "0.2.17"
 description = "EasyDrop domain model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_domain-0.2.5-py3-none-any.whl", hash = "sha256:92c936c4a7b555130ef75244c314e5214f36522a8b48cccb0d5f2dd0f2a4fa5b"},
+    {file = "ed_domain-0.2.17-py3-none-any.whl", hash = "sha256:20d822fae227142276c16e8a8ce578fe42197b18ee6d6fde7ea8c100ec367d53"},
 ]
 
 [package.extras]
 dev = ["check-manifest"]
 
 [[package]]
-name = "ed-utility"
-version = "0.1.0"
-description = "EasyDrop utils Package"
+name = "ed-infrastructure"
+version = "0.1.7"
+description = "EasyDrop infrastructure Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_utility-0.1.0-py3-none-any.whl", hash = "sha256:4833400f8e4b215fedccf7665f13c34c75f169e714183945d1e2413de5a1bcb4"},
+    {file = "ed_infrastructure-0.1.7-py3-none-any.whl", hash = "sha256:170d2ef1a1607b83ddfdf23c002433d9e13f47074b7459f10a4e214ff713b7a0"},
 ]
 
 [package.extras]
@@ -2848,4 +2848,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "5b8ac7a5add4d8c9f6290c3c363e7579bf6e660dfa077d5808d3a87ea246e748"
+content-hash = "840126de24107e72d775fbfcb632a5d4b5a6567b596124405d73432ed34f3199"

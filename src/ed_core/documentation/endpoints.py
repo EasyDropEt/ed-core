@@ -1,6 +1,7 @@
-from ed_domain.services.common.base_endpoint import BaseEndpoint
-from ed_domain.services.common.endpoint_description import EndpointDescription
-from ed_domain.services.common.http_method import HttpMethod
+from ed_domain.documentation.common.base_endpoint import BaseEndpoint
+from ed_domain.documentation.common.endpoint_description import \
+    EndpointDescription
+from ed_domain.documentation.common.http_method import HttpMethod
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrdersDto)
@@ -78,13 +79,6 @@ class CoreEndpoint(BaseEndpoint):
                 "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs",
                 "path_params": {"driver_id": str},
                 "response_model": list[DeliveryJobDto],
-            },
-            {
-                "name": "upload_driver_profile",
-                "method": HttpMethod.POST,
-                "path": f"{self._base_url}/drivers/{{driver_id}}/upload",
-                "path_params": {"driver_id": str},
-                "response_model": DriverDto,
             },
             {
                 "name": "get_driver",

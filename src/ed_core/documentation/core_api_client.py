@@ -1,4 +1,4 @@
-from ed_domain.services.common.api_response import ApiResponse
+from ed_domain.documentation.common.api_response import ApiResponse
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrdersDto)
@@ -35,11 +35,6 @@ class CoreApiClient(ABCCoreApiClient):
     ) -> ApiResponse[list[DeliveryJobDto]]:
         endpoint = self._endpoints.get_description("get_driver_delivery_jobs")
         api_client = ApiClient[list[DeliveryJobDto]](endpoint)
-        return api_client({"path_params": {"driver_id": driver_id}})
-
-    def upload_driver_profile(self, driver_id: str) -> ApiResponse[DriverDto]:
-        endpoint = self._endpoints.get_description("upload_driver_profile")
-        api_client = ApiClient[DriverDto](endpoint)
         return api_client({"path_params": {"driver_id": driver_id}})
 
     def get_driver_by_user_id(self, user_id: str) -> ApiResponse[DriverDto]:

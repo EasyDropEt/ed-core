@@ -1,24 +1,23 @@
 from typing import Annotated
 
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
-from ed_utility.persistence.mongo_db.db_client import DbClient
-from ed_utility.persistence.mongo_db.unit_of_work import UnitOfWork
+from ed_infrastructure.persistence.mongo_db.db_client import DbClient
+from ed_infrastructure.persistence.mongo_db.unit_of_work import UnitOfWork
 from fastapi import Depends
 from rmediator.mediator import Mediator
 
-from ed_core.application.contracts.infrastructure.files.abc_image_uploader import \
-    ABCImageUploader
 from ed_core.application.contracts.infrastructure.message_queue.abc_producer import \
     ABCProducer
 from ed_core.application.contracts.infrastructure.message_queue.abc_subscriber import \
     ABCSubscriber
 from ed_core.application.features.business.handlers.commands import (
-    CreateBusinessCommandHandler, CreateOrdersCommandHandler)
+    CreateBusinessCommandHandler, CreateOrdersCommandHandler,
+    UpdateBusinessCommandHandler)
 from ed_core.application.features.business.handlers.queries import (
     GetAllBusinessesQueryHandler, GetBusinessByUserIdQueryHandler,
     GetBusinessOrdersQueryHandler, GetBusinessQueryHandler)
 from ed_core.application.features.business.requests.commands import (
-    CreateBusinessCommand, CreateOrdersCommand)
+    CreateBusinessCommand, CreateOrdersCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
     GetBusinessQuery)
@@ -31,12 +30,12 @@ from ed_core.application.features.delivery_job.requests.commands import (
 from ed_core.application.features.delivery_job.requests.queries import (
     GetDeliveryJobQuery, GetDeliveryJobsQuery)
 from ed_core.application.features.driver.handlers.commands import (
-    CreateDriverCommandHandler, UploadDriverProfilePictureCommandHandler)
+    CreateDriverCommandHandler, UpdateDriverCommandHandler)
 from ed_core.application.features.driver.handlers.queries import (
     GetAllDriversQueryHandler, GetDriverByUserIdQueryHandler,
     GetDriverDeliveryJobsQueryHandler, GetDriverQueryHandler)
 from ed_core.application.features.driver.requests.commands import (
-    CreateDriverCommand, UploadDriverProfilePictureCommand)
+    CreateDriverCommand, UpdateDriverCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
     GetDriverQuery)
@@ -46,15 +45,8 @@ from ed_core.application.features.order.requests.queries import (
     GetOrderQuery, GetOrdersQuery)
 from ed_core.common.generic_helpers import get_config
 from ed_core.common.typing.config import Config, TestMessage
-from ed_core.infrastructure.files.image_uploader import ImageUploader
 from ed_core.infrastructure.rabbitmq.producer import RabbitMQProducer
 from ed_core.infrastructure.rabbitmq.subscriber import RabbitMQSubscriber
-
-
-def get_image_uploader(
-    config: Annotated[Config, Depends(get_config)],
-) -> ABCImageUploader:
-    return ImageUploader(config["cloudinary"])
 
 
 def get_db_client(config: Annotated[Config, Depends(get_config)]) -> DbClient:
@@ -90,7 +82,6 @@ def get_subscriber(config: Annotated[Config, Depends(get_config)]) -> ABCSubscri
 
 
 def mediator(
-    image_uploader: Annotated[ABCImageUploader, Depends(get_image_uploader)],
     uow: Annotated[ABCUnitOfWork, Depends(get_uow)],
     producer: Annotated[ABCProducer, Depends(get_producer)],
 ) -> Mediator:
@@ -108,10 +99,7 @@ def mediator(
         (GetDriverQuery, GetDriverQueryHandler(uow)),
         (GetDriverByUserIdQuery, GetDriverByUserIdQueryHandler(uow)),
         (GetAllDriversQuery, GetAllDriversQueryHandler(uow)),
-        (
-            UploadDriverProfilePictureCommand,
-            UploadDriverProfilePictureCommandHandler(uow, image_uploader),
-        ),
+        (UpdateDriverCommand, UpdateDriverCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
         (CreateOrdersCommand, CreateOrdersCommandHandler(uow, producer)),
@@ -119,6 +107,7 @@ def mediator(
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),
         (GetAllBusinessQuery, GetAllBusinessesQueryHandler(uow)),
+        (UpdateBusinessCommand, UpdateBusinessCommandHandler(uow)),
         # Order handlers
         (GetOrdersQuery, GetOrdersQueryHandler(uow)),
         (GetOrderQuery, GetOrderQueryHandler(uow)),
