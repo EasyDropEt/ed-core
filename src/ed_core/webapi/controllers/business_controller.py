@@ -5,9 +5,10 @@ from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateOrdersDto)
+                                                        CreateOrdersDto,
+                                                        UpdateBusinessDto)
 from ed_core.application.features.business.requests.commands import (
-    CreateBusinessCommand, CreateOrdersCommand)
+    CreateBusinessCommand, CreateOrdersCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
     GetBusinessQuery)
@@ -36,6 +37,16 @@ async def create_business(
 ):
     LOG.info(f"Satisfying request {request_dto}")
     return await mediator.send(CreateBusinessCommand(dto=request_dto))
+
+
+@router.put("/{business_id}", response_model=GenericResponse[BusinessDto])
+@rest_endpoint
+async def update_business(
+    business_id: UUID,
+    dto: UpdateBusinessDto,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(UpdateBusinessCommand(id=business_id, dto=dto))
 
 
 @router.get("/{business_id}", response_model=GenericResponse[BusinessDto])

@@ -1,19 +1,18 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends
 from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
-from ed_core.application.contracts.infrastructure.files.abc_image_uploader import \
-    InputImage
 from ed_core.application.features.common.dtos.delivery_job_dto import \
     DeliveryJobDto
 from ed_core.application.features.common.dtos.driver_dto import DriverDto
 from ed_core.application.features.delivery_job.requests.commands import \
     ClaimDeliveryJobCommand
-from ed_core.application.features.driver.dtos import CreateDriverDto
+from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      UpdateDriverDto)
 from ed_core.application.features.driver.requests.commands import (
-    CreateDriverCommand, UploadDriverProfilePictureCommand)
+    CreateDriverCommand, UpdateDriverCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
     GetDriverQuery)
@@ -55,19 +54,6 @@ async def driver_delivery_jobs(
     return await mediator.send(GetDriverDeliveryJobsQuery(driver_id=driver_id))
 
 
-@router.post("/{driver_id}/upload", response_model=GenericResponse[DriverDto])
-@rest_endpoint
-async def upload_image(
-    driver_id: UUID,
-    file: UploadFile,
-    mediator: Annotated[Mediator, Depends(mediator)],
-):
-    return await mediator.send(
-        UploadDriverProfilePictureCommand(
-            id=driver_id, file=InputImage(file.file))
-    )
-
-
 @router.get("/{driver_id}", response_model=GenericResponse[DriverDto])
 @rest_endpoint
 async def get_driver(
@@ -75,6 +61,16 @@ async def get_driver(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(GetDriverQuery(driver_id=driver_id))
+
+
+@router.put("/{driver_id}", response_model=GenericResponse[DriverDto])
+@rest_endpoint
+async def update_driver(
+    driver_id: UUID,
+    dto: UpdateDriverDto,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(UpdateDriverCommand(driver_id=driver_id, dto=dto))
 
 
 @router.get("/users/{user_id}", response_model=GenericResponse[DriverDto])

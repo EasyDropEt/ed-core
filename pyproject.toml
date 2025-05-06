@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ed-core"
-version = "0.1.15"
+version = "0.1.16"
 description = ""
 authors = ["ffekirnew <ffekirnew0808@gmail.com>"]
 license = "MIT"
@@ -20,9 +20,9 @@ python-dotenv = "^1.0.1"
 jsons = "^1.6.3"
 cloudinary = "^1.42.2"
 python-multipart = "^0.0.20"
-ed-domain = "^0.2.5"
+ed-domain = "^0.2.17"
 twine = "^6.1.0"
-ed-utility = "^0.1.0"
+ed-infrastructure = "^0.1.7"
 
 
 [tool.poetry.group.test.dependencies]

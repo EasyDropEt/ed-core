@@ -1,15 +1,17 @@
 from abc import ABCMeta, abstractmethod
 
-from ed_domain.services.common.api_response import ApiResponse
+from ed_domain.documentation.common.api_response import ApiResponse
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateOrdersDto)
+                                                        CreateOrdersDto,
+                                                        UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto,
                                                       DeliveryJobDto,
                                                       DriverDto, OrderDto)
 from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
     CreateDeliveryJobDto
-from ed_core.application.features.driver.dtos import CreateDriverDto
+from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      UpdateDriverDto)
 
 
 class ABCCoreApiClient(metaclass=ABCMeta):
@@ -28,11 +30,12 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     ) -> ApiResponse[list[DeliveryJobDto]]: ...
 
     @abstractmethod
-    def upload_driver_profile(
-        self, driver_id: str) -> ApiResponse[DriverDto]: ...
+    def get_driver(self, driver_id: str) -> ApiResponse[DriverDto]: ...
 
     @abstractmethod
-    def get_driver(self, driver_id: str) -> ApiResponse[DriverDto]: ...
+    def update_driver(
+        self, driver_id: str, update_driver_dto: UpdateDriverDto
+    ) -> ApiResponse[DriverDto]: ...
 
     @abstractmethod
     def get_driver_by_user_id(
@@ -54,6 +57,11 @@ class ABCCoreApiClient(metaclass=ABCMeta):
 
     @abstractmethod
     def get_business(self, business_id: str) -> ApiResponse[BusinessDto]: ...
+
+    @abstractmethod
+    def update_business(
+        self, business_id: str, update_business_dto: UpdateBusinessDto
+    ) -> ApiResponse[BusinessDto]: ...
 
     @abstractmethod
     def get_business_by_user_id(
