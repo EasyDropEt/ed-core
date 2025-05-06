@@ -630,13 +630,13 @@ pgp = ["gpg"]
 
 [[package]]
 name = "ed-domain"
-version = "0.2.18"
+version = "0.2.20"
 description = "EasyDrop domain model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_domain-0.2.18-py3-none-any.whl", hash = "sha256:dacec7f504127b8ff34ed7153f0411fb738f9c11dcacf14d0335c5492fc9af1b"},
+    {file = "ed_domain-0.2.20-py3-none-any.whl", hash = "sha256:e045cd424c3d76189a4dc8d60be158fa39bdc332d0a2706dbf1cb4ae3aef99f2"},
 ]
 
 [package.extras]
@@ -2848,4 +2848,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "931be89a7bcaa0ae54cdd3aca1c3600bc987ac47034325e3ff04c1d4f93585f7"
+content-hash = "4ba2fce579eceeb132481dfc906bbd5bd9412b6d3aa7a514af11ab90c73b557d"
