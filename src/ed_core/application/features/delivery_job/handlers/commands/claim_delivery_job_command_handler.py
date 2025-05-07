@@ -10,7 +10,7 @@ from ed_core.application.features.common.dtos.route_dto import (RouteDto,
                                                                 WayPointDto)
 from ed_core.application.features.delivery_job.requests.commands.claim_delivery_job_command import \
     ClaimDeliveryJobCommand
-from ed_core.common.exception_helpers import ApplicationException, Exceptions
+from ed_domain.common.exceptioins import ApplicationException, Exceptions
 
 
 @request_handler(ClaimDeliveryJobCommand, BaseResponse[DeliveryJobDto])

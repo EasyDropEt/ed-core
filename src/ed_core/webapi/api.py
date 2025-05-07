@@ -1,8 +1,8 @@
 import uvicorn
+from ed_domain.common.exceptions import ApplicationException
 from fastapi import FastAPI, Request
 from starlette.responses import JSONResponse
 
-from ed_core.common.exception_helpers import ApplicationException
 from ed_core.common.logging_helpers import get_logger
 from ed_core.common.singleton_helpers import SingletonMeta
 from ed_core.webapi.common.helpers import GenericResponse

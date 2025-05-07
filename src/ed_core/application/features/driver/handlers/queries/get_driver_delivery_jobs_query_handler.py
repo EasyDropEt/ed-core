@@ -7,7 +7,7 @@ from ed_core.application.features.common.dtos import DeliveryJobDto
 from ed_core.application.features.common.dtos.route_dto import RouteDto
 from ed_core.application.features.driver.requests.queries.get_driver_delivery_jobs_query import \
     GetDriverDeliveryJobsQuery
-from ed_core.common.exception_helpers import ApplicationException, Exceptions
+from ed_domain.common.exceptioins import ApplicationException, Exceptions
 
 
 @request_handler(GetDriverDeliveryJobsQuery, BaseResponse[list[DeliveryJobDto]])

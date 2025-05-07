@@ -29,7 +29,6 @@ router = APIRouter(prefix="/drivers", tags=["Driver Feature"])
 async def get_all_drivers(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    LOG.info("Satisfying get_all_drivers request")
     return await mediator.send(GetAllDriversQuery())
 
 
@@ -39,7 +38,6 @@ async def create_driver(
     request_dto: CreateDriverDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    LOG.info(f"Satisfying request {request_dto}")
     return await mediator.send(CreateDriverCommand(dto=request_dto))
 
 
