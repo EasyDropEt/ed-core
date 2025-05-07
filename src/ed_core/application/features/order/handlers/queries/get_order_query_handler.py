@@ -17,14 +17,7 @@ class GetOrderQueryHandler(RequestHandler):
         if order := self._uow.order_repository.get(id=request.order_id):
             return BaseResponse[OrderDto].success(
                 "Order fetched successfully.",
-                OrderDto(
-                    **order,
-                    consumer=ConsumerDto(
-                        **self._uow.consumer_repository.get(
-                            id=order["consumer_id"],
-                        )  # type: ignore
-                    ),
-                ),
+                OrderDto.from_order(order, self._uow),
             )
 
         raise ApplicationException(

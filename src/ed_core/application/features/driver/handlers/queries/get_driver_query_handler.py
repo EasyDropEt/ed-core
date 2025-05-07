@@ -22,24 +22,7 @@ class GetDriverQueryHandler(RequestHandler):
         if driver := self._uow.driver_repository.get(id=request.driver_id):
             return BaseResponse[DriverDto].success(
                 "Driver fetched successfully.",
-                DriverDto(
-                    id=driver["id"],
-                    first_name=driver["first_name"],
-                    last_name=driver["last_name"],
-                    profile_image=driver["profile_image"],
-                    phone_number=driver["phone_number"],
-                    email=driver.get("email", ""),
-                    car=CarDto(
-                        **self._uow.car_repository.get(
-                            id=driver["car_id"],
-                        ),  # type: ignore
-                    ),
-                    location=LocationDto(
-                        **self._uow.location_repository.get(
-                            id=driver["location_id"],
-                        )  # type: ignore
-                    ),
-                ),
+                DriverDto.from_driver(driver, self._uow),
             )
 
         return BaseResponse[DriverDto].error(

@@ -5,7 +5,7 @@ from rmediator.types import RequestHandler
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.business.requests.queries import \
     GetBusinessOrdersQuery
-from ed_core.application.features.common.dtos import ConsumerDto, OrderDto
+from ed_core.application.features.common.dtos import OrderDto
 
 
 @request_handler(GetBusinessOrdersQuery, BaseResponse[list[OrderDto]])
@@ -19,14 +19,7 @@ class GetBusinessOrdersQueryHandler(RequestHandler):
         return BaseResponse[list[OrderDto]].success(
             "Orders fetched successfully.",
             [
-                OrderDto(
-                    **order,
-                    consumer=ConsumerDto(
-                        **self._uow.consumer_repository.get(
-                            id=order["consumer_id"],
-                        )  # type: ignore
-                    ),
-                )
+                OrderDto.from_order(order, self._uow)
                 for order in self._uow.order_repository.get_all(
                     business_id=request.business_id
                 )

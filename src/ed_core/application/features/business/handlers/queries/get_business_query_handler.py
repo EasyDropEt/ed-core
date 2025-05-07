@@ -5,7 +5,7 @@ from rmediator.types import RequestHandler
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.business.requests.queries import \
     GetBusinessQuery
-from ed_core.application.features.common.dtos import BusinessDto, LocationDto
+from ed_core.application.features.common.dtos import BusinessDto
 
 
 @request_handler(GetBusinessQuery, BaseResponse[BusinessDto])
@@ -17,14 +17,7 @@ class GetBusinessQueryHandler(RequestHandler):
         if business := self._uow.business_repository.get(id=request.business_id):
             return BaseResponse[BusinessDto].success(
                 "Business fetched successfully.",
-                BusinessDto(
-                    **business,
-                    location=LocationDto(
-                        **self._uow.location_repository.get(
-                            id=business["location_id"],
-                        ),  # type: ignore
-                    ),
-                ),
+                BusinessDto.from_business(business, self._uow),
             )
 
         return BaseResponse[BusinessDto].error(

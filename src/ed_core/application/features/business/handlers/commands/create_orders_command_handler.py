@@ -20,7 +20,7 @@ from ed_core.application.features.business.dtos.validators.create_orders_dto_val
     CreateOrdersDtoValidator
 from ed_core.application.features.business.requests.commands import \
     CreateOrdersCommand
-from ed_core.application.features.common.dtos import ConsumerDto, OrderDto
+from ed_core.application.features.common.dtos import OrderDto
 from ed_core.common.generic_helpers import get_new_id
 from ed_core.common.logging_helpers import get_logger
 
@@ -72,13 +72,8 @@ class CreateOrdersCommandHandler(RequestHandler):
 
         return BaseResponse[list[OrderDto]].success(
             "Order created successfully.",
-            [
-                OrderDto(
-                    **order,
-                    consumer=ConsumerDto(**consumer),  # type: ignore
-                )
-                for order, consumer in zip(created_orders, consumers)
-            ],
+            [OrderDto.from_order(order, self._uow)
+             for order in created_orders],
         )
 
     async def _publish_orders(

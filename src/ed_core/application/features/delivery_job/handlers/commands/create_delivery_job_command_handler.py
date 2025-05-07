@@ -8,6 +8,9 @@ from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.common.dtos import DeliveryJobDto
+from ed_core.application.features.common.dtos.delivery_job_dto import \
+    WayPointDto
+from ed_core.application.features.common.dtos.order_dto import OrderDto
 from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
     CreateDeliveryJobDto
 from ed_core.application.features.delivery_job.requests.commands.create_delivery_job_command import \
@@ -42,5 +45,5 @@ class CreateDeliveryJobCommandHandler(RequestHandler):
 
         return BaseResponse[DeliveryJobDto].success(
             "Delivery job created successfully.",
-            DeliveryJobDto(**delivery_job),  # type: ignore
+            DeliveryJobDto.from_delivery_job(delivery_job, self._uow),
         )

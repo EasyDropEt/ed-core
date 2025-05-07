@@ -7,9 +7,7 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.common.dtos.driver_dto import (CarDto,
-                                                                 DriverDto,
-                                                                 LocationDto)
+from ed_core.application.features.common.dtos.driver_dto import DriverDto
 from ed_core.application.features.driver.dtos.update_driver_dto import (
     UpdateDriverDto, UpdateLocationDto)
 from ed_core.application.features.driver.dtos.validators import \
@@ -61,16 +59,9 @@ class UpdateDriverCommandHandler(RequestHandler):
 
             self._uow.driver_repository.update(driver["id"], driver)
 
-            car = self._uow.car_repository.get(id=driver["car_id"])
             return BaseResponse[DriverDto].success(
                 "Driver updated successfully.",
-                DriverDto(
-                    **driver,  # type: ignore
-                    car=CarDto(
-                        **car,  # type: ignore
-                    ),
-                    location=LocationDto(**location),  # type: ignore
-                ),
+                DriverDto.from_driver(driver, self._uow),
             )
 
         raise ApplicationException(

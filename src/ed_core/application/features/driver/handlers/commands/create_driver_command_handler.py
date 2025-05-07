@@ -60,11 +60,7 @@ class CreateDriverCommandHandler(RequestHandler):
 
         return BaseResponse[DriverDto].success(
             "Driver created successfully.",
-            DriverDto(
-                **driver,
-                car=CarDto(**car),  # type: ignore
-                location=LocationDto(**location),  # type: ignore
-            ),
+            DriverDto.from_driver(driver, self._uow),
         )
 
     async def _create_car(self, car: CreateCarDto) -> Car:

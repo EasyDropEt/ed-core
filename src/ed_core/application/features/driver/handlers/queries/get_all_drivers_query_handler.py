@@ -6,8 +6,6 @@ from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.common.dtos import DriverDto
-from ed_core.application.features.common.dtos.business_dto import LocationDto
-from ed_core.application.features.common.dtos.car_dto import CarDto
 from ed_core.application.features.driver.requests.queries.get_all_drivers_query import \
     GetAllDriversQuery
 
@@ -24,23 +22,8 @@ class GetAllDriversQueryHandler(RequestHandler):
         if drivers := self._uow.driver_repository.get_all():
             return BaseResponse[list[DriverDto]].success(
                 "Drivers fetched successfully.",
-                [
-                    DriverDto(
-                        **driver,
-                        # type: ignore
-                        car=CarDto(
-                            **self._uow.car_repository.get(
-                                id=driver["car_id"],
-                            ),  # type: ignore
-                        ),
-                        location=LocationDto(
-                            **self._uow.location_repository.get(
-                                id=driver["location_id"]
-                            ),  # type: ignore
-                        ),
-                    )
-                    for driver in drivers
-                ],
+                [DriverDto.from_driver(driver, self._uow)
+                 for driver in drivers],
             )
 
         return BaseResponse[list[DriverDto]].error(

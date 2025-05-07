@@ -11,8 +11,7 @@ from ed_core.application.features.business.dtos.validators import \
     CreateBusinessDtoValidator
 from ed_core.application.features.business.requests.commands import \
     CreateBusinessCommand
-from ed_core.application.features.common.dtos.business_dto import (BusinessDto,
-                                                                   LocationDto)
+from ed_core.application.features.common.dtos.business_dto import BusinessDto
 from ed_core.common.generic_helpers import get_new_id
 from ed_core.common.logging_helpers import get_logger
 
@@ -57,10 +56,7 @@ class CreateBusinessCommandHandler(RequestHandler):
 
         return BaseResponse[BusinessDto].success(
             "Business created successfully.",
-            BusinessDto(
-                **business,
-                location=LocationDto(**location),  # type: ignore
-            ),
+            BusinessDto.from_business(business, self._uow),
         )
 
     async def _create_location(self, location: CreateLocationDto) -> Location:

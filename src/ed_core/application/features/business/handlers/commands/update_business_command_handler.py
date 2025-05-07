@@ -14,8 +14,7 @@ from ed_core.application.features.business.dtos.validators import \
     UpdateBusinessDtoValidator
 from ed_core.application.features.business.requests.commands import \
     UpdateBusinessCommand
-from ed_core.application.features.common.dtos.business_dto import (BusinessDto,
-                                                                   LocationDto)
+from ed_core.application.features.common.dtos.business_dto import BusinessDto
 from ed_core.common.generic_helpers import get_new_id
 from ed_core.common.logging_helpers import get_logger
 
@@ -57,15 +56,19 @@ class UpdateBusinessCommandHandler(RequestHandler):
                 if "billing_details" in dto
                 else business["billing_details"]
             )
-            business = self._uow.business_repository.update(
-                business["id"], business)
+            is_business_updated = self._uow.business_repository.update(
+                business["id"], business
+            )
+            if not is_business_updated:
+                raise ApplicationException(
+                    Exceptions.InternalServerException,
+                    "Business update failed.",
+                    ["Internal server error."],
+                )
 
             return BaseResponse[BusinessDto].success(
                 "Business updated successfully.",
-                BusinessDto(
-                    **business,  # type: ignore
-                    location=LocationDto(**location),  # type: ignore
-                ),
+                BusinessDto.from_business(business, self._uow),
             )
 
         raise ApplicationException(
