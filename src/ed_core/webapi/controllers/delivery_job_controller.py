@@ -24,7 +24,6 @@ async def get_delivery_jobs(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     result = await mediator.send(GetDeliveryJobsQuery())
-    LOG.info(f"Result: {result.to_dict()}")
     return result
 
 
@@ -35,7 +34,6 @@ async def get_delivery_job(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     result = await mediator.send(GetDeliveryJobQuery(delivery_job_id))
-    LOG.info(f"Result: {result}")
     return result
 
 

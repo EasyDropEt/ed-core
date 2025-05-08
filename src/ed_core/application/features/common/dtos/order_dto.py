@@ -6,11 +6,12 @@ from ed_domain.core.entities.order import Order, OrderStatus, Parcel
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from pydantic import BaseModel
 
-from ed_core.application.features.common.dtos.consumer_dto import ConsumerDto
+from ed_core.application.features.common.dtos import BusinessDto, ConsumerDto
 
 
 class OrderDto(BaseModel):
     id: UUID
+    business: BusinessDto
     consumer: ConsumerDto
     latest_time_of_delivery: datetime
     parcel: Parcel
@@ -23,12 +24,16 @@ class OrderDto(BaseModel):
         order: Order,
         uow: ABCUnitOfWork,
     ) -> "OrderDto":
-        assert order["consumer_id"] is not None, "Consumer ID cannot be None"
         order_consumer = uow.consumer_repository.get(id=order["consumer_id"])
         assert order_consumer is not None, "Consumer not found"
+
+        order_business = uow.business_repository.get(id=order["business_id"])
+        assert order_business is not None, "Business not found"
+
         return cls(
             id=order["id"],
-            consumer=ConsumerDto.from_consumer(order_consumer),
+            business=BusinessDto.from_business(order_business, uow),
+            consumer=ConsumerDto.from_consumer(order_consumer, uow),
             latest_time_of_delivery=order["latest_time_of_delivery"],
             parcel=order["parcel"],
             order_status=order["order_status"],
