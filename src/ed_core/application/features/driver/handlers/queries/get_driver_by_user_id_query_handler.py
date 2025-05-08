@@ -29,5 +29,5 @@ class GetDriverByUserIdQueryHandler(RequestHandler):
         raise ApplicationException(
             Exceptions.NotFoundException,
             "Driver not found.",
-            [f"Buisness with id {request.user_id} not found."],
+            [f"Driver with user id {request.user_id} not found."],
         )

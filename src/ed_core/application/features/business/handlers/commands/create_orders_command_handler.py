@@ -4,6 +4,7 @@ from ed_domain.core.entities import Bill, Consumer, Location, Order
 from ed_domain.core.entities.order import OrderStatus
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from ed_domain.core.value_objects.money import Currency, Money
+from ed_domain.queues.common.abc_producer import ABCProducer
 from ed_domain.queues.ed_optimization.order_model import (BusinessModel,
                                                           ConsumerModel,
                                                           OrderModel)
@@ -11,8 +12,6 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.contracts.infrastructure.message_queue.abc_producer import \
-    ABCProducer
 from ed_core.application.features.business.dtos import CreateLocationDto
 from ed_core.application.features.business.dtos.create_orders_dto import \
     CreateConsumerDto

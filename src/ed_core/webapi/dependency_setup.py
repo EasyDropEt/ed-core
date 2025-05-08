@@ -1,15 +1,15 @@
 from typing import Annotated
 
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.queues.common.abc_producer import ABCProducer
+from ed_domain.queues.common.abc_subscriber import ABCSubscriber
 from ed_infrastructure.persistence.mongo_db.db_client import DbClient
 from ed_infrastructure.persistence.mongo_db.unit_of_work import UnitOfWork
+from ed_infrastructure.queues.rabbitmq.producer import RabbitMQProducer
+from ed_infrastructure.queues.rabbitmq.subscriber import RabbitMQSubscriber
 from fastapi import Depends
 from rmediator.mediator import Mediator
 
-from ed_core.application.contracts.infrastructure.message_queue.abc_producer import \
-    ABCProducer
-from ed_core.application.contracts.infrastructure.message_queue.abc_subscriber import \
-    ABCSubscriber
 from ed_core.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler, CreateOrdersCommandHandler,
     UpdateBusinessCommandHandler)
@@ -45,8 +45,6 @@ from ed_core.application.features.order.requests.queries import (
     GetOrderQuery, GetOrdersQuery)
 from ed_core.common.generic_helpers import get_config
 from ed_core.common.typing.config import Config, TestMessage
-from ed_core.infrastructure.rabbitmq.producer import RabbitMQProducer
-from ed_core.infrastructure.rabbitmq.subscriber import RabbitMQSubscriber
 
 
 def get_db_client(config: Annotated[Config, Depends(get_config)]) -> DbClient:
