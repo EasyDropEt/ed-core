@@ -26,8 +26,7 @@ class GetConsumerByUserIdQueryHandler(RequestHandler):
                 ConsumerDto.from_consumer(consumer, self._uow),
             )
 
-        raise ApplicationException(
-            Exceptions.NotFoundException,
-            "Consumer not found.",
+        return BaseResponse[ConsumerDto].error(
+            "Consumer couldn't be fetched.",
             [f"Consumer with user id {request.user_id} not found."],
         )
