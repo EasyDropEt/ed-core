@@ -3,9 +3,11 @@ from ed_domain.documentation.common.api_response import ApiResponse
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrdersDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.common.dtos import (BusinessDto,
+from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto, OrderDto)
+from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
+                                                        UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       UpdateDriverDto)
@@ -147,3 +149,47 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("get_orders")
         api_client = ApiClient[list[OrderDto]](endpoint)
         return api_client({})
+
+    def get_consumers(self) -> ApiResponse[list[ConsumerDto]]:
+        endpoint = self._endpoints.get_description("get_consumers")
+        api_client = ApiClient[list[ConsumerDto]](endpoint)
+
+        return api_client({})
+
+    def create_consumer(
+        self, create_consumer_dto: CreateConsumerDto
+    ) -> ApiResponse[ConsumerDto]:
+        endpoint = self._endpoints.get_description("create_consumer")
+        api_client = ApiClient[ConsumerDto](endpoint)
+
+        return api_client({"request": create_consumer_dto})
+
+    def get_consumer_delivery_jobs(
+        self, consumer_id: str
+    ) -> ApiResponse[list[OrderDto]]:
+        endpoint = self._endpoints.get_description(
+            "get_consumer_delivery_jobs")
+        api_client = ApiClient[list[OrderDto]](endpoint)
+        return api_client({"path_params": {"consumer_id": consumer_id}})
+
+    def get_consumer_by_user_id(self, user_id: str) -> ApiResponse[ConsumerDto]:
+        endpoint = self._endpoints.get_description("get_consumer_by_user_id")
+        api_client = ApiClient[ConsumerDto](endpoint)
+        return api_client({"path_params": {"user_id": user_id}})
+
+    def get_consumer(self, consumer_id: str) -> ApiResponse[ConsumerDto]:
+        endpoint = self._endpoints.get_description("get_consumer")
+        api_client = ApiClient[ConsumerDto](endpoint)
+        return api_client({"path_params": {"consumer_id": consumer_id}})
+
+    def update_consumer(
+        self, consumer_id: str, update_consumer_dto: UpdateConsumerDto
+    ) -> ApiResponse[ConsumerDto]:
+        endpoint = self._endpoints.get_description("update_consumer")
+        api_client = ApiClient[ConsumerDto](endpoint)
+        return api_client(
+            {
+                "path_params": {"consumer_id": consumer_id},
+                "request": update_consumer_dto,
+            }
+        )

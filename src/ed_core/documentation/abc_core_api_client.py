@@ -8,6 +8,9 @@ from ed_core.application.features.business.dtos import (CreateBusinessDto,
 from ed_core.application.features.common.dtos import (BusinessDto,
                                                       DeliveryJobDto,
                                                       DriverDto, OrderDto)
+from ed_core.application.features.common.dtos.consumer_dto import ConsumerDto
+from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
+                                                        UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
     CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
@@ -95,3 +98,29 @@ class ABCCoreApiClient(metaclass=ABCMeta):
 
     @abstractmethod
     def get_order(self, order_id: str) -> ApiResponse[OrderDto]: ...
+
+    # Consumer features
+    @abstractmethod
+    def get_consumers(self) -> ApiResponse[list[ConsumerDto]]: ...
+
+    @abstractmethod
+    def create_consumer(
+        self, create_consumer_dto: CreateConsumerDto
+    ) -> ApiResponse[ConsumerDto]: ...
+
+    @abstractmethod
+    def get_consumer_delivery_jobs(
+        self, consumer_id: str
+    ) -> ApiResponse[list[OrderDto]]: ...
+
+    @abstractmethod
+    def get_consumer(self, consumer_id: str) -> ApiResponse[ConsumerDto]: ...
+
+    @abstractmethod
+    def update_consumer(
+        self, consumer_id: str, update_consumer_dto: UpdateConsumerDto
+    ) -> ApiResponse[ConsumerDto]: ...
+
+    @abstractmethod
+    def get_consumer_by_user_id(
+        self, user_id: str) -> ApiResponse[ConsumerDto]: ...

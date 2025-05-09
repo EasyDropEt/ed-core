@@ -5,9 +5,11 @@ from ed_domain.documentation.common.http_method import HttpMethod
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrdersDto)
-from ed_core.application.features.common.dtos import (BusinessDto,
+from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto, OrderDto)
+from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
+                                                        UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import CreateDriverDto
 
@@ -135,6 +137,49 @@ class CoreEndpoint(BaseEndpoint):
                 "path": f"{self._base_url}/orders/{{order_id}}",
                 "path_params": {"order_id": str},
                 "response_model": OrderDto,
+            },
+            # Consumer endpoints
+            {
+                "name": "get_consumers",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/consumers",
+                "response_model": list[ConsumerDto],
+            },
+            {
+                "name": "create_consumer",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/consumers",
+                "request_model": CreateConsumerDto,
+                "response_model": ConsumerDto,
+            },
+            {
+                "name": "update_consumer",
+                "method": HttpMethod.PUT,
+                "path": f"{self._base_url}/consumers/{{consumer_id}}",
+                "path_params": {"consumer_id": str},
+                "request_model": UpdateConsumerDto,
+                "response_model": ConsumerDto,
+            },
+            {
+                "name": "get_consumer_orders",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/consumers/{{consumer_id}}/orders",
+                "path_params": {"consumer_id": str},
+                "response_model": list[OrderDto],
+            },
+            {
+                "name": "get_consumer",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/consumers/{{consumer_id}}",
+                "path_params": {"consumer_id": str},
+                "response_model": ConsumerDto,
+            },
+            {
+                "name": "get_consumer_by_user_id",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/consumers/users/{{user_id}}",
+                "path_params": {"user_id": str},
+                "response_model": ConsumerDto,
             },
         ]
 
