@@ -99,6 +99,9 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     @abstractmethod
     def get_order(self, order_id: str) -> ApiResponse[OrderDto]: ...
 
+    @abstractmethod
+    def cancel_order(self, order_id: str) -> ApiResponse[OrderDto]: ...
+
     # Consumer features
     @abstractmethod
     def get_consumers(self) -> ApiResponse[list[ConsumerDto]]: ...

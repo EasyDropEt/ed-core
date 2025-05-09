@@ -50,8 +50,12 @@ from ed_core.application.features.driver.requests.commands import (
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
     GetDriverQuery)
+from ed_core.application.features.order.handlers.commands import \
+    CancelOrderCommandHandler
 from ed_core.application.features.order.handlers.queries import (
     GetOrderQueryHandler, GetOrdersQueryHandler)
+from ed_core.application.features.order.requests.commands import \
+    CancelOrderCommand
 from ed_core.application.features.order.requests.queries import (
     GetOrderQuery, GetOrdersQuery)
 from ed_core.common.generic_helpers import get_config
@@ -125,6 +129,7 @@ def mediator(
         # Order handlers
         (GetOrdersQuery, GetOrdersQueryHandler(uow)),
         (GetOrderQuery, GetOrderQueryHandler(uow)),
+        (CancelOrderCommand, CancelOrderCommandHandler(uow)),
         # Consumer handlers
         (CreateConsumerCommand, CreateConsumerCommandHandler(uow)),
         (UpdateConsumerCommand, UpdateConsumerCommandHandler(uow)),

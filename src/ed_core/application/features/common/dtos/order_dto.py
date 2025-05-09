@@ -25,7 +25,9 @@ class OrderDto(BaseModel):
         uow: ABCUnitOfWork,
     ) -> "OrderDto":
         order_consumer = uow.consumer_repository.get(id=order["consumer_id"])
-        assert order_consumer is not None, "Consumer not found"
+        assert (
+            order_consumer is not None
+        ), f"Consumer with id: {order['consumer_id']} not found"
 
         order_business = uow.business_repository.get(id=order["business_id"])
         assert order_business is not None, "Business not found"

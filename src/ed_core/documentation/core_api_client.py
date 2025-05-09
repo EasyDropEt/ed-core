@@ -145,6 +145,11 @@ class CoreApiClient(ABCCoreApiClient):
         api_client = ApiClient[OrderDto](endpoint)
         return api_client({"path_params": {"order_id": order_id}})
 
+    def cancel_order(self, order_id: str) -> ApiResponse[OrderDto]:
+        endpoint = self._endpoints.get_description("cancel_order")
+        api_client = ApiClient[OrderDto](endpoint)
+        return api_client({"path_params": {"order_id": order_id}})
+
     def get_orders(self) -> ApiResponse[list[OrderDto]]:
         endpoint = self._endpoints.get_description("get_orders")
         api_client = ApiClient[list[OrderDto]](endpoint)
