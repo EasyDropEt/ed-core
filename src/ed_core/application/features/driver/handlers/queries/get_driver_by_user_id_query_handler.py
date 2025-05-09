@@ -7,8 +7,6 @@ from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.common.dtos import DriverDto
-from ed_core.application.features.common.dtos.business_dto import LocationDto
-from ed_core.application.features.common.dtos.car_dto import CarDto
 from ed_core.application.features.driver.requests.queries import \
     GetDriverByUserIdQuery
 

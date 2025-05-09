@@ -21,6 +21,16 @@ from ed_core.application.features.business.requests.commands import (
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
     GetBusinessQuery)
+from ed_core.application.features.consumer.handlers.commands import (
+    CreateConsumerCommandHandler, UpdateConsumerCommandHandler)
+from ed_core.application.features.consumer.handlers.queries import (
+    GetConsumerByUserIdQueryHandler, GetConsumerOrdersQueryHandler,
+    GetConsumerQueryHandler, GetConsumersQueryHandler)
+from ed_core.application.features.consumer.requests.commands import (
+    CreateConsumerCommand, UpdateConsumerCommand)
+from ed_core.application.features.consumer.requests.queries import (
+    GetConsumerByUserIdQuery, GetConsumerOrdersQuery, GetConsumerQuery,
+    GetConsumersQuery)
 from ed_core.application.features.delivery_job.handlers.commands import (
     ClaimDeliveryJobCommandHandler, CreateDeliveryJobCommandHandler)
 from ed_core.application.features.delivery_job.handlers.queries import (
@@ -72,7 +82,6 @@ def get_subscriber(config: Annotated[Config, Depends(get_config)]) -> ABCSubscri
     subscriber = RabbitMQSubscriber[TestMessage](
         config["rabbitmq_url"],
         config["rabbitmq_queue"],
-        lambda x: print(x),
     )
     subscriber.start()
 
@@ -109,6 +118,13 @@ def mediator(
         # Order handlers
         (GetOrdersQuery, GetOrdersQueryHandler(uow)),
         (GetOrderQuery, GetOrderQueryHandler(uow)),
+        # Consumer handlers
+        (CreateConsumerCommand, CreateConsumerCommandHandler(uow)),
+        (UpdateConsumerCommand, UpdateConsumerCommandHandler(uow)),
+        (GetConsumersQuery, GetConsumersQueryHandler(uow)),
+        (GetConsumerQuery, GetConsumerQueryHandler(uow)),
+        (GetConsumerByUserIdQuery, GetConsumerByUserIdQueryHandler(uow)),
+        (GetConsumerOrdersQuery, GetConsumerOrdersQueryHandler(uow)),
     ]
     for command, handler in handlers:
         mediator.register_handler(command, handler)
