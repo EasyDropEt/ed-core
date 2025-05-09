@@ -138,6 +138,13 @@ class CoreEndpoint(BaseEndpoint):
                 "path_params": {"order_id": str},
                 "response_model": OrderDto,
             },
+            {
+                "name": "cancel_order",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/orders/{{order_id}}/cancel",
+                "path_params": {"order_id": str},
+                "response_model": OrderDto,
+            },
             # Consumer endpoints
             {
                 "name": "get_consumers",

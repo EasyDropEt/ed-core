@@ -4,7 +4,7 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.common.dtos import ConsumerDto, OrderDto
+from ed_core.application.features.common.dtos import OrderDto
 from ed_core.application.features.order.requests.queries import GetOrderQuery
 
 
@@ -23,5 +23,5 @@ class GetOrderQueryHandler(RequestHandler):
         raise ApplicationException(
             Exceptions.NotFoundException,
             "Order not found.",
-            [f"Buisness with id {request.order_id} not found."],
+            [f"Order with id {request.order_id} not found."],
         )
