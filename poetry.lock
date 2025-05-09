@@ -629,6 +629,20 @@ paramiko = ["paramiko"]
 pgp = ["gpg"]
 
 [[package]]
+name = "ed-auth"
+version = "0.1.6"
+description = "EasyDrop auth model Package"
+optional = false
+python-versions = ">=3.12"
+groups = ["main"]
+files = [
+    {file = "ed_auth-0.1.6-py3-none-any.whl", hash = "sha256:6bc2e8adf8507a3d49bf9014e265df4be8b3417234f7103804ba1a11b4b57a09"},
+]
+
+[package.extras]
+dev = ["check-manifest"]
+
+[[package]]
 name = "ed-domain"
 version = "0.2.20"
 description = "EasyDrop domain model Package"
@@ -2848,4 +2862,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "4ba2fce579eceeb132481dfc906bbd5bd9412b6d3aa7a514af11ab90c73b557d"
+content-hash = "9a974af7cb22c1b089fee76515b4b64f860d98ac64ee6eee55bedd3d1dbf4f73"

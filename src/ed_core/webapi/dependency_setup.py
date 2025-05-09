@@ -10,6 +10,7 @@ from ed_infrastructure.queues.rabbitmq.subscriber import RabbitMQSubscriber
 from fastapi import Depends
 from rmediator.mediator import Mediator
 
+from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler, CreateOrdersCommandHandler,
     UpdateBusinessCommandHandler)
@@ -55,6 +56,11 @@ from ed_core.application.features.order.requests.queries import (
     GetOrderQuery, GetOrdersQuery)
 from ed_core.common.generic_helpers import get_config
 from ed_core.common.typing.config import Config, TestMessage
+from ed_core.infrastructure.api.api_handler import ApiHandler
+
+
+def get_api(config: Annotated[Config, Depends(get_config)]) -> ABCApi:
+    return ApiHandler(config["auth_api"])
 
 
 def get_db_client(config: Annotated[Config, Depends(get_config)]) -> DbClient:
@@ -91,6 +97,7 @@ def get_subscriber(config: Annotated[Config, Depends(get_config)]) -> ABCSubscri
 def mediator(
     uow: Annotated[ABCUnitOfWork, Depends(get_uow)],
     producer: Annotated[ABCProducer, Depends(get_producer)],
+    api: Annotated[ABCApi, Depends(get_api)],
 ) -> Mediator:
     mediator = Mediator()
 
@@ -109,7 +116,7 @@ def mediator(
         (UpdateDriverCommand, UpdateDriverCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
-        (CreateOrdersCommand, CreateOrdersCommandHandler(uow, producer)),
+        (CreateOrdersCommand, CreateOrdersCommandHandler(uow, producer, api)),
         (GetBusinessQuery, GetBusinessQueryHandler(uow)),
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),

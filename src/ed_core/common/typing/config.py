@@ -14,6 +14,7 @@ class Config(TypedDict):
     rabbitmq_url: str
     rabbitmq_queue: str
     cloudinary: CloudinaryConfig
+    auth_api: str
 
 
 class TestMessage(TypedDict):

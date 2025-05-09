@@ -1,5 +1,6 @@
 from datetime import UTC, datetime
 
+from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.entities import Bill, Consumer, Location, Order
 from ed_domain.core.entities.order import OrderStatus
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
@@ -12,6 +13,7 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
+from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.business.dtos import CreateLocationDto
 from ed_core.application.features.business.dtos.create_orders_dto import \
     CreateConsumerDto
@@ -28,9 +30,12 @@ LOG = get_logger()
 
 @request_handler(CreateOrdersCommand, BaseResponse[list[OrderDto]])
 class CreateOrdersCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork, producer: ABCProducer[OrderModel]):
+    def __init__(
+        self, uow: ABCUnitOfWork, producer: ABCProducer[OrderModel], api: ABCApi
+    ):
         self._uow = uow
         self._producer = producer
+        self._api = api
 
     async def handle(
         self, request: CreateOrdersCommand
@@ -45,10 +50,13 @@ class CreateOrdersCommandHandler(RequestHandler):
                 dto_validator.errors,
             )
 
-        consumers = await self._create_or_get_consumers(
-            [order["consumer"] for order in dto["orders"]]
-        )
-        bill = await self._create_bill()
+        consumers = [
+            self._create_or_get_consumer(
+                order["consumer"],
+            )
+            for order in dto["orders"]
+        ]
+        bill = self._create_bill()
         created_orders = self._uow.order_repository.create_many(
             [
                 Order(
@@ -67,7 +75,7 @@ class CreateOrdersCommandHandler(RequestHandler):
             ]
         )
 
-        await self._publish_orders(created_orders, consumers)
+        self._publish_orders(created_orders, consumers)
 
         return BaseResponse[list[OrderDto]].success(
             "Order created successfully.",
@@ -75,23 +83,57 @@ class CreateOrdersCommandHandler(RequestHandler):
              for order in created_orders],
         )
 
-    async def _publish_orders(
-        self, orders: list[Order], consumers: list[Consumer]
-    ) -> None:
-        for order, consumer in zip(orders, consumers):
-            self._producer.publish(
-                OrderModel(
-                    **order,  # type: ignore
-                    consumer=ConsumerModel(**consumer),  # type: ignore
-                    business=BusinessModel(
-                        **self._uow.business_repository.get(
-                            id=order["business_id"],
-                        )  # type: ignore
-                    ),
-                )
+    def _create_or_get_consumer(self, consumer: CreateConsumerDto) -> Consumer:
+        if existing_consumer := self._uow.consumer_repository.get(
+            phone_number=consumer["phone_number"]
+        ):
+            return existing_consumer
+
+        location = self._create_location(consumer["location"])
+        create_user_response = self._api.auth_api.create_get_otp(
+            {
+                "first_name": consumer["first_name"],
+                "last_name": consumer["last_name"],
+                "phone_number": consumer["phone_number"],
+                "email": consumer["email"],
+            }
+        )
+        if not create_user_response["is_success"]:
+            raise ApplicationException(
+                Exceptions.InternalServerException,
+                "Failed to create orders",
+                ["Could not create consumers."],
             )
 
-    async def _create_bill(self) -> Bill:
+        user = create_user_response["data"]
+
+        new_consumer = Consumer(
+            **consumer,  # type: ignore
+            id=get_new_id(),
+            user_id=user["id"],
+            notification_ids=[],
+            active_status=True,
+            created_datetime=datetime.now(UTC),
+            updated_datetime=datetime.now(UTC),
+            location_id=location["id"],
+        )
+
+        return self._uow.consumer_repository.create(new_consumer)
+
+    def _create_location(self, location: CreateLocationDto) -> Location:
+        return self._uow.location_repository.create(
+            Location(
+                **location,
+                id=get_new_id(),
+                city="Addis Ababa",
+                country="Ethiopia",
+                create_datetime=datetime.now(UTC),
+                update_datetime=datetime.now(UTC),
+                deleted=False,
+            )
+        )
+
+    def _create_bill(self) -> Bill:
         return self._uow.bill_repository.create(
             Bill(
                 id=get_new_id(),
@@ -106,38 +148,16 @@ class CreateOrdersCommandHandler(RequestHandler):
             )
         )
 
-    async def _create_or_get_consumers(
-        self, consumers: list[CreateConsumerDto]
-    ) -> list[Consumer]:
-        return [
-            self._uow.consumer_repository.get(
-                phone_number=consumer["phone_number"])
-            or self._uow.consumer_repository.create(
-                Consumer(
-                    **consumer,  # type: ignore
-                    id=get_new_id(),
-                    user_id=get_new_id(),
-                    notification_ids=[],
-                    active_status=True,
-                    created_datetime=datetime.now(UTC),
-                    updated_datetime=datetime.now(UTC),
-                    location_id=(await self._create_location(consumer["location"]))[
-                        "id"
-                    ],
+    def _publish_orders(self, orders: list[Order], consumers: list[Consumer]) -> None:
+        for order, consumer in zip(orders, consumers):
+            self._producer.publish(
+                OrderModel(
+                    **order,  # type: ignore
+                    consumer=ConsumerModel(**consumer),  # type: ignore
+                    business=BusinessModel(
+                        **self._uow.business_repository.get(
+                            id=order["business_id"],
+                        )  # type: ignore
+                    ),
                 )
             )
-            for consumer in consumers
-        ]
-
-    async def _create_location(self, location: CreateLocationDto) -> Location:
-        return self._uow.location_repository.create(
-            Location(
-                **location,
-                id=get_new_id(),
-                city="Addis Ababa",
-                country="Ethiopia",
-                create_datetime=datetime.now(UTC),
-                update_datetime=datetime.now(UTC),
-                deleted=False,
-            )
-        )
