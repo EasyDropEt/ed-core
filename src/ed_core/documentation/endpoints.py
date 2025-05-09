@@ -155,7 +155,8 @@ class CoreEndpoint(BaseEndpoint):
             {
                 "name": "update_consumer",
                 "method": HttpMethod.PUT,
-                "path": f"{self._base_url}/consumers",
+                "path": f"{self._base_url}/consumers/{{consumer_id}}",
+                "path_params": {"consumer_id": str},
                 "request_model": UpdateConsumerDto,
                 "response_model": ConsumerDto,
             },
