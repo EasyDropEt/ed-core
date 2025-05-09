@@ -40,7 +40,7 @@ class CreateConsumerCommandHandler(RequestHandler):
                 first_name=dto["first_name"],
                 last_name=dto["last_name"],
                 phone_number=dto["phone_number"],
-                email="",
+                email=dto["email"],
                 id=get_new_id(),
                 location_id=location["id"],
                 notification_ids=[],
