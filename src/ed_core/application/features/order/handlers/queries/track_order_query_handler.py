@@ -51,18 +51,13 @@ class TrackOrderQueryHandler(RequestHandler):
             driver = self._uow.driver_repository.get(id=driver_id)
             assert driver is not None, "Driver not found"
 
-            current_location = self._uow.location_repository.get(
-                id=driver["current_location_id"]
-            )
-            assert current_location is not None, "Current location not found"
-
             return BaseResponse[TrackOrderDto].success(
                 "Order fetched successfully.",
                 TrackOrderDto.from_entities(
                     order,
                     self._uow,
                     delivery_job=delivery_job,
-                    location=current_location,
+                    driver=driver,
                 ),
             )
 
