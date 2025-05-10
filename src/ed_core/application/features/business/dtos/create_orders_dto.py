@@ -3,7 +3,8 @@ from typing import TypedDict
 
 from ed_domain.core.entities.order import Parcel
 
-from ed_core.application.features.business.dtos.create_location_dto import CreateLocationDto
+from ed_core.application.features.business.dtos.create_location_dto import \
+    CreateLocationDto
 
 
 class CreateConsumerDto(TypedDict):

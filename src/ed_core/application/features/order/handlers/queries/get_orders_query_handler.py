@@ -25,6 +25,5 @@ class GetOrdersQueryHandler(RequestHandler):
 
         except Exception as e:
             raise ApplicationException(
-                Exceptions.InternalServerException, "Error fetching orders", [
-                    str(e)]
+                Exceptions.InternalServerException, "Error fetching orders", [str(e)]
             ) from e

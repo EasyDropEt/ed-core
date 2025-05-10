@@ -4,14 +4,18 @@ from ed_domain.documentation.common.endpoint_description import \
 from ed_domain.documentation.common.http_method import HttpMethod
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateOrdersDto)
+                                                        CreateOrdersDto,
+                                                        UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DeliveryJobDto,
-                                                      DriverDto, OrderDto)
+                                                      DriverDto, OrderDto,
+                                                      TrackOrderDto)
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import CreateDriverDto
+from ed_core.application.features.driver.dtos.update_driver_dto import (
+    UpdateDriverDto, UpdateLocationDto)
 
 
 class CoreEndpoint(BaseEndpoint):
@@ -37,6 +41,14 @@ class CoreEndpoint(BaseEndpoint):
                 "method": HttpMethod.GET,
                 "path": f"{self._base_url}/businesses/{{business_id}}",
                 "path_params": {"business_id": str},
+                "response_model": BusinessDto,
+            },
+            {
+                "name": "update_business",
+                "method": HttpMethod.PUT,
+                "path": f"{self._base_url}/businesses/{{business_id}}",
+                "path_params": {"business_id": str},
+                "request_model": UpdateBusinessDto,
                 "response_model": BusinessDto,
             },
             {
@@ -90,6 +102,22 @@ class CoreEndpoint(BaseEndpoint):
                 "response_model": DriverDto,
             },
             {
+                "name": "update_driver",
+                "method": HttpMethod.PUT,
+                "path": f"{self._base_url}/drivers/{{driver_id}}",
+                "path_params": {"driver_id": str},
+                "request_model": UpdateDriverDto,
+                "response_model": DriverDto,
+            },
+            {
+                "name": "update_driver_current_location",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/drivers/{{driver_id}}/location",
+                "path_params": {"driver_id": str},
+                "request_model": UpdateLocationDto,
+                "response_model": DriverDto,
+            },
+            {
                 "name": "get_driver_by_user_id",
                 "method": HttpMethod.GET,
                 "path": f"{self._base_url}/drivers/users/{{user_id}}",
@@ -137,6 +165,13 @@ class CoreEndpoint(BaseEndpoint):
                 "path": f"{self._base_url}/orders/{{order_id}}",
                 "path_params": {"order_id": str},
                 "response_model": OrderDto,
+            },
+            {
+                "name": "track_order",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/orders/{{order_id}}/track",
+                "path_params": {"order_id": str},
+                "response_model": TrackOrderDto,
             },
             {
                 "name": "cancel_order",

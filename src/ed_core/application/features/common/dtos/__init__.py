@@ -8,6 +8,8 @@ from ed_core.application.features.common.dtos.driver_dto import DriverDto
 from ed_core.application.features.common.dtos.driver_payment_dto import \
     DriverPaymentDto
 from ed_core.application.features.common.dtos.order_dto import OrderDto
+from ed_core.application.features.common.dtos.track_order_dto import \
+    TrackOrderDto
 
 __all__ = [
     "BusinessDto",
@@ -19,4 +21,5 @@ __all__ = [
     "LocationDto",
     "OrderDto",
     "ConsumerDto",
+    "TrackOrderDto",
 ]

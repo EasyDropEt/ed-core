@@ -20,6 +20,5 @@ class GetAllBusinessesQueryHandler(RequestHandler):
 
         return BaseResponse[list[BusinessDto]].success(
             "Business fetched successfully.",
-            [BusinessDto.from_business(business, self._uow)
-             for business in businesses],
+            [BusinessDto.from_business(business, self._uow) for business in businesses],
         )

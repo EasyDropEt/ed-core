@@ -4,15 +4,16 @@ from fastapi import APIRouter, Depends
 from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
-from ed_core.application.features.common.dtos.delivery_job_dto import \
-    DeliveryJobDto
-from ed_core.application.features.common.dtos.driver_dto import DriverDto
+from ed_core.application.features.common.dtos import DeliveryJobDto, DriverDto
 from ed_core.application.features.delivery_job.requests.commands import \
     ClaimDeliveryJobCommand
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       UpdateDriverDto)
+from ed_core.application.features.driver.dtos.update_driver_dto import \
+    UpdateLocationDto
 from ed_core.application.features.driver.requests.commands import (
-    CreateDriverCommand, UpdateDriverCommand)
+    CreateDriverCommand, UpdateDriverCommand,
+    UpdateDriverCurrentLocationCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
     GetDriverQuery)
@@ -69,6 +70,18 @@ async def update_driver(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(UpdateDriverCommand(driver_id=driver_id, dto=dto))
+
+
+@router.put("/{driver_id}/current-location", response_model=GenericResponse[DriverDto])
+@rest_endpoint
+async def update_driver_current_location(
+    driver_id: UUID,
+    dto: UpdateLocationDto,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(
+        UpdateDriverCurrentLocationCommand(driver_id=driver_id, dto=dto)
+    )
 
 
 @router.get("/users/{user_id}", response_model=GenericResponse[DriverDto])

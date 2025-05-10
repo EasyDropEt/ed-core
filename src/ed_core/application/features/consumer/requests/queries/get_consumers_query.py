@@ -9,5 +9,4 @@ from ed_core.application.features.common.dtos import ConsumerDto
 
 @request(BaseResponse[list[ConsumerDto]])
 @dataclass
-class GetConsumersQuery(Request):
-    ...
+class GetConsumersQuery(Request): ...

@@ -41,23 +41,25 @@ from ed_core.application.features.delivery_job.requests.commands import (
 from ed_core.application.features.delivery_job.requests.queries import (
     GetDeliveryJobQuery, GetDeliveryJobsQuery)
 from ed_core.application.features.driver.handlers.commands import (
-    CreateDriverCommandHandler, UpdateDriverCommandHandler)
+    CreateDriverCommandHandler, UpdateDriverCommandHandler,
+    UpdateDriverCurrentLocationCommandHandler)
 from ed_core.application.features.driver.handlers.queries import (
     GetAllDriversQueryHandler, GetDriverByUserIdQueryHandler,
     GetDriverDeliveryJobsQueryHandler, GetDriverQueryHandler)
 from ed_core.application.features.driver.requests.commands import (
-    CreateDriverCommand, UpdateDriverCommand)
+    CreateDriverCommand, UpdateDriverCommand,
+    UpdateDriverCurrentLocationCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
     GetDriverQuery)
 from ed_core.application.features.order.handlers.commands import \
     CancelOrderCommandHandler
 from ed_core.application.features.order.handlers.queries import (
-    GetOrderQueryHandler, GetOrdersQueryHandler)
+    GetOrderQueryHandler, GetOrdersQueryHandler, TrackOrderQueryHandler)
 from ed_core.application.features.order.requests.commands import \
     CancelOrderCommand
 from ed_core.application.features.order.requests.queries import (
-    GetOrderQuery, GetOrdersQuery)
+    GetOrderQuery, GetOrdersQuery, TrackOrderQuery)
 from ed_core.common.generic_helpers import get_config
 from ed_core.common.typing.config import Config, TestMessage
 from ed_core.infrastructure.api.api_handler import ApiHandler
@@ -118,6 +120,10 @@ def mediator(
         (GetDriverByUserIdQuery, GetDriverByUserIdQueryHandler(uow)),
         (GetAllDriversQuery, GetAllDriversQueryHandler(uow)),
         (UpdateDriverCommand, UpdateDriverCommandHandler(uow)),
+        (
+            UpdateDriverCurrentLocationCommand,
+            UpdateDriverCurrentLocationCommandHandler(uow),
+        ),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
         (CreateOrdersCommand, CreateOrdersCommandHandler(uow, producer, api)),
@@ -126,6 +132,7 @@ def mediator(
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),
         (GetAllBusinessQuery, GetAllBusinessesQueryHandler(uow)),
         (UpdateBusinessCommand, UpdateBusinessCommandHandler(uow)),
+        (TrackOrderQuery, TrackOrderQueryHandler(uow)),
         # Order handlers
         (GetOrdersQuery, GetOrdersQueryHandler(uow)),
         (GetOrderQuery, GetOrderQueryHandler(uow)),

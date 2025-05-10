@@ -5,5 +5,4 @@ from ed_core.application.features.business.requests.commands.create_orders_comma
 from ed_core.application.features.business.requests.commands.update_business_command import \
     UpdateBusinessCommand
 
-__all__ = ["CreateBusinessCommand",
-           "CreateOrdersCommand", "UpdateBusinessCommand"]
+__all__ = ["CreateBusinessCommand", "CreateOrdersCommand", "UpdateBusinessCommand"]

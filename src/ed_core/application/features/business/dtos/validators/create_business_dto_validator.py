@@ -1,11 +1,9 @@
-from ed_core.application.features.business.dtos.create_business_dto import CreateBusinessDto
+from ed_core.application.features.business.dtos.create_business_dto import \
+    CreateBusinessDto
 from ed_core.application.features.common.dtos.validators.abc_dto_validator import (
-    ABCDtoValidator,
-    ValidationResponse,
-)
-from ed_core.application.features.driver.dtos.validators.create_driver_dto_validator import (
-    CreateLocationDtoValidator,
-)
+    ABCDtoValidator, ValidationResponse)
+from ed_core.application.features.driver.dtos.validators.create_driver_dto_validator import \
+    CreateLocationDtoValidator
 
 
 class CreateBusinessDtoValidator(ABCDtoValidator[CreateBusinessDto]):

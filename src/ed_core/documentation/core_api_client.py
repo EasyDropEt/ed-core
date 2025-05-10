@@ -5,12 +5,15 @@ from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DeliveryJobDto,
-                                                      DriverDto, OrderDto)
+                                                      DriverDto, OrderDto,
+                                                      TrackOrderDto)
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       UpdateDriverDto)
+from ed_core.application.features.driver.dtos.update_driver_dto import \
+    UpdateLocationDto
 from ed_core.common.api_helpers import ApiClient
 from ed_core.documentation.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.endpoints import CoreEndpoint
@@ -58,6 +61,17 @@ class CoreApiClient(ABCCoreApiClient):
         api_client = ApiClient[DriverDto](endpoint)
         return api_client(
             {"path_params": {"driver_id": driver_id}, "request": update_driver_dto}
+        )
+
+    def update_driver_current_location(
+        self, driver_id: str, update_location_dto: UpdateLocationDto
+    ) -> ApiResponse[DriverDto]:
+        endpoint = self._endpoints.get_description(
+            "update_driver_current_location")
+        api_client = ApiClient[DriverDto](endpoint)
+        return api_client(
+            {"path_params": {"driver_id": driver_id},
+                "request": update_location_dto}
         )
 
     def claim_delivery_job(
@@ -140,20 +154,25 @@ class CoreApiClient(ABCCoreApiClient):
         api_client = ApiClient[DeliveryJobDto](endpoint)
         return api_client({"request": create_delivery_job_dto})
 
+    def get_orders(self) -> ApiResponse[list[OrderDto]]:
+        endpoint = self._endpoints.get_description("get_orders")
+        api_client = ApiClient[list[OrderDto]](endpoint)
+        return api_client({})
+
     def get_order(self, order_id: str) -> ApiResponse[OrderDto]:
         endpoint = self._endpoints.get_description("get_order")
         api_client = ApiClient[OrderDto](endpoint)
+        return api_client({"path_params": {"order_id": order_id}})
+
+    def track_order(self, order_id: str) -> ApiResponse[TrackOrderDto]:
+        endpoint = self._endpoints.get_description("track_order")
+        api_client = ApiClient[TrackOrderDto](endpoint)
         return api_client({"path_params": {"order_id": order_id}})
 
     def cancel_order(self, order_id: str) -> ApiResponse[OrderDto]:
         endpoint = self._endpoints.get_description("cancel_order")
         api_client = ApiClient[OrderDto](endpoint)
         return api_client({"path_params": {"order_id": order_id}})
-
-    def get_orders(self) -> ApiResponse[list[OrderDto]]:
-        endpoint = self._endpoints.get_description("get_orders")
-        api_client = ApiClient[list[OrderDto]](endpoint)
-        return api_client({})
 
     def get_consumers(self) -> ApiResponse[list[ConsumerDto]]:
         endpoint = self._endpoints.get_description("get_consumers")
@@ -198,3 +217,7 @@ class CoreApiClient(ABCCoreApiClient):
                 "request": update_consumer_dto,
             }
         )
+
+
+if __name__ == "__main__":
+    CoreApiClient("")
