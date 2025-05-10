@@ -111,8 +111,8 @@ class CoreEndpoint(BaseEndpoint):
             },
             {
                 "name": "update_driver_current_location",
-                "method": HttpMethod.GET,
-                "path": f"{self._base_url}/drivers/{{driver_id}}/location",
+                "method": HttpMethod.PUT,
+                "path": f"{self._base_url}/drivers/{{driver_id}}/current-location",
                 "path_params": {"driver_id": str},
                 "request_model": UpdateLocationDto,
                 "response_model": DriverDto,
