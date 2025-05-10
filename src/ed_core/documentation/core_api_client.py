@@ -88,6 +88,20 @@ class CoreApiClient(ABCCoreApiClient):
             }
         )
 
+    def cancel_delivery_job(
+        self, driver_id: str, delivery_job_id: str
+    ) -> ApiResponse[DeliveryJobDto]:
+        endpoint = self._endpoints.get_description("cancel_delivery_job")
+        api_client = ApiClient[DeliveryJobDto](endpoint)
+        return api_client(
+            {
+                "path_params": {
+                    "driver_id": driver_id,
+                    "delivery_job_id": delivery_job_id,
+                }
+            }
+        )
+
     def get_all_businesses(self) -> ApiResponse[list[BusinessDto]]:
         endpoint = self._endpoints.get_description("get_all_businesses")
         api_client = ApiClient[list[BusinessDto]](endpoint)

@@ -126,8 +126,15 @@ class CoreEndpoint(BaseEndpoint):
             },
             {
                 "name": "claim_delivery_job",
-                "method": HttpMethod.GET,
-                "path": f"{self._base_url}/{{driver_id}}/claim/{{delivery_job_id}}",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/claim",
+                "path_params": {"driver_id": str, "delivery_job_id": str},
+                "response_model": DeliveryJobDto,
+            },
+            {
+                "name": "cancel_delivery_job",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/cancel",
                 "path_params": {"driver_id": str, "delivery_job_id": str},
                 "response_model": DeliveryJobDto,
             },

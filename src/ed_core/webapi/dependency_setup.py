@@ -33,11 +33,13 @@ from ed_core.application.features.consumer.requests.queries import (
     GetConsumerByUserIdQuery, GetConsumerOrdersQuery, GetConsumerQuery,
     GetConsumersQuery)
 from ed_core.application.features.delivery_job.handlers.commands import (
-    ClaimDeliveryJobCommandHandler, CreateDeliveryJobCommandHandler)
+    CancelDeliveryJobCommandHandler, ClaimDeliveryJobCommandHandler,
+    CreateDeliveryJobCommandHandler)
 from ed_core.application.features.delivery_job.handlers.queries import (
     GetDeliveryJobQueryHandler, GetDeliveryJobsQueryHandler)
 from ed_core.application.features.delivery_job.requests.commands import (
-    ClaimDeliveryJobCommand, CreateDeliveryJobCommand)
+    CancelDeliveryJobCommand, ClaimDeliveryJobCommand,
+    CreateDeliveryJobCommand)
 from ed_core.application.features.delivery_job.requests.queries import (
     GetDeliveryJobQuery, GetDeliveryJobsQuery)
 from ed_core.application.features.driver.handlers.commands import (
@@ -124,6 +126,7 @@ def mediator(
             UpdateDriverCurrentLocationCommand,
             UpdateDriverCurrentLocationCommandHandler(uow),
         ),
+        (CancelDeliveryJobCommand, CancelDeliveryJobCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
         (CreateOrdersCommand, CreateOrdersCommandHandler(uow, producer, api)),

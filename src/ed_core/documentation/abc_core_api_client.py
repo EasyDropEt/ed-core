@@ -58,6 +58,11 @@ class ABCCoreApiClient(metaclass=ABCMeta):
         self, driver_id: str, delivery_job_id: str
     ) -> ApiResponse[DeliveryJobDto]: ...
 
+    @abstractmethod
+    def cancel_delivery_job(
+        self, driver_id: str, delivery_job_id: str
+    ) -> ApiResponse[DeliveryJobDto]: ...
+
     # Business features
     @abstractmethod
     def get_all_businesses(self) -> ApiResponse[list[BusinessDto]]: ...

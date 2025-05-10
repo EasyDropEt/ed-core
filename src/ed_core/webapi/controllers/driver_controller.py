@@ -5,8 +5,8 @@ from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
 from ed_core.application.features.common.dtos import DeliveryJobDto, DriverDto
-from ed_core.application.features.delivery_job.requests.commands import \
-    ClaimDeliveryJobCommand
+from ed_core.application.features.delivery_job.requests.commands import (
+    CancelDeliveryJobCommand, ClaimDeliveryJobCommand)
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       UpdateDriverDto)
 from ed_core.application.features.driver.dtos.update_driver_dto import \
@@ -94,7 +94,7 @@ async def get_driver_by_user_id(
 
 
 @router.post(
-    "/{driver_id}/claim/{delivery_job_id}",
+    "/{driver_id}/delivery-jobs/{delivery_job_id}/claim",
     response_model=GenericResponse[DeliveryJobDto],
 )
 @rest_endpoint
@@ -105,6 +105,24 @@ async def claim_delivery_job(
 ):
     return await mediator.send(
         ClaimDeliveryJobCommand(
+            driver_id=driver_id,
+            delivery_job_id=delivery_job_id,
+        )
+    )
+
+
+@router.post(
+    "/{driver_id}/delivery-jobs/{delivery_job_id}/cancel",
+    response_model=GenericResponse[DeliveryJobDto],
+)
+@rest_endpoint
+async def cancel_delivery_job(
+    driver_id: UUID,
+    delivery_job_id: UUID,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(
+        CancelDeliveryJobCommand(
             driver_id=driver_id,
             delivery_job_id=delivery_job_id,
         )
