@@ -45,8 +45,7 @@ class UpdateBusinessCommandHandler(RequestHandler):
             business["phone_number"] = self._get_from_dto_or_business(
                 business, dto, "phone_number"
             )
-            business["email"] = self._get_from_dto_or_business(
-                business, dto, "email")
+            business["email"] = self._get_from_dto_or_business(business, dto, "email")
             business["location_id"] = (
                 location["id"] if location else business["location_id"]
             )

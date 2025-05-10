@@ -18,6 +18,7 @@ class DriverDto(BaseModel):
     email: Optional[str]
     car: CarDto
     location: LocationDto
+    current_location: Optional[LocationDto]
 
     @classmethod
     def from_driver(cls, driver: Driver, uow: ABCUnitOfWork) -> "DriverDto":
@@ -26,6 +27,9 @@ class DriverDto(BaseModel):
 
         location = uow.location_repository.get(id=driver["location_id"])
         assert location is not None, "Location not found"
+
+        current_location = uow.location_repository.get(id=driver["current_location_id"])
+        assert current_location is not None, "Current location not found"
 
         return cls(
             id=driver["id"],
@@ -36,4 +40,5 @@ class DriverDto(BaseModel):
             email=driver.get("email"),
             car=CarDto.from_car(car),
             location=LocationDto.from_location(location),
+            current_location=LocationDto.from_location(current_location),
         )

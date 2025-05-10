@@ -79,8 +79,7 @@ class CreateOrdersCommandHandler(RequestHandler):
 
         return BaseResponse[list[OrderDto]].success(
             "Order created successfully.",
-            [OrderDto.from_order(order, self._uow)
-             for order in created_orders],
+            [OrderDto.from_order(order, self._uow) for order in created_orders],
         )
 
     def _create_or_get_consumer(self, consumer: CreateConsumerDto) -> Consumer:

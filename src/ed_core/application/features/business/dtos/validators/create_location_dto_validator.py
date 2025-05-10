@@ -1,8 +1,7 @@
-from ed_core.application.features.business.dtos.create_location_dto import CreateLocationDto
+from ed_core.application.features.business.dtos.create_location_dto import \
+    CreateLocationDto
 from ed_core.application.features.common.dtos.validators.abc_dto_validator import (
-    ABCDtoValidator,
-    ValidationResponse,
-)
+    ABCDtoValidator, ValidationResponse)
 
 
 class CreateLocationDtoValidator(ABCDtoValidator[CreateLocationDto]):

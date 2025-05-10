@@ -35,8 +35,7 @@ class CreateConsumerDtoValidator(ABCDtoValidator[CreateConsumerDto]):
 
 class CreateOrderDtoValidator(ABCDtoValidator[CreateOrderDto]):
     def validate(self, dto: CreateOrderDto) -> ValidationResponse:
-        consumer_dto_validation = CreateConsumerDtoValidator().validate(
-            dto["consumer"])
+        consumer_dto_validation = CreateConsumerDtoValidator().validate(dto["consumer"])
         errors = consumer_dto_validation.errors
 
         print(dto["latest_time_of_delivery"], datetime.now(UTC))

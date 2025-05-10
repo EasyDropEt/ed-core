@@ -22,8 +22,7 @@ class GetAllDriversQueryHandler(RequestHandler):
         if drivers := self._uow.driver_repository.get_all():
             return BaseResponse[list[DriverDto]].success(
                 "Drivers fetched successfully.",
-                [DriverDto.from_driver(driver, self._uow)
-                 for driver in drivers],
+                [DriverDto.from_driver(driver, self._uow) for driver in drivers],
             )
 
         return BaseResponse[list[DriverDto]].error(

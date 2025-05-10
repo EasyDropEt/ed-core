@@ -9,12 +9,16 @@ from ed_core.application.features.common.dtos import (BusinessDto,
                                                       DeliveryJobDto,
                                                       DriverDto, OrderDto)
 from ed_core.application.features.common.dtos.consumer_dto import ConsumerDto
+from ed_core.application.features.common.dtos.track_order_dto import \
+    TrackOrderDto
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
     CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       UpdateDriverDto)
+from ed_core.application.features.driver.dtos.update_driver_dto import \
+    UpdateLocationDto
 
 
 class ABCCoreApiClient(metaclass=ABCMeta):
@@ -38,6 +42,11 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     @abstractmethod
     def update_driver(
         self, driver_id: str, update_driver_dto: UpdateDriverDto
+    ) -> ApiResponse[DriverDto]: ...
+
+    @abstractmethod
+    def update_driver_current_location(
+        self, driver_id: str, update_location_dto: UpdateLocationDto
     ) -> ApiResponse[DriverDto]: ...
 
     @abstractmethod
@@ -95,6 +104,9 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     # Order features
     @abstractmethod
     def get_orders(self) -> ApiResponse[list[OrderDto]]: ...
+
+    @abstractmethod
+    def track_order(self, order_id: str) -> ApiResponse[TrackOrderDto]: ...
 
     @abstractmethod
     def get_order(self, order_id: str) -> ApiResponse[OrderDto]: ...
