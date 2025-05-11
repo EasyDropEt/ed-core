@@ -13,7 +13,11 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
-from ed_core.application.features.driver.dtos import CreateDriverDto
+from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      DropOffOrderDto,
+                                                      DropOffOrderVerifyDto,
+                                                      PickUpOrderDto,
+                                                      PickUpOrderVerifyDto)
 from ed_core.application.features.driver.dtos.update_driver_dto import (
     UpdateDriverDto, UpdateLocationDto)
 
@@ -126,10 +130,61 @@ class CoreEndpoint(BaseEndpoint):
             },
             {
                 "name": "claim_delivery_job",
-                "method": HttpMethod.GET,
-                "path": f"{self._base_url}/{{driver_id}}/claim/{{delivery_job_id}}",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/claim",
                 "path_params": {"driver_id": str, "delivery_job_id": str},
                 "response_model": DeliveryJobDto,
+            },
+            {
+                "name": "cancel_delivery_job",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/cancel",
+                "path_params": {"driver_id": str, "delivery_job_id": str},
+                "response_model": DeliveryJobDto,
+            },
+            {
+                "name": "initiate_order_pick_up",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up",
+                "path_params": {
+                    "driver_id": str,
+                    "delivery_job_id": str,
+                    "order_id": str,
+                },
+                "response_model": PickUpOrderDto,
+            },
+            {
+                "name": "verify_order_pick_up",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up/verify",
+                "path_params": {
+                    "driver_id": str,
+                    "delivery_job_id": str,
+                    "order_id": str,
+                },
+                "request_model": PickUpOrderVerifyDto,
+            },
+            {
+                "name": "initiate_order_drop_off",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/drop-off",
+                "path_params": {
+                    "driver_id": str,
+                    "delivery_job_id": str,
+                    "order_id": str,
+                },
+                "response_model": DropOffOrderDto,
+            },
+            {
+                "name": "verify_order_drop_off",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up/verify",
+                "path_params": {
+                    "driver_id": str,
+                    "delivery_job_id": str,
+                    "order_id": str,
+                },
+                "request_model": DropOffOrderVerifyDto,
             },
             # Delivery job endpoints
             {

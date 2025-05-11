@@ -11,6 +11,10 @@ from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      DropOffOrderDto,
+                                                      DropOffOrderVerifyDto,
+                                                      PickUpOrderDto,
+                                                      PickUpOrderVerifyDto,
                                                       UpdateDriverDto)
 from ed_core.application.features.driver.dtos.update_driver_dto import \
     UpdateLocationDto
@@ -85,6 +89,90 @@ class CoreApiClient(ABCCoreApiClient):
                     "driver_id": driver_id,
                     "delivery_job_id": delivery_job_id,
                 }
+            }
+        )
+
+    def cancel_delivery_job(
+        self, driver_id: str, delivery_job_id: str
+    ) -> ApiResponse[DeliveryJobDto]:
+        endpoint = self._endpoints.get_description("cancel_delivery_job")
+        api_client = ApiClient[DeliveryJobDto](endpoint)
+        return api_client(
+            {
+                "path_params": {
+                    "driver_id": driver_id,
+                    "delivery_job_id": delivery_job_id,
+                }
+            }
+        )
+
+    def initiate_order_pick_up(
+        self, driver_id: str, delivery_job_id: str, order_id: str
+    ) -> ApiResponse[PickUpOrderDto]:
+        endpoint = self._endpoints.get_description("initiate_order_pick_up")
+        api_client = ApiClient[PickUpOrderDto](endpoint)
+        return api_client(
+            {
+                "path_params": {
+                    "driver_id": driver_id,
+                    "delivery_job_id": delivery_job_id,
+                    "order_id": order_id,
+                }
+            }
+        )
+
+    def verify_order_pick_up(
+        self,
+        driver_id: str,
+        delivery_job_id: str,
+        order_id: str,
+        pick_up_order_verify_dto: PickUpOrderVerifyDto,
+    ) -> ApiResponse[None]:
+        endpoint = self._endpoints.get_description("verify_order_pick_up")
+        api_client = ApiClient[None](endpoint)
+        return api_client(
+            {
+                "path_params": {
+                    "driver_id": driver_id,
+                    "delivery_job_id": delivery_job_id,
+                    "order_id": order_id,
+                },
+                "request": pick_up_order_verify_dto,
+            }
+        )
+
+    def initiate_order_drop_off(
+        self, driver_id: str, delivery_job_id: str, order_id: str
+    ) -> ApiResponse[DropOffOrderDto]:
+        endpoint = self._endpoints.get_description("initiate_order_drop_off")
+        api_client = ApiClient[DropOffOrderDto](endpoint)
+        return api_client(
+            {
+                "path_params": {
+                    "driver_id": driver_id,
+                    "delivery_job_id": delivery_job_id,
+                    "order_id": order_id,
+                }
+            }
+        )
+
+    def verify_order_drop_off(
+        self,
+        driver_id: str,
+        delivery_job_id: str,
+        order_id: str,
+        drop_off_order_verify_dto: DropOffOrderVerifyDto,
+    ) -> ApiResponse[None]:
+        endpoint = self._endpoints.get_description("verify_order_drop_off")
+        api_client = ApiClient[None](endpoint)
+        return api_client(
+            {
+                "path_params": {
+                    "driver_id": driver_id,
+                    "delivery_job_id": delivery_job_id,
+                    "order_id": order_id,
+                },
+                "request": drop_off_order_verify_dto,
             }
         )
 

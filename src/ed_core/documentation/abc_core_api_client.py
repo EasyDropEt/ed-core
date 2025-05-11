@@ -13,9 +13,12 @@ from ed_core.application.features.common.dtos.track_order_dto import \
     TrackOrderDto
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
-from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
-    CreateDeliveryJobDto
+from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      DropOffOrderDto,
+                                                      DropOffOrderVerifyDto,
+                                                      PickUpOrderDto,
+                                                      PickUpOrderVerifyDto,
                                                       UpdateDriverDto)
 from ed_core.application.features.driver.dtos.update_driver_dto import \
     UpdateLocationDto
@@ -57,6 +60,39 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     def claim_delivery_job(
         self, driver_id: str, delivery_job_id: str
     ) -> ApiResponse[DeliveryJobDto]: ...
+
+    @abstractmethod
+    def cancel_delivery_job(
+        self, driver_id: str, delivery_job_id: str
+    ) -> ApiResponse[DeliveryJobDto]: ...
+
+    @abstractmethod
+    def initiate_order_pick_up(
+        self, driver_id: str, delivery_job_id: str, order_id: str
+    ) -> ApiResponse[PickUpOrderDto]: ...
+
+    @abstractmethod
+    def verify_order_pick_up(
+        self,
+        driver_id: str,
+        delivery_job_id: str,
+        order_id: str,
+        pick_up_order_verify_dto: PickUpOrderVerifyDto,
+    ) -> ApiResponse[None]: ...
+
+    @abstractmethod
+    def initiate_order_drop_off(
+        self, driver_id: str, delivery_job_id: str, order_id: str
+    ) -> ApiResponse[DropOffOrderDto]: ...
+
+    @abstractmethod
+    def verify_order_drop_off(
+        self,
+        driver_id: str,
+        delivery_job_id: str,
+        order_id: str,
+        drop_off_order_verify_dto: DropOffOrderVerifyDto,
+    ) -> ApiResponse[None]: ...
 
     # Business features
     @abstractmethod

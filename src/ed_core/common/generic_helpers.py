@@ -3,7 +3,7 @@ import uuid
 
 from dotenv import load_dotenv
 
-from ed_core.common.typing.config import Config
+from ed_core.common.typing.config import Config, Environment
 
 
 def get_new_id() -> uuid.UUID:
@@ -25,4 +25,10 @@ def get_config() -> Config:
             "env_variable": os.getenv("CLOUDINARY_ENV_VARIABLE") or "",
         },
         "auth_api": os.getenv("AUTH_API") or "",
+        "notification_api": os.getenv("NOTIFICATION_API") or "",
+        "environment": (
+            Environment.PROD
+            if os.getenv("ENVIRONMENT") == "production"
+            else Environment.DEV
+        ),
     }
