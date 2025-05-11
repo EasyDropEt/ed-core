@@ -83,8 +83,8 @@ def get_otp_generator(
 
 def get_api(config: Annotated[Config, Depends(get_config)]) -> ABCApi:
     return ApiHandler(
-        AuthApiClient(config["auth_api"]), NotificationApiClient(
-            config["auth_api"])
+        AuthApiClient(config["auth_api"]),
+        NotificationApiClient(config["notification_api"]),
     )
 
 
