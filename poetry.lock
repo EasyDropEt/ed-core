@@ -672,13 +672,13 @@ dev = ["check-manifest"]
 
 [[package]]
 name = "ed-notification"
-version = "0.1.4"
+version = "0.1.6"
 description = "EasyDrop notification model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_notification-0.1.4-py3-none-any.whl", hash = "sha256:b4aa3902156e9d2c7ecd97952592a0782f45f694216ed15a9e0e3e9ec85348de"},
+    {file = "ed_notification-0.1.6-py3-none-any.whl", hash = "sha256:34faa9e80bd46902fccff418aafaa3c9d9e9beec390b59f60d926d3c5708c270"},
 ]
 
 [package.extras]
@@ -2876,4 +2876,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "5c85b215456be394b1328804ed60bda33ed553308fe9239c43b5a693ae3ce80f"
+content-hash = "1471c871d368d558f7e3c595693a5ac119524582d3936612322d08d13ff597b1"

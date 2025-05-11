@@ -21,7 +21,7 @@ class GetDriverDeliveryJobsQueryHandler(RequestHandler):
             driver_id=request.driver_id
         ):
             return BaseResponse[list[DeliveryJobDto]].success(
-                "DeliveryJob fetched successfully.",
+                "Driver delivery jobs fetched successfully.",
                 [
                     DeliveryJobDto.from_delivery_job(delivery_job, self._uow)
                     for delivery_job in delivery_jobs
@@ -30,6 +30,6 @@ class GetDriverDeliveryJobsQueryHandler(RequestHandler):
 
         raise ApplicationException(
             Exceptions.NotFoundException,
-            "Delivery jobs not found.",
+            "Driver delivery jobs could not fetched.",
             [f"Delivery jobs for driver with id {request.driver_id} not found."],
         )

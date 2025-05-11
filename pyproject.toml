@@ -24,7 +24,7 @@ ed-domain = "0.2.22"
 twine = "^6.1.0"
 ed-infrastructure = "^0.1.7"
 ed-auth = "^0.1.6"
-ed-notification = "0.1.4"
+ed-notification = "0.1.6"
 
 
 [tool.poetry.group.test.dependencies]

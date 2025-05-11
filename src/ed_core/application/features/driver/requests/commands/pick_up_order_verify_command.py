@@ -5,12 +5,11 @@ from rmediator.decorators import request
 from rmediator.types import Request
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.common.dtos import DeliveryJobDto
 from ed_core.application.features.driver.dtos.pick_up_order_verify_dto import \
     PickUpOrderVerifyDto
 
 
-@request(BaseResponse[DeliveryJobDto])
+@request(BaseResponse[None])
 @dataclass
 class PickUpOrderVerifyCommand(Request):
     driver_id: UUID
