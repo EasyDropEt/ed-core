@@ -5,8 +5,9 @@ from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DeliveryJobDto,
-                                                      DriverDto, OrderDto,
-                                                      TrackOrderDto)
+                                                      DriverDto,
+                                                      NotificationDto,
+                                                      OrderDto, TrackOrderDto)
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
@@ -305,6 +306,13 @@ class CoreApiClient(ABCCoreApiClient):
                 "request": update_consumer_dto,
             }
         )
+
+    def get_user_notifications(
+        self, user_id: str
+    ) -> ApiResponse[list[NotificationDto]]:
+        endpoint = self._endpoints.get_description("get_consumer_by_user_id")
+        api_client = ApiClient[list[NotificationDto]](endpoint)
+        return api_client({"path_params": {"user_id": user_id}})
 
 
 if __name__ == "__main__":

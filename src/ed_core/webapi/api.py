@@ -9,7 +9,9 @@ from ed_core.webapi.common.helpers import GenericResponse
 from ed_core.webapi.controllers import (business_controller,
                                         consumer_controller,
                                         delivery_job_controller,
-                                        driver_controller, order_controller)
+                                        driver_controller,
+                                        notification_controller,
+                                        order_controller)
 
 LOG = get_logger()
 
@@ -27,6 +29,7 @@ class API(FastAPI, metaclass=SingletonMeta):
             delivery_job_controller.router,
             order_controller.router,
             consumer_controller.router,
+            notification_controller.router,
         ]
         self._include_routers()
         self._contain_exceptions()
