@@ -15,7 +15,7 @@ LOG = get_logger()
 router = APIRouter(prefix="/notifications", tags=["Notification Feature"])
 
 
-@router.get("/users/{user_id}", response_model=GenericResponse[NotificationDto])
+@router.get("/users/{user_id}", response_model=GenericResponse[list[NotificationDto]])
 @rest_endpoint
 async def get_user_notifications(
     user_id: UUID,
