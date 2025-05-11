@@ -1,12 +1,17 @@
 from typing import Annotated
 
+from ed_auth.documentation.auth_api_client import AuthApiClient
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from ed_domain.queues.common.abc_producer import ABCProducer
 from ed_domain.queues.common.abc_subscriber import ABCSubscriber
+from ed_domain.utils.otp.abc_otp_generator import ABCOtpGenerator
 from ed_infrastructure.persistence.mongo_db.db_client import DbClient
 from ed_infrastructure.persistence.mongo_db.unit_of_work import UnitOfWork
 from ed_infrastructure.queues.rabbitmq.producer import RabbitMQProducer
 from ed_infrastructure.queues.rabbitmq.subscriber import RabbitMQSubscriber
+from ed_infrastructure.utils.otp.otp_generator import OtpGenerator
+from ed_notification.documentation.notification_api_client import \
+    NotificationApiClient
 from fastapi import Depends
 from rmediator.mediator import Mediator
 
@@ -43,13 +48,16 @@ from ed_core.application.features.delivery_job.requests.commands import (
 from ed_core.application.features.delivery_job.requests.queries import (
     GetDeliveryJobQuery, GetDeliveryJobsQuery)
 from ed_core.application.features.driver.handlers.commands import (
-    CreateDriverCommandHandler, UpdateDriverCommandHandler,
+    CreateDriverCommandHandler, DropOffOrderCommandHandler,
+    DropOffOrderVerifyCommandHandler, PickUpOrderCommandHandler,
+    PickUpOrderVerifyCommandHandler, UpdateDriverCommandHandler,
     UpdateDriverCurrentLocationCommandHandler)
 from ed_core.application.features.driver.handlers.queries import (
     GetAllDriversQueryHandler, GetDriverByUserIdQueryHandler,
     GetDriverDeliveryJobsQueryHandler, GetDriverQueryHandler)
 from ed_core.application.features.driver.requests.commands import (
-    CreateDriverCommand, UpdateDriverCommand,
+    CreateDriverCommand, DropOffOrderCommand, DropOffOrderVerifyCommand,
+    PickUpOrderCommand, PickUpOrderVerifyCommand, UpdateDriverCommand,
     UpdateDriverCurrentLocationCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
@@ -63,12 +71,21 @@ from ed_core.application.features.order.requests.commands import \
 from ed_core.application.features.order.requests.queries import (
     GetOrderQuery, GetOrdersQuery, TrackOrderQuery)
 from ed_core.common.generic_helpers import get_config
-from ed_core.common.typing.config import Config, TestMessage
+from ed_core.common.typing.config import Config, Environment, TestMessage
 from ed_core.infrastructure.api.api_handler import ApiHandler
 
 
+def get_otp_generator(
+    config: Annotated[Config, Depends(get_config)],
+) -> ABCOtpGenerator:
+    return OtpGenerator(dev_mode=config["environment"] == Environment.DEV)
+
+
 def get_api(config: Annotated[Config, Depends(get_config)]) -> ABCApi:
-    return ApiHandler(config["auth_api"])
+    return ApiHandler(
+        AuthApiClient(config["auth_api"]), NotificationApiClient(
+            config["auth_api"])
+    )
 
 
 def get_db_client(config: Annotated[Config, Depends(get_config)]) -> DbClient:
@@ -106,6 +123,7 @@ def mediator(
     uow: Annotated[ABCUnitOfWork, Depends(get_uow)],
     producer: Annotated[ABCProducer, Depends(get_producer)],
     api: Annotated[ABCApi, Depends(get_api)],
+    otp: Annotated[ABCOtpGenerator, Depends(get_otp_generator)],
 ) -> Mediator:
     mediator = Mediator()
 
@@ -121,6 +139,10 @@ def mediator(
         (GetDriverQuery, GetDriverQueryHandler(uow)),
         (GetDriverByUserIdQuery, GetDriverByUserIdQueryHandler(uow)),
         (GetAllDriversQuery, GetAllDriversQueryHandler(uow)),
+        (DropOffOrderCommand, DropOffOrderCommandHandler(uow, api, otp)),
+        (DropOffOrderVerifyCommand, DropOffOrderVerifyCommandHandler(uow, api)),
+        (PickUpOrderCommand, PickUpOrderCommandHandler(uow, api, otp)),
+        (PickUpOrderVerifyCommand, PickUpOrderVerifyCommandHandler(uow, api)),
         (UpdateDriverCommand, UpdateDriverCommandHandler(uow)),
         (
             UpdateDriverCurrentLocationCommand,

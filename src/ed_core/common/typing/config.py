@@ -1,3 +1,4 @@
+from enum import StrEnum
 from typing import TypedDict
 
 
@@ -8,6 +9,13 @@ class CloudinaryConfig(TypedDict):
     env_variable: str
 
 
+class Environment(StrEnum):
+    DEV = "dev"
+    STAGING = "staging"
+    PROD = "prod"
+    TEST = "test"
+
+
 class Config(TypedDict):
     mongo_db_connection_string: str
     db_name: str
@@ -15,6 +23,8 @@ class Config(TypedDict):
     rabbitmq_queue: str
     cloudinary: CloudinaryConfig
     auth_api: str
+    notification_api: str
+    environment: Environment
 
 
 class TestMessage(TypedDict):
