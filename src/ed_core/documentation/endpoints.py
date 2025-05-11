@@ -131,21 +131,21 @@ class CoreEndpoint(BaseEndpoint):
             {
                 "name": "claim_delivery_job",
                 "method": HttpMethod.POST,
-                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/claim",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/claim",
                 "path_params": {"driver_id": str, "delivery_job_id": str},
                 "response_model": DeliveryJobDto,
             },
             {
                 "name": "cancel_delivery_job",
                 "method": HttpMethod.POST,
-                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/cancel",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/cancel",
                 "path_params": {"driver_id": str, "delivery_job_id": str},
                 "response_model": DeliveryJobDto,
             },
             {
                 "name": "initiate_order_pick_up",
                 "method": HttpMethod.POST,
-                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up",
                 "path_params": {
                     "driver_id": str,
                     "delivery_job_id": str,
@@ -156,7 +156,7 @@ class CoreEndpoint(BaseEndpoint):
             {
                 "name": "verify_order_pick_up",
                 "method": HttpMethod.POST,
-                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up/verify",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up/verify",
                 "path_params": {
                     "driver_id": str,
                     "delivery_job_id": str,
@@ -167,7 +167,7 @@ class CoreEndpoint(BaseEndpoint):
             {
                 "name": "initiate_order_drop_off",
                 "method": HttpMethod.POST,
-                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/drop-off",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/drop-off",
                 "path_params": {
                     "driver_id": str,
                     "delivery_job_id": str,
@@ -178,7 +178,7 @@ class CoreEndpoint(BaseEndpoint):
             {
                 "name": "verify_order_drop_off",
                 "method": HttpMethod.POST,
-                "path": f"{self._base_url}/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up/verify",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up/verify",
                 "path_params": {
                     "driver_id": str,
                     "delivery_job_id": str,

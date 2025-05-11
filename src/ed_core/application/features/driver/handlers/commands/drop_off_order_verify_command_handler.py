@@ -62,7 +62,7 @@ class DropOffOrderVerifyCommandHandler(RequestHandler):
         for index, waypoint in enumerate(waypoints):
             if (
                 waypoint["order_id"] == order_id
-                and waypoint["type"] == WayPointType.PICK_UP
+                and waypoint["type"] == WayPointType.DROP_OFF
             ):
                 return index
 

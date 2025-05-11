@@ -9,6 +9,7 @@ from ed_core.application.features.delivery_job.requests.commands import (
     CancelDeliveryJobCommand, ClaimDeliveryJobCommand)
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       DropOffOrderDto,
+                                                      DropOffOrderVerifyDto,
                                                       PickUpOrderDto,
                                                       PickUpOrderVerifyDto,
                                                       UpdateDriverDto)
@@ -61,7 +62,7 @@ async def initiate_order_pick_up(
 
 
 @router.post(
-    "/{driver_id}/delivery-jobs/{delivery_job_id}/orders/{order_id}/pick-up-verify",
+    "/{driver_id}/delivery-jobs/{delivery_job_id}/orders/{order_id}/pick-up/verify",
     response_model=GenericResponse[None],
 )
 @rest_endpoint
@@ -102,7 +103,7 @@ async def verify_order_drop_off(
     driver_id: UUID,
     delivery_job_id: UUID,
     order_id: UUID,
-    dto: PickUpOrderVerifyDto,
+    dto: DropOffOrderVerifyDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(
