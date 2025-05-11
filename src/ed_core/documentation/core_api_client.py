@@ -310,7 +310,7 @@ class CoreApiClient(ABCCoreApiClient):
     def get_user_notifications(
         self, user_id: str
     ) -> ApiResponse[list[NotificationDto]]:
-        endpoint = self._endpoints.get_description("get_consumer_by_user_id")
+        endpoint = self._endpoints.get_description("get_user_notifications")
         api_client = ApiClient[list[NotificationDto]](endpoint)
         return api_client({"path_params": {"user_id": user_id}})
 
