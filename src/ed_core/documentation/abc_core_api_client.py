@@ -7,7 +7,9 @@ from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto,
                                                       DeliveryJobDto,
-                                                      DriverDto, OrderDto)
+                                                      DriverDto,
+                                                      NotificationDto,
+                                                      OrderDto)
 from ed_core.application.features.common.dtos.consumer_dto import ConsumerDto
 from ed_core.application.features.common.dtos.track_order_dto import \
     TrackOrderDto
@@ -175,3 +177,9 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     @abstractmethod
     def get_consumer_by_user_id(
         self, user_id: str) -> ApiResponse[ConsumerDto]: ...
+
+    # Notification featuers
+    @abstractmethod
+    def get_user_notifications(
+        self, user_id: str
+    ) -> ApiResponse[list[NotificationDto]]: ...

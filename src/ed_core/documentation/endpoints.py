@@ -8,8 +8,9 @@ from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DeliveryJobDto,
-                                                      DriverDto, OrderDto,
-                                                      TrackOrderDto)
+                                                      DriverDto,
+                                                      NotificationDto,
+                                                      OrderDto, TrackOrderDto)
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
@@ -277,6 +278,14 @@ class CoreEndpoint(BaseEndpoint):
                 "path": f"{self._base_url}/consumers/users/{{user_id}}",
                 "path_params": {"user_id": str},
                 "response_model": ConsumerDto,
+            },
+            # Notification features
+            {
+                "name": "get_user_notifications",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/notifications/users/{{user_id}}",
+                "path_params": {"user_id": str},
+                "response_model": list[NotificationDto],
             },
         ]
 

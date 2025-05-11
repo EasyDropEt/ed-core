@@ -62,6 +62,10 @@ from ed_core.application.features.driver.requests.commands import (
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
     GetDriverQuery)
+from ed_core.application.features.notification.handlers.queries import \
+    GetNotificationsQueryHandler
+from ed_core.application.features.notification.requests.queries import \
+    GetNotificationsQuery
 from ed_core.application.features.order.handlers.commands import \
     CancelOrderCommandHandler
 from ed_core.application.features.order.handlers.queries import (
@@ -169,6 +173,8 @@ def mediator(
         (GetConsumerQuery, GetConsumerQueryHandler(uow)),
         (GetConsumerByUserIdQuery, GetConsumerByUserIdQueryHandler(uow)),
         (GetConsumerOrdersQuery, GetConsumerOrdersQueryHandler(uow)),
+        # Notification handlers
+        (GetNotificationsQuery, GetNotificationsQueryHandler(uow)),
     ]
     for command, handler in handlers:
         mediator.register_handler(command, handler)
