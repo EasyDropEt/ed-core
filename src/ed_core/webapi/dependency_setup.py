@@ -125,7 +125,6 @@ def get_subscriber(config: Annotated[Config, Depends(get_config)]) -> ABCSubscri
 
 def mediator(
     uow: Annotated[ABCUnitOfWork, Depends(get_uow)],
-    producer: Annotated[ABCProducer, Depends(get_producer)],
     api: Annotated[ABCApi, Depends(get_api)],
     otp: Annotated[ABCOtpGenerator, Depends(get_otp_generator)],
 ) -> Mediator:
@@ -155,7 +154,7 @@ def mediator(
         (CancelDeliveryJobCommand, CancelDeliveryJobCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
-        (CreateOrdersCommand, CreateOrdersCommandHandler(uow, producer, api)),
+        (CreateOrdersCommand, CreateOrdersCommandHandler(uow, api)),
         (GetBusinessQuery, GetBusinessQueryHandler(uow)),
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),

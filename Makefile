@@ -1,5 +1,8 @@
 .phony: format lint run test docker.build docker.build.quite docker.run export_deps build upload
 
+PROJECT_NAME=ed-core
+GCP_PROJECT_ID=easydrop-459608
+
 export_deps:
 	@echo "Make: Exporting dependencies..."
 	@poetry export --without-hashes --format=requirements.txt > requirements.txt
@@ -52,3 +55,9 @@ upload: build
 	@rm -rf .coverage
 	@rm -rf .eggs
 	@rm -rf .tox
+
+gcp:
+	@echo "Make: Building and pushing docker image to GCP..."
+	docker buildx build -t $(PROJECT_NAME):$(IMAGE_TAG) --platform linux/amd64 .
+	docker tag $(PROJECT_NAME):$(IMAGE_TAG) gcr.io/$(GCP_PROJECT_ID)/$(PROJECT_NAME)-$(IMAGE_TAG)
+	docker push gcr.io/$(GCP_PROJECT_ID)/$(PROJECT_NAME)-$(IMAGE_TAG)

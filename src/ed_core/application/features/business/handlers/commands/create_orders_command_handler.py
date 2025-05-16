@@ -30,11 +30,8 @@ LOG = get_logger()
 
 @request_handler(CreateOrdersCommand, BaseResponse[list[OrderDto]])
 class CreateOrdersCommandHandler(RequestHandler):
-    def __init__(
-        self, uow: ABCUnitOfWork, producer: ABCProducer[OrderModel], api: ABCApi
-    ):
+    def __init__(self, uow: ABCUnitOfWork, api: ABCApi):
         self._uow = uow
-        self._producer = producer
         self._api = api
 
     async def handle(
@@ -79,7 +76,8 @@ class CreateOrdersCommandHandler(RequestHandler):
 
         return BaseResponse[list[OrderDto]].success(
             "Order created successfully.",
-            [OrderDto.from_order(order, self._uow) for order in created_orders],
+            [OrderDto.from_order(order, self._uow)
+             for order in created_orders],
         )
 
     def _create_or_get_consumer(self, consumer: CreateConsumerDto) -> Consumer:
