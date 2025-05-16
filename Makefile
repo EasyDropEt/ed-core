@@ -1,7 +1,6 @@
-.phony: format lint run test docker.build docker.build.quite docker.run export_deps build upload
+include .env
 
-PROJECT_NAME=ed-core
-GCP_PROJECT_ID=easydrop-459608
+.phony: format lint run test docker.build docker.build.quite docker.run export_deps build upload
 
 export_deps:
 	@echo "Make: Exporting dependencies..."

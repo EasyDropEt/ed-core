@@ -2,6 +2,8 @@ from typing import Generic, TypeVar
 
 import jsons
 import requests
+from ed_domain.common.exceptions import ApplicationException, Exceptions
+from ed_domain.common.logging import get_logger
 from ed_domain.documentation.common.api_response import ApiResponse
 from ed_domain.documentation.common.endpoint_call_params import \
     EndpointCallParams
@@ -9,6 +11,7 @@ from ed_domain.documentation.common.endpoint_description import \
     EndpointDescription
 
 T = TypeVar("T")
+LOG = get_logger()
 
 
 class ApiClient(Generic[T]):
@@ -28,10 +31,21 @@ class ApiClient(Generic[T]):
             else {}
         )
 
-        response = requests.request(
-            method, url, headers=headers, params=params, data=jsons.dumps(data)
-        )
-        return response.json()
+        try:
+            LOG.debug(
+                f"Making {method} request to {url} with headers {headers}")
+            response = requests.request(
+                method, url, headers=headers, params=params, data=jsons.dumps(
+                    data)
+            )
+            return response.json()
+        except requests.RequestException as e:
+            LOG.error(f"Request failed: {e}")
+            raise ApplicationException(
+                Exceptions.InternalServerException,
+                "Internal server error",
+                [f"Request to {url} failed with error: {e}"],
+            )
 
     def _build_url(self, call_params: EndpointCallParams) -> str:
         path = self._description["path"]
