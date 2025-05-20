@@ -8,8 +8,6 @@ from ed_domain.core.entities.delivery_job import (DeliveryJob,
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from pydantic import BaseModel
 
-from ed_core.application.features.common.dtos.driver_payment_dto import \
-    DriverPaymentDto
 from ed_core.application.features.common.dtos.order_dto import OrderDto
 
 
@@ -37,7 +35,6 @@ class DeliveryJobDto(BaseModel):
     estimated_distance_in_kms: float
     estimated_time_in_minutes: int
     driver_id: Optional[UUID]
-    driver_payment: Optional[DriverPaymentDto]
     status: DeliveryJobStatus
     estimated_payment: float
     estimated_completion_time: datetime

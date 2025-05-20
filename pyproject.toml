@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ed-core"
-version = "0.2.9"
+version = "0.2.11"
 description = ""
 authors = ["ffekirnew <ffekirnew0808@gmail.com>"]
 license = "MIT"
@@ -20,7 +20,7 @@ python-dotenv = "^1.0.1"
 jsons = "^1.6.3"
 cloudinary = "^1.42.2"
 python-multipart = "^0.0.20"
-ed-domain = "0.2.22"
+ed-domain = "0.3.2"
 twine = "^6.1.0"
 ed-infrastructure = "^0.1.7"
 ed-auth = "^0.1.6"

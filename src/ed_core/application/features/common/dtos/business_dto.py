@@ -1,7 +1,6 @@
 from uuid import UUID
 
 from ed_domain.core.entities import Business
-from ed_domain.core.entities.business import BillingDetail
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from pydantic import BaseModel
 
@@ -16,7 +15,6 @@ class BusinessDto(BaseModel):
     phone_number: str
     email: str
     location: LocationDto
-    billing_details: list[BillingDetail]
 
     @classmethod
     def from_business(cls, business: Business, uow: ABCUnitOfWork) -> "BusinessDto":
@@ -31,5 +29,4 @@ class BusinessDto(BaseModel):
             phone_number=business["phone_number"],
             email=business["email"],
             location=LocationDto.from_location(location),
-            billing_details=business["billing_details"],
         )

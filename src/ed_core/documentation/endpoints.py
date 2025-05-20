@@ -11,6 +11,7 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DriverDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto)
+from ed_core.application.features.common.dtos.bill_dto import BillDto
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
@@ -64,6 +65,13 @@ class CoreEndpoint(BaseEndpoint):
                 "response_model": BusinessDto,
             },
             {
+                "name": "get_business_bills",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/businesses/{{business_id}}/bills",
+                "path_params": {"business_id": str},
+                "response_model": list[BillDto],
+            },
+            {
                 "name": "get_business_orders",
                 "method": HttpMethod.GET,
                 "path": f"{self._base_url}/businesses/{{business_id}}/orders",
@@ -98,6 +106,13 @@ class CoreEndpoint(BaseEndpoint):
                 "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs",
                 "path_params": {"driver_id": str},
                 "response_model": list[DeliveryJobDto],
+            },
+            {
+                "name": "get_driver_bills",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/drivers/{{driver_id}}/bills",
+                "path_params": {"driver_id": str},
+                "response_model": list[BillDto],
             },
             {
                 "name": "get_driver",

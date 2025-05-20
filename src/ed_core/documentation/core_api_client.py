@@ -8,6 +8,7 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DriverDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto)
+from ed_core.application.features.common.dtos.bill_dto import BillDto
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
@@ -41,6 +42,11 @@ class CoreApiClient(ABCCoreApiClient):
         api_client = ApiClient[DriverDto](endpoint)
 
         return api_client({"request": create_driver_dto})
+
+    def get_driver_bills(self, driver_id: str) -> ApiResponse[list[BillDto]]:
+        endpoint = self._endpoints.get_description("get_driver_bills")
+        api_client = ApiClient[list[BillDto]](endpoint)
+        return api_client({"path_params": {"driver_id": driver_id}})
 
     def get_driver_delivery_jobs(
         self, driver_id: str
@@ -210,6 +216,11 @@ class CoreApiClient(ABCCoreApiClient):
                 "request": update_business_dto,
             }
         )
+
+    def get_business_bills(self, business_id: str) -> ApiResponse[list[BillDto]]:
+        endpoint = self._endpoints.get_description("get_business_bills")
+        api_client = ApiClient[list[BillDto]](endpoint)
+        return api_client({"path_params": {"business_id": business_id}})
 
     def get_business_orders(self, business_id: str) -> ApiResponse[list[OrderDto]]:
         endpoint = self._endpoints.get_description("get_business_orders")

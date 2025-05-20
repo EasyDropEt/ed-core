@@ -20,13 +20,14 @@ from ed_core.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler, CreateOrdersCommandHandler,
     UpdateBusinessCommandHandler)
 from ed_core.application.features.business.handlers.queries import (
-    GetAllBusinessesQueryHandler, GetBusinessByUserIdQueryHandler,
-    GetBusinessOrdersQueryHandler, GetBusinessQueryHandler)
+    GetAllBusinessesQueryHandler, GetBusinessBillsQueryHandler,
+    GetBusinessByUserIdQueryHandler, GetBusinessOrdersQueryHandler,
+    GetBusinessQueryHandler)
 from ed_core.application.features.business.requests.commands import (
     CreateBusinessCommand, CreateOrdersCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
-    GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
-    GetBusinessQuery)
+    GetAllBusinessQuery, GetBusinessBillsQuery, GetBusinessByUserIdQuery,
+    GetBusinessOrdersQuery, GetBusinessQuery)
 from ed_core.application.features.consumer.handlers.commands import (
     CreateConsumerCommandHandler, UpdateConsumerCommandHandler)
 from ed_core.application.features.consumer.handlers.queries import (
@@ -53,15 +54,16 @@ from ed_core.application.features.driver.handlers.commands import (
     PickUpOrderVerifyCommandHandler, UpdateDriverCommandHandler,
     UpdateDriverCurrentLocationCommandHandler)
 from ed_core.application.features.driver.handlers.queries import (
-    GetAllDriversQueryHandler, GetDriverByUserIdQueryHandler,
-    GetDriverDeliveryJobsQueryHandler, GetDriverQueryHandler)
+    GetAllDriversQueryHandler, GetDriverBillsQueryHandler,
+    GetDriverByUserIdQueryHandler, GetDriverDeliveryJobsQueryHandler,
+    GetDriverQueryHandler)
 from ed_core.application.features.driver.requests.commands import (
     CreateDriverCommand, DropOffOrderCommand, DropOffOrderVerifyCommand,
     PickUpOrderCommand, PickUpOrderVerifyCommand, UpdateDriverCommand,
     UpdateDriverCurrentLocationCommand)
 from ed_core.application.features.driver.requests.queries import (
-    GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
-    GetDriverQuery)
+    GetAllDriversQuery, GetDriverBillsQuery, GetDriverByUserIdQuery,
+    GetDriverDeliveryJobsQuery, GetDriverQuery)
 from ed_core.application.features.notification.handlers.queries import \
     GetNotificationsQueryHandler
 from ed_core.application.features.notification.requests.queries import \
@@ -138,6 +140,7 @@ def mediator(
         (GetDeliveryJobQuery, GetDeliveryJobQueryHandler(uow)),
         # Driver handlers
         (CreateDriverCommand, CreateDriverCommandHandler(uow)),
+        (GetDriverBillsQuery, GetDriverBillsQueryHandler(uow)),
         (GetDriverDeliveryJobsQuery, GetDriverDeliveryJobsQueryHandler(uow)),
         (GetDriverQuery, GetDriverQueryHandler(uow)),
         (GetDriverByUserIdQuery, GetDriverByUserIdQueryHandler(uow)),
@@ -155,6 +158,7 @@ def mediator(
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
         (CreateOrdersCommand, CreateOrdersCommandHandler(uow, api)),
+        (GetBusinessBillsQuery, GetBusinessBillsQueryHandler(uow)),
         (GetBusinessQuery, GetBusinessQueryHandler(uow)),
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),

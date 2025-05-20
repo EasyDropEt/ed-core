@@ -1,5 +1,7 @@
 from ed_core.application.features.driver.requests.queries.get_all_drivers_query import \
     GetAllDriversQuery
+from ed_core.application.features.driver.requests.queries.get_driver_bills_query import \
+    GetDriverBillsQuery
 from ed_core.application.features.driver.requests.queries.get_driver_by_user_id_query import \
     GetDriverByUserIdQuery
 from ed_core.application.features.driver.requests.queries.get_driver_delivery_jobs_query import \
@@ -8,6 +10,7 @@ from ed_core.application.features.driver.requests.queries.get_driver_query impor
     GetDriverQuery
 
 __all__ = [
+    "GetDriverBillsQuery",
     "GetDriverDeliveryJobsQuery",
     "GetDriverByUserIdQuery",
     "GetDriverQuery",
