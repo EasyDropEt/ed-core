@@ -77,12 +77,10 @@ class CoreApiClient(ABCCoreApiClient):
     def update_driver_current_location(
         self, driver_id: str, update_location_dto: UpdateLocationDto
     ) -> ApiResponse[DriverDto]:
-        endpoint = self._endpoints.get_description(
-            "update_driver_current_location")
+        endpoint = self._endpoints.get_description("update_driver_current_location")
         api_client = ApiClient[DriverDto](endpoint)
         return api_client(
-            {"path_params": {"driver_id": driver_id},
-                "request": update_location_dto}
+            {"path_params": {"driver_id": driver_id}, "request": update_location_dto}
         )
 
     def claim_delivery_job(
@@ -233,8 +231,7 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("create_business_order")
         api_client = ApiClient[list[OrderDto]](endpoint)
         return api_client(
-            {"path_params": {"business_id": business_id},
-                "request": create_orders_dto}
+            {"path_params": {"business_id": business_id}, "request": create_orders_dto}
         )
 
     def get_delivery_jobs(self) -> ApiResponse[list[DeliveryJobDto]]:
@@ -291,8 +288,7 @@ class CoreApiClient(ABCCoreApiClient):
     def get_consumer_delivery_jobs(
         self, consumer_id: str
     ) -> ApiResponse[list[OrderDto]]:
-        endpoint = self._endpoints.get_description(
-            "get_consumer_delivery_jobs")
+        endpoint = self._endpoints.get_description("get_consumer_delivery_jobs")
         api_client = ApiClient[list[OrderDto]](endpoint)
         return api_client({"path_params": {"consumer_id": consumer_id}})
 

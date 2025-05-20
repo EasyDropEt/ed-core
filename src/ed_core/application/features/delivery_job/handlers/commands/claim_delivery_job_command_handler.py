@@ -17,8 +17,7 @@ class ClaimDeliveryJobCommandHandler(RequestHandler):
     async def handle(
         self, request: ClaimDeliveryJobCommand
     ) -> BaseResponse[DeliveryJobDto]:
-        delivery_job = self._uow.delivery_job_repository.get(
-            id=request.delivery_job_id)
+        delivery_job = self._uow.delivery_job_repository.get(id=request.delivery_job_id)
         if not delivery_job:
             raise ApplicationException(
                 Exceptions.NotFoundException,

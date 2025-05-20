@@ -1,5 +1,3 @@
-include .env
-
 .phony: format lint run test docker.build docker.build.quite docker.run export_deps build upload
 
 export_deps:

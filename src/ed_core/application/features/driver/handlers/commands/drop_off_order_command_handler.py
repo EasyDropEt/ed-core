@@ -54,8 +54,7 @@ class DropOffOrderCommandHandler(RequestHandler):
             "waypoint_status"
         ] = WaypointStatus.IN_PROGRESS
 
-        self._uow.delivery_job_repository.update(
-            delivery_job["id"], delivery_job)
+        self._uow.delivery_job_repository.update(delivery_job["id"], delivery_job)
         self._uow.otp_repository.create(
             {
                 "id": get_new_id(),
@@ -113,8 +112,7 @@ class DropOffOrderCommandHandler(RequestHandler):
         )
 
     def _validate_delivery_job(self, delivery_job_id: UUID) -> DeliveryJob:
-        delivery_job = self._uow.delivery_job_repository.get(
-            id=delivery_job_id)
+        delivery_job = self._uow.delivery_job_repository.get(id=delivery_job_id)
         if not delivery_job or "driver_id" not in delivery_job:
             raise ApplicationException(
                 Exceptions.NotFoundException,

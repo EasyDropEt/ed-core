@@ -17,8 +17,7 @@ class GetBusinessBillsQueryHandler(RequestHandler):
     async def handle(
         self, request: GetBusinessBillsQuery
     ) -> BaseResponse[list[BillDto]]:
-        bills = self._uow.bill_repository.get_all(
-            business_id=request.business_id)
+        bills = self._uow.bill_repository.get_all(business_id=request.business_id)
         if not bills:
             raise ApplicationException(
                 Exceptions.NotFoundException,

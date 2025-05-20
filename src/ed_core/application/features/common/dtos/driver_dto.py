@@ -28,8 +28,7 @@ class DriverDto(BaseModel):
         location = uow.location_repository.get(id=driver["location_id"])
         assert location is not None, "Location not found"
 
-        current_location = uow.location_repository.get(
-            id=driver["current_location_id"])
+        current_location = uow.location_repository.get(id=driver["current_location_id"])
         assert current_location is not None, "Current location not found"
 
         return cls(

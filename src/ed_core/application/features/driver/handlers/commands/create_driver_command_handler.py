@@ -6,7 +6,7 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.common.dtos.driver_dto import (DriverDto)
+from ed_core.application.features.common.dtos.driver_dto import DriverDto
 from ed_core.application.features.driver.dtos.create_driver_dto import (
     CreateCarDto, CreateLocationDto)
 from ed_core.application.features.driver.dtos.validators import \

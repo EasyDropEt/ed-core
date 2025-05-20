@@ -18,8 +18,7 @@ class CancelDeliveryJobCommandHandler(RequestHandler):
     async def handle(
         self, request: CancelDeliveryJobCommand
     ) -> BaseResponse[DeliveryJobDto]:
-        delivery_job = self._uow.delivery_job_repository.get(
-            id=request.delivery_job_id)
+        delivery_job = self._uow.delivery_job_repository.get(id=request.delivery_job_id)
         if not delivery_job:
             raise ApplicationException(
                 Exceptions.NotFoundException,
@@ -57,8 +56,7 @@ class CancelDeliveryJobCommandHandler(RequestHandler):
             )
 
         delivery_job["status"] = DeliveryJobStatus.CANCELLED
-        self._uow.delivery_job_repository.update(
-            delivery_job["id"], delivery_job)
+        self._uow.delivery_job_repository.update(delivery_job["id"], delivery_job)
 
         return BaseResponse[DeliveryJobDto].success(
             "Delivery job Canceled successfully.",

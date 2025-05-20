@@ -5,7 +5,6 @@ from ed_domain.core.entities import Bill, Consumer, Location, Order
 from ed_domain.core.entities.order import OrderStatus
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from ed_domain.core.value_objects.money import Currency, Money
-from ed_domain.queues.common.abc_producer import ABCProducer
 from ed_domain.queues.ed_optimization.order_model import (BusinessModel,
                                                           ConsumerModel,
                                                           OrderModel)
@@ -76,8 +75,7 @@ class CreateOrdersCommandHandler(RequestHandler):
 
         return BaseResponse[list[OrderDto]].success(
             "Order created successfully.",
-            [OrderDto.from_order(order, self._uow)
-             for order in created_orders],
+            [OrderDto.from_order(order, self._uow) for order in created_orders],
         )
 
     def _create_or_get_consumer(self, consumer: CreateConsumerDto) -> Consumer:

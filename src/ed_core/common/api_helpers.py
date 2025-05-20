@@ -32,11 +32,9 @@ class ApiClient(Generic[T]):
         )
 
         try:
-            LOG.debug(
-                f"Making {method} request to {url} with headers {headers}")
+            LOG.debug(f"Making {method} request to {url} with headers {headers}")
             response = requests.request(
-                method, url, headers=headers, params=params, data=jsons.dumps(
-                    data)
+                method, url, headers=headers, params=params, data=jsons.dumps(data)
             )
             return response.json()
         except requests.RequestException as e:
