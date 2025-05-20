@@ -8,6 +8,7 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DriverDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto)
+from ed_core.application.features.common.dtos.bill_dto import BillDto
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
@@ -22,7 +23,6 @@ from ed_core.application.features.driver.dtos.update_driver_dto import \
 from ed_core.common.api_helpers import ApiClient
 from ed_core.documentation.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.endpoints import CoreEndpoint
-from src.ed_core.application.features.common.dtos.bill_dto import BillDto
 
 
 class CoreApiClient(ABCCoreApiClient):

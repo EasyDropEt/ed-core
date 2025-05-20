@@ -15,29 +15,15 @@ class GetDriverBillsQueryHandler(RequestHandler):
         self._uow = uow
 
     async def handle(self, request: GetDriverBillsQuery) -> BaseResponse[list[BillDto]]:
-        if driver := self._uow.driver_repository.get(id=request.driver_id):
-            bill_ids = driver["bill_ids"]
+        bills = self._uow.bill_repository.get_all(driver_id=request.driver_id)
+        if not bills:
+            raise ApplicationException(
+                Exceptions.NotFoundException,
+                "Driver bills could not fetched.",
+                [f"Bills for driver with id {request.driver_id} not found."],
+            )
 
-            if not bill_ids:
-                raise ApplicationException(
-                    Exceptions.NotFoundException,
-                    "Driver bills could not fetched.",
-                    [f"Bills for driver with id {request.driver_id} not found."],
-                )
-
-            bill_id_dtos = []
-            for bill_id in bill_ids:
-                bill = self._uow.bill_repository.get(id=bill_id)
-                if not bill:
-                    raise ApplicationException(
-                        Exceptions.NotFoundException,
-                        "Driver bills could not fetched.",
-                        [f"Bill with id {bill_id} not found."],
-                    )
-                bill_id_dtos.append(BillDto.from_bill(bill))
-
-        raise ApplicationException(
-            Exceptions.NotFoundException,
-            "Driver bills could not fetched.",
-            [f"Driver with id {request.driver_id} not found."],
+        return BaseResponse[list[BillDto]].success(
+            "Driver bills fetched successfully.",
+            [BillDto.from_bill(bill) for bill in bills],
         )

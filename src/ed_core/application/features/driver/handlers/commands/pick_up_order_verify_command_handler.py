@@ -137,13 +137,13 @@ class PickUpOrderVerifyCommandHandler(RequestHandler):
             )
         return order
 
-    def _validate_bill(self, order_id: UUID) -> Bill:
-        bill = self._uow.bill_repository.get(id=order_id)
+    def _validate_bill(self, bill_id: UUID) -> Bill:
+        bill = self._uow.bill_repository.get(id=bill_id)
         if not bill:
             raise ApplicationException(
                 Exceptions.NotFoundException,
                 "Bill not found.",
-                [f"Bill with id {order_id} not found."],
+                [f"Bill with id {bill_id} not found."],
             )
 
         return bill
