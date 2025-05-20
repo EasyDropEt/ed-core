@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 from ed_domain.common.exceptions import ApplicationException, Exceptions
-from ed_domain.core.entities import DeliveryJob, Driver, Order
+from ed_domain.core.entities import Bill, DeliveryJob, Driver, Order
 from ed_domain.core.entities.delivery_job import (WayPoint, WaypointStatus,
                                                   WayPointType)
 from ed_domain.core.entities.notification import NotificationType
@@ -28,6 +28,7 @@ class PickUpOrderVerifyCommandHandler(RequestHandler):
         delivery_job = self._validate_delivery_job(request.delivery_job_id)
         driver = self._validate_driver(request.driver_id, delivery_job)
         order = self._validate_order(request.order_id)
+        bill = self._validate_bill(order["bill_id"])
 
         # Validate otp
         self._validate_otp(driver["user_id"], request.dto["otp"])
@@ -41,6 +42,9 @@ class PickUpOrderVerifyCommandHandler(RequestHandler):
         ] = WaypointStatus.DONE
         self._uow.delivery_job_repository.update(
             delivery_job["id"], delivery_job)
+
+        bill["driver_id"] = driver["id"]
+        self._uow.bill_repository.update(bill["id"], bill)
 
         # Send notifications
         self._api.notification_api.send_notification(
@@ -132,3 +136,14 @@ class PickUpOrderVerifyCommandHandler(RequestHandler):
                 [f"Order with id {order_id} not found."],
             )
         return order
+
+    def _validate_bill(self, order_id: UUID) -> Bill:
+        bill = self._uow.bill_repository.get(id=order_id)
+        if not bill:
+            raise ApplicationException(
+                Exceptions.NotFoundException,
+                "Bill not found.",
+                [f"Bill with id {order_id} not found."],
+            )
+
+        return bill

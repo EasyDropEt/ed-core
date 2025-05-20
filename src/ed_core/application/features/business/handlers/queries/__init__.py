@@ -1,5 +1,7 @@
 from ed_core.application.features.business.handlers.queries.get_all_businesses_query_handler import \
     GetAllBusinessesQueryHandler
+from ed_core.application.features.business.handlers.queries.get_business_bills_query_handler import \
+    GetBusinessBillsQueryHandler
 from ed_core.application.features.business.handlers.queries.get_business_by_user_id_query_handler import \
     GetBusinessByUserIdQueryHandler
 from ed_core.application.features.business.handlers.queries.get_business_orders_query_handler import \
@@ -8,6 +10,7 @@ from ed_core.application.features.business.handlers.queries.get_business_query_h
     GetBusinessQueryHandler
 
 __all__ = [
+    "GetBusinessBillsQueryHandler",
     "GetBusinessQueryHandler",
     "GetBusinessOrdersQueryHandler",
     "GetAllBusinessesQueryHandler",

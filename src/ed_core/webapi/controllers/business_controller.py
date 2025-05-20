@@ -12,7 +12,10 @@ from ed_core.application.features.business.requests.commands import (
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
     GetBusinessQuery)
+from ed_core.application.features.business.requests.queries.get_business_bills_query import \
+    GetBusinessBillsQuery
 from ed_core.application.features.common.dtos import BusinessDto, OrderDto
+from ed_core.application.features.common.dtos.bill_dto import BillDto
 from ed_core.common.logging_helpers import get_logger
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
@@ -65,6 +68,15 @@ async def get_business_by_user_id(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(GetBusinessByUserIdQuery(user_id=user_id))
+
+
+@router.get("/{business_id}/bills", response_model=GenericResponse[list[BillDto]])
+@rest_endpoint
+async def get_business_bills(
+    business_id: UUID,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(GetBusinessBillsQuery(business_id=business_id))
 
 
 @router.get("/{business_id}/orders", response_model=GenericResponse[list[OrderDto]])

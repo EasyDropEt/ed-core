@@ -5,14 +5,12 @@ from ed_domain.documentation.common.api_response import ApiResponse
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrdersDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.common.dtos import (BusinessDto,
+from ed_core.application.features.common.dtos import (BillDto, BusinessDto,
+                                                      ConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
                                                       NotificationDto,
-                                                      OrderDto)
-from ed_core.application.features.common.dtos.consumer_dto import ConsumerDto
-from ed_core.application.features.common.dtos.track_order_dto import \
-    TrackOrderDto
+                                                      OrderDto, TrackOrderDto)
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
@@ -35,6 +33,10 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     def create_driver(
         self, create_driver_dto: CreateDriverDto
     ) -> ApiResponse[DriverDto]: ...
+
+    @abstractmethod
+    def get_driver_bills(
+        self, driver_id: str) -> ApiResponse[list[BillDto]]: ...
 
     @abstractmethod
     def get_driver_delivery_jobs(
@@ -116,6 +118,10 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     @abstractmethod
     def get_business_by_user_id(
         self, user_id: str) -> ApiResponse[BusinessDto]: ...
+
+    @abstractmethod
+    def get_business_bills(
+        self, business_id: str) -> ApiResponse[list[BillDto]]: ...
 
     @abstractmethod
     def get_business_orders(
