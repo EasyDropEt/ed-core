@@ -13,6 +13,7 @@ from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       DriverHeldFundsDto,
+                                                      DriverPaymentSummaryDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,
                                                       PickUpOrderDto,
@@ -23,8 +24,6 @@ from ed_core.application.features.driver.dtos.update_driver_dto import \
 from ed_core.common.api_helpers import ApiClient
 from ed_core.documentation.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.endpoints import CoreEndpoint
-from src.ed_core.application.features.driver.dtos.driver_payment_summary_dto import \
-    DriverPaymentSummaryDto
 
 
 class CoreApiClient(ABCCoreApiClient):
