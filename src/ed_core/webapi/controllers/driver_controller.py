@@ -5,10 +5,12 @@ from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
 from ed_core.application.features.common.dtos import DeliveryJobDto, DriverDto
-from ed_core.application.features.common.dtos.bill_dto import BillDto
+from ed_core.application.features.common.dtos.order_dto import OrderDto
 from ed_core.application.features.delivery_job.requests.commands import (
     CancelDeliveryJobCommand, ClaimDeliveryJobCommand)
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      DriverHeldFundsDto,
+                                                      DriverPaymentSummaryDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,
                                                       PickUpOrderDto,
@@ -21,8 +23,9 @@ from ed_core.application.features.driver.requests.commands import (
     PickUpOrderCommand, PickUpOrderVerifyCommand, UpdateDriverCommand,
     UpdateDriverCurrentLocationCommand)
 from ed_core.application.features.driver.requests.queries import (
-    GetAllDriversQuery, GetDriverBillsQuery, GetDriverByUserIdQuery,
-    GetDriverDeliveryJobsQuery, GetDriverQuery)
+    GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
+    GetDriverHeldFundsQuery, GetDriverOrdersQuery,
+    GetDriverPaymentSummaryQuery, GetDriverQuery)
 from ed_core.common.logging_helpers import get_logger
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
@@ -120,16 +123,40 @@ async def driver_delivery_jobs(
     driver_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetDriverDeliveryJobsQuery(driver_id=driver_id))
+    return await mediator.send(GetDriverDeliveryJobsQuery(driver_id))
 
 
-@router.get("/{driver_id}/bills", response_model=GenericResponse[list[BillDto]])
+@router.get(
+    "/{driver_id}/payment/summary",
+    response_model=GenericResponse[DriverPaymentSummaryDto],
+)
 @rest_endpoint
-async def driver_bills(
+async def driver_payment_summary(
     driver_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetDriverBillsQuery(driver_id=driver_id))
+    return await mediator.send(GetDriverPaymentSummaryQuery(driver_id))
+
+
+@router.get(
+    "/{driver_id}/payment/held-funds",
+    response_model=GenericResponse[DriverHeldFundsDto],
+)
+@rest_endpoint
+async def driver_held_funds(
+    driver_id: UUID,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(GetDriverHeldFundsQuery(driver_id))
+
+
+@router.get("/{driver_id}/orders", response_model=GenericResponse[list[OrderDto]])
+@rest_endpoint
+async def driver_orders(
+    driver_id: UUID,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(GetDriverOrdersQuery(driver_id))
 
 
 @router.get("/{driver_id}", response_model=GenericResponse[DriverDto])
@@ -138,7 +165,7 @@ async def get_driver(
     driver_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetDriverQuery(driver_id=driver_id))
+    return await mediator.send(GetDriverQuery(driver_id))
 
 
 @router.put("/{driver_id}", response_model=GenericResponse[DriverDto])
@@ -148,7 +175,7 @@ async def update_driver(
     dto: UpdateDriverDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(UpdateDriverCommand(driver_id=driver_id, dto=dto))
+    return await mediator.send(UpdateDriverCommand(driver_id, dto))
 
 
 @router.put("/{driver_id}/current-location", response_model=GenericResponse[DriverDto])
@@ -158,9 +185,7 @@ async def update_driver_current_location(
     dto: UpdateLocationDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(
-        UpdateDriverCurrentLocationCommand(driver_id=driver_id, dto=dto)
-    )
+    return await mediator.send(UpdateDriverCurrentLocationCommand(driver_id, dto))
 
 
 @router.get("/users/{user_id}", response_model=GenericResponse[DriverDto])
@@ -169,7 +194,7 @@ async def get_driver_by_user_id(
     user_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetDriverByUserIdQuery(user_id=user_id))
+    return await mediator.send(GetDriverByUserIdQuery(user_id))
 
 
 @router.post(
@@ -182,12 +207,7 @@ async def claim_delivery_job(
     delivery_job_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(
-        ClaimDeliveryJobCommand(
-            driver_id=driver_id,
-            delivery_job_id=delivery_job_id,
-        )
-    )
+    return await mediator.send(ClaimDeliveryJobCommand(driver_id, delivery_job_id))
 
 
 @router.post(
@@ -200,9 +220,4 @@ async def cancel_delivery_job(
     delivery_job_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(
-        CancelDeliveryJobCommand(
-            driver_id=driver_id,
-            delivery_job_id=delivery_job_id,
-        )
-    )
+    return await mediator.send(CancelDeliveryJobCommand(driver_id, delivery_job_id))

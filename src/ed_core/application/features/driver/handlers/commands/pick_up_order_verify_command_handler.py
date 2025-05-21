@@ -40,7 +40,8 @@ class PickUpOrderVerifyCommandHandler(RequestHandler):
         delivery_job["waypoints"][waypoint_index][
             "waypoint_status"
         ] = WaypointStatus.DONE
-        self._uow.delivery_job_repository.update(delivery_job["id"], delivery_job)
+        self._uow.delivery_job_repository.update(
+            delivery_job["id"], delivery_job)
 
         bill["driver_id"] = driver["id"]
         self._uow.bill_repository.update(bill["id"], bill)
@@ -74,7 +75,8 @@ class PickUpOrderVerifyCommandHandler(RequestHandler):
         )
 
     def _validate_delivery_job(self, delivery_job_id: UUID) -> DeliveryJob:
-        delivery_job = self._uow.delivery_job_repository.get(id=delivery_job_id)
+        delivery_job = self._uow.delivery_job_repository.get(
+            id=delivery_job_id)
         if not delivery_job or "driver_id" not in delivery_job:
             raise ApplicationException(
                 Exceptions.NotFoundException,

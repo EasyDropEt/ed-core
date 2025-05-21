@@ -8,11 +8,12 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DriverDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto)
-from ed_core.application.features.common.dtos.bill_dto import BillDto
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      DriverHeldFundsDto,
+                                                      DriverPaymentSummaryDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,
                                                       PickUpOrderDto,
@@ -43,9 +44,9 @@ class CoreApiClient(ABCCoreApiClient):
 
         return api_client({"request": create_driver_dto})
 
-    def get_driver_bills(self, driver_id: str) -> ApiResponse[list[BillDto]]:
-        endpoint = self._endpoints.get_description("get_driver_bills")
-        api_client = ApiClient[list[BillDto]](endpoint)
+    def get_driver_orders(self, driver_id: str) -> ApiResponse[list[OrderDto]]:
+        endpoint = self._endpoints.get_description("get_driver_orders")
+        api_client = ApiClient[list[OrderDto]](endpoint)
         return api_client({"path_params": {"driver_id": driver_id}})
 
     def get_driver_delivery_jobs(
@@ -59,6 +60,19 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("get_driver_by_user_id")
         api_client = ApiClient[DriverDto](endpoint)
         return api_client({"path_params": {"user_id": user_id}})
+
+    def get_driver_held_funds(self, driver_id: str) -> ApiResponse[DriverHeldFundsDto]:
+        endpoint = self._endpoints.get_description("get_driver_held_funds")
+        api_client = ApiClient[DriverHeldFundsDto](endpoint)
+        return api_client({"path_params": {"driver_id": driver_id}})
+
+    def get_driver_payment_summary(
+        self, driver_id: str
+    ) -> ApiResponse[DriverPaymentSummaryDto]:
+        endpoint = self._endpoints.get_description(
+            "get_driver_payment_summary")
+        api_client = ApiClient[DriverPaymentSummaryDto](endpoint)
+        return api_client({"path_params": {"driver_id": driver_id}})
 
     def get_driver(self, driver_id: str) -> ApiResponse[DriverDto]:
         endpoint = self._endpoints.get_description("get_driver")
@@ -77,10 +91,12 @@ class CoreApiClient(ABCCoreApiClient):
     def update_driver_current_location(
         self, driver_id: str, update_location_dto: UpdateLocationDto
     ) -> ApiResponse[DriverDto]:
-        endpoint = self._endpoints.get_description("update_driver_current_location")
+        endpoint = self._endpoints.get_description(
+            "update_driver_current_location")
         api_client = ApiClient[DriverDto](endpoint)
         return api_client(
-            {"path_params": {"driver_id": driver_id}, "request": update_location_dto}
+            {"path_params": {"driver_id": driver_id},
+                "request": update_location_dto}
         )
 
     def claim_delivery_job(
@@ -215,11 +231,6 @@ class CoreApiClient(ABCCoreApiClient):
             }
         )
 
-    def get_business_bills(self, business_id: str) -> ApiResponse[list[BillDto]]:
-        endpoint = self._endpoints.get_description("get_business_bills")
-        api_client = ApiClient[list[BillDto]](endpoint)
-        return api_client({"path_params": {"business_id": business_id}})
-
     def get_business_orders(self, business_id: str) -> ApiResponse[list[OrderDto]]:
         endpoint = self._endpoints.get_description("get_business_orders")
         api_client = ApiClient[list[OrderDto]](endpoint)
@@ -231,7 +242,8 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("create_business_order")
         api_client = ApiClient[list[OrderDto]](endpoint)
         return api_client(
-            {"path_params": {"business_id": business_id}, "request": create_orders_dto}
+            {"path_params": {"business_id": business_id},
+                "request": create_orders_dto}
         )
 
     def get_delivery_jobs(self) -> ApiResponse[list[DeliveryJobDto]]:
@@ -288,7 +300,8 @@ class CoreApiClient(ABCCoreApiClient):
     def get_consumer_delivery_jobs(
         self, consumer_id: str
     ) -> ApiResponse[list[OrderDto]]:
-        endpoint = self._endpoints.get_description("get_consumer_delivery_jobs")
+        endpoint = self._endpoints.get_description(
+            "get_consumer_delivery_jobs")
         api_client = ApiClient[list[OrderDto]](endpoint)
         return api_client({"path_params": {"consumer_id": consumer_id}})
 

@@ -7,6 +7,7 @@ from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos import BusinessDto, ConsumerDto
+from ed_core.application.features.common.dtos.bill_dto import BillDto
 
 
 class OrderDto(BaseModel):
@@ -17,6 +18,7 @@ class OrderDto(BaseModel):
     parcel: Parcel
     order_status: OrderStatus
     delivery_job_id: Optional[UUID]
+    bill: BillDto
 
     @classmethod
     def from_order(
@@ -32,6 +34,9 @@ class OrderDto(BaseModel):
         order_business = uow.business_repository.get(id=order["business_id"])
         assert order_business is not None, "Business not found"
 
+        bill = uow.bill_repository.get(id=order["bill_id"])
+        assert bill is not None, "Bill not found"
+
         return cls(
             id=order["id"],
             business=BusinessDto.from_business(order_business, uow),
@@ -40,4 +45,5 @@ class OrderDto(BaseModel):
             parcel=order["parcel"],
             order_status=order["order_status"],
             delivery_job_id=order.get("delivery_job_id"),
+            bill=BillDto.from_bill(bill),
         )

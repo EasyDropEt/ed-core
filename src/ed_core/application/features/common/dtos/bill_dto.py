@@ -10,7 +10,6 @@ class BillDto(BaseModel):
     amount: Money
     bill_status: BillStatus
     due_date: datetime
-    update_datetime: datetime
 
     @classmethod
     def from_bill(cls, bill: Bill) -> "BillDto":
@@ -19,5 +18,4 @@ class BillDto(BaseModel):
             amount=bill["amount"],
             bill_status=bill["bill_status"],
             due_date=bill["due_date"],
-            update_datetime=bill["update_datetime"],
         )

@@ -630,13 +630,13 @@ pgp = ["gpg"]
 
 [[package]]
 name = "ed-auth"
-version = "0.1.6"
+version = "0.1.9"
 description = "EasyDrop auth model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_auth-0.1.6-py3-none-any.whl", hash = "sha256:6bc2e8adf8507a3d49bf9014e265df4be8b3417234f7103804ba1a11b4b57a09"},
+    {file = "ed_auth-0.1.9-py3-none-any.whl", hash = "sha256:62258273fbc41948ea4704560232dfb0472aeb4e240792bcfff8ede1b1dd4c62"},
 ]
 
 [package.extras]
@@ -644,13 +644,13 @@ dev = ["check-manifest"]
 
 [[package]]
 name = "ed-domain"
-version = "0.3.2"
+version = "0.3.3"
 description = "EasyDrop domain model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_domain-0.3.2-py3-none-any.whl", hash = "sha256:8398afc0405774d1513abd7c534f338fe14e4fa027552a814a35268d588bffe1"},
+    {file = "ed_domain-0.3.3-py3-none-any.whl", hash = "sha256:84c8d411f9b0958cbf6ae0ab7ca6dbeebf346406e3a3f07f13a1ba0df89bf3c8"},
 ]
 
 [package.extras]
@@ -658,13 +658,13 @@ dev = ["check-manifest"]
 
 [[package]]
 name = "ed-infrastructure"
-version = "0.1.7"
+version = "0.1.9"
 description = "EasyDrop infrastructure Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_infrastructure-0.1.7-py3-none-any.whl", hash = "sha256:170d2ef1a1607b83ddfdf23c002433d9e13f47074b7459f10a4e214ff713b7a0"},
+    {file = "ed_infrastructure-0.1.9-py3-none-any.whl", hash = "sha256:5feb45907f214ee3f254be8d0ed181997a62dffac734ba913d7bfbf8c851a173"},
 ]
 
 [package.extras]
@@ -672,13 +672,13 @@ dev = ["check-manifest"]
 
 [[package]]
 name = "ed-notification"
-version = "0.1.6"
+version = "0.1.8"
 description = "EasyDrop notification model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_notification-0.1.6-py3-none-any.whl", hash = "sha256:34faa9e80bd46902fccff418aafaa3c9d9e9beec390b59f60d926d3c5708c270"},
+    {file = "ed_notification-0.1.8-py3-none-any.whl", hash = "sha256:ac25758616f2ec70d0e5978ff7e3c4c92b668567bb6222e126884bb2f67b1dde"},
 ]
 
 [package.extras]
@@ -2876,4 +2876,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "c102fbe328159bf308a8e457faee1f8962468cd276fe2f8a4385afd3989c42de"
+content-hash = "ed6a2826848b0e4cd6f628c52dad2d6d9f5a10f94126f45cea55c5c6faf4f0ae"

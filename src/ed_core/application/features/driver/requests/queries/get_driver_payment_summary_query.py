@@ -5,10 +5,10 @@ from rmediator.decorators import request
 from rmediator.types import Request
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.common.dtos import BillDto
+from ed_core.application.features.driver.dtos import DriverPaymentSummaryDto
 
 
-@request(BaseResponse[list[BillDto]])
+@request(BaseResponse[DriverPaymentSummaryDto])
 @dataclass
-class GetDriverBillsQuery(Request):
+class GetDriverPaymentSummaryQuery(Request):
     driver_id: UUID
