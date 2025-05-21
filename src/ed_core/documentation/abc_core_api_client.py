@@ -15,6 +15,8 @@ from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      DriverHeldFundsDto,
+                                                      DriverPaymentSummaryDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,
                                                       PickUpOrderDto,
@@ -35,7 +37,8 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     ) -> ApiResponse[DriverDto]: ...
 
     @abstractmethod
-    def get_driver_bills(self, driver_id: str) -> ApiResponse[list[BillDto]]: ...
+    def get_driver_orders(
+        self, driver_id: str) -> ApiResponse[list[OrderDto]]: ...
 
     @abstractmethod
     def get_driver_delivery_jobs(
@@ -44,6 +47,16 @@ class ABCCoreApiClient(metaclass=ABCMeta):
 
     @abstractmethod
     def get_driver(self, driver_id: str) -> ApiResponse[DriverDto]: ...
+
+    @abstractmethod
+    def get_driver_held_funds(
+        self, driver_id: str
+    ) -> ApiResponse[DriverHeldFundsDto]: ...
+
+    @abstractmethod
+    def get_driver_payment_summary(
+        self, driver_id: str
+    ) -> ApiResponse[DriverPaymentSummaryDto]: ...
 
     @abstractmethod
     def update_driver(
@@ -56,7 +69,8 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     ) -> ApiResponse[DriverDto]: ...
 
     @abstractmethod
-    def get_driver_by_user_id(self, user_id: str) -> ApiResponse[DriverDto]: ...
+    def get_driver_by_user_id(
+        self, user_id: str) -> ApiResponse[DriverDto]: ...
 
     @abstractmethod
     def claim_delivery_job(
@@ -114,13 +128,12 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     ) -> ApiResponse[BusinessDto]: ...
 
     @abstractmethod
-    def get_business_by_user_id(self, user_id: str) -> ApiResponse[BusinessDto]: ...
+    def get_business_by_user_id(
+        self, user_id: str) -> ApiResponse[BusinessDto]: ...
 
     @abstractmethod
-    def get_business_bills(self, business_id: str) -> ApiResponse[list[BillDto]]: ...
-
-    @abstractmethod
-    def get_business_orders(self, business_id: str) -> ApiResponse[list[OrderDto]]: ...
+    def get_business_orders(
+        self, business_id: str) -> ApiResponse[list[OrderDto]]: ...
 
     @abstractmethod
     def create_business_orders(
@@ -132,7 +145,8 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     def get_delivery_jobs(self) -> ApiResponse[list[DeliveryJobDto]]: ...
 
     @abstractmethod
-    def get_delivery_job(self, delivery_job_id: str) -> ApiResponse[DeliveryJobDto]: ...
+    def get_delivery_job(
+        self, delivery_job_id: str) -> ApiResponse[DeliveryJobDto]: ...
 
     @abstractmethod
     def create_delivery_job(
@@ -175,7 +189,8 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     ) -> ApiResponse[ConsumerDto]: ...
 
     @abstractmethod
-    def get_consumer_by_user_id(self, user_id: str) -> ApiResponse[ConsumerDto]: ...
+    def get_consumer_by_user_id(
+        self, user_id: str) -> ApiResponse[ConsumerDto]: ...
 
     # Notification featuers
     @abstractmethod

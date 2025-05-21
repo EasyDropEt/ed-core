@@ -11,11 +11,12 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DriverDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto)
-from ed_core.application.features.common.dtos.bill_dto import BillDto
 from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
+                                                      DriverHeldFundsDto,
+                                                      DriverPaymentSummaryDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,
                                                       PickUpOrderDto,
@@ -65,13 +66,6 @@ class CoreEndpoint(BaseEndpoint):
                 "response_model": BusinessDto,
             },
             {
-                "name": "get_business_bills",
-                "method": HttpMethod.GET,
-                "path": f"{self._base_url}/businesses/{{business_id}}/bills",
-                "path_params": {"business_id": str},
-                "response_model": list[BillDto],
-            },
-            {
                 "name": "get_business_orders",
                 "method": HttpMethod.GET,
                 "path": f"{self._base_url}/businesses/{{business_id}}/orders",
@@ -108,11 +102,11 @@ class CoreEndpoint(BaseEndpoint):
                 "response_model": list[DeliveryJobDto],
             },
             {
-                "name": "get_driver_bills",
+                "name": "get_driver_orders",
                 "method": HttpMethod.GET,
-                "path": f"{self._base_url}/drivers/{{driver_id}}/bills",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/orders",
                 "path_params": {"driver_id": str},
-                "response_model": list[BillDto],
+                "response_model": list[OrderDto],
             },
             {
                 "name": "get_driver",
@@ -201,6 +195,20 @@ class CoreEndpoint(BaseEndpoint):
                     "order_id": str,
                 },
                 "request_model": DropOffOrderVerifyDto,
+            },
+            {
+                "name": "get_driver_payment_summary",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/drivers/{{driver_id}}/payment-summary",
+                "path_params": {"driver_id": str},
+                "request_model": DriverPaymentSummaryDto,
+            },
+            {
+                "name": "get_driver_held_funds",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/drivers/{{driver_id}}/driver-held-funds",
+                "path_params": {"driver_id": str},
+                "request_model": DriverHeldFundsDto,
             },
             # Delivery job endpoints
             {
