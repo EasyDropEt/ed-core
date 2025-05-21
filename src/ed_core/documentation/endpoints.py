@@ -199,14 +199,14 @@ class CoreEndpoint(BaseEndpoint):
             {
                 "name": "get_driver_payment_summary",
                 "method": HttpMethod.GET,
-                "path": f"{self._base_url}/drivers/{{driver_id}}/payment-summary",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/payment/summary",
                 "path_params": {"driver_id": str},
                 "request_model": DriverPaymentSummaryDto,
             },
             {
                 "name": "get_driver_held_funds",
                 "method": HttpMethod.GET,
-                "path": f"{self._base_url}/drivers/{{driver_id}}/driver-held-funds",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/payment/held-funds",
                 "path_params": {"driver_id": str},
                 "request_model": DriverHeldFundsDto,
             },

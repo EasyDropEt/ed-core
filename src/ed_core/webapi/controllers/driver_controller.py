@@ -127,7 +127,7 @@ async def driver_delivery_jobs(
 
 
 @router.get(
-    "/{driver_id}/payment-summary",
+    "/{driver_id}/payment/summary",
     response_model=GenericResponse[DriverPaymentSummaryDto],
 )
 @rest_endpoint
@@ -139,7 +139,8 @@ async def driver_payment_summary(
 
 
 @router.get(
-    "/{driver_id}/driver-held-funds", response_model=GenericResponse[DriverHeldFundsDto]
+    "/{driver_id}/payment/held-funds",
+    response_model=GenericResponse[DriverHeldFundsDto],
 )
 @rest_endpoint
 async def driver_held_funds(
