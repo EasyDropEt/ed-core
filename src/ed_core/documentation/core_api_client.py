@@ -1,4 +1,5 @@
 from ed_domain.documentation.common.api_response import ApiResponse
+from ed_infrastructure.utils.api.api_client import ApiClient
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrdersDto,
@@ -21,7 +22,6 @@ from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       UpdateDriverDto)
 from ed_core.application.features.driver.dtos.update_driver_dto import \
     UpdateLocationDto
-from ed_core.common.api_helpers import ApiClient
 from ed_core.documentation.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.endpoints import CoreEndpoint
 
