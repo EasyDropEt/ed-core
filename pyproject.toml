@@ -20,11 +20,12 @@ python-dotenv = "^1.0.1"
 jsons = "^1.6.3"
 cloudinary = "^1.42.2"
 python-multipart = "^0.0.20"
-ed-domain = "^0.3.7"
+ed-domain = "^0.3.9"
 twine = "^6.1.0"
-ed-infrastructure = "^0.1.15"
+ed-infrastructure = "^0.1.17"
 ed-auth = "^0.1.9"
 ed-notification = "^0.1.8"
+faststream = {extras = ["rabbit"], version = "^0.5.42"}
 
 
 [tool.poetry.group.test.dependencies]
