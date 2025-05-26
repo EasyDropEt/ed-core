@@ -1,12 +1,11 @@
 from abc import ABCMeta, abstractmethod
 
-from ed_domain.documentation.common.api_response import ApiResponse
+from ed_domain.documentation.api.definitions import ApiResponse
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrdersDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.common.dtos import (BillDto, BusinessDto,
-                                                      ConsumerDto,
+from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
                                                       NotificationDto,

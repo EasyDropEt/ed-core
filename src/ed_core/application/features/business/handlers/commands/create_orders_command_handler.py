@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 
 from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.entities import Bill, Consumer, Location, Order
+from ed_domain.core.entities.bill import BillStatus
 from ed_domain.core.entities.order import OrderStatus
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from ed_domain.core.value_objects.money import Currency, Money
@@ -52,14 +53,13 @@ class CreateOrdersCommandHandler(RequestHandler):
             )
             for order in dto["orders"]
         ]
-        bill = self._create_bill()
         created_orders = self._uow.order_repository.create_many(
             [
                 Order(
                     id=get_new_id(),
                     consumer_id=consumer["id"],
                     business_id=business_id,
-                    bill_id=bill["id"],
+                    bill_id=self._create_bill()["id"],
                     latest_time_of_delivery=order["latest_time_of_delivery"],
                     parcel=order["parcel"],
                     order_status=OrderStatus.PENDING,
@@ -71,11 +71,12 @@ class CreateOrdersCommandHandler(RequestHandler):
             ]
         )
 
-        self._publish_orders(created_orders, consumers)
+        # self._publish_orders(created_orders, consumers)
 
         return BaseResponse[list[OrderDto]].success(
             "Order created successfully.",
-            [OrderDto.from_order(order, self._uow) for order in created_orders],
+            [OrderDto.from_order(order, self._uow)
+             for order in created_orders],
         )
 
     def _create_or_get_consumer(self, consumer: CreateConsumerDto) -> Consumer:
@@ -118,13 +119,17 @@ class CreateOrdersCommandHandler(RequestHandler):
     def _create_location(self, location: CreateLocationDto) -> Location:
         return self._uow.location_repository.create(
             Location(
-                **location,
                 id=get_new_id(),
+                address=location["address"],
+                latitude=location["latitude"],
+                longitude=location["longitude"],
+                postal_code=location["postal_code"],
                 city="Addis Ababa",
                 country="Ethiopia",
                 create_datetime=datetime.now(UTC),
                 update_datetime=datetime.now(UTC),
                 deleted=False,
+                last_used=datetime.now(UTC),
             )
         )
 
@@ -136,10 +141,11 @@ class CreateOrdersCommandHandler(RequestHandler):
                     amount=10,
                     currency=Currency.ETB,
                 ),
+                bill_status=BillStatus.PENDING,
+                due_date=datetime.now(UTC),
                 create_datetime=datetime.now(UTC),
                 update_datetime=datetime.now(UTC),
                 deleted=False,
-                paid=False,
             )
         )
 
