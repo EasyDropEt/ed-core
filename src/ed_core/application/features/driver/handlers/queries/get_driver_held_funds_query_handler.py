@@ -26,11 +26,13 @@ class GetDriverHeldFundsQueryHandler(RequestHandler):
         earliest_due_date = datetime.now(UTC)
 
         if orders:
-            earliest_due_date = min(
+            valid_due_dates = [
                 order.bill.due_date
                 for order in orders
                 if order.bill.due_date is not None
-            )
+            ]
+            if valid_due_dates:
+                earliest_due_date = min(valid_due_dates)
 
         return BaseResponse[DriverHeldFundsDto].success(
             "Driver orders fetched successfully.",
