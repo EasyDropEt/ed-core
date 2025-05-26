@@ -1,6 +1,6 @@
+from datetime import UTC, datetime
 from uuid import UUID
 
-from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.entities.bill import BillStatus, Money
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from ed_domain.core.value_objects.money import Currency
@@ -23,16 +23,17 @@ class GetDriverHeldFundsQueryHandler(RequestHandler):
         self, request: GetDriverHeldFundsQuery
     ) -> BaseResponse[DriverHeldFundsDto]:
         orders = self._get_outstanding_orders(request.driver_id)
-        if not orders:
-            raise ApplicationException(
-                Exceptions.NotFoundException,
-                "Driver held funds could not be fetched.",
-                [f"Held funds for driver with id {request.driver_id} not found."],
-            )
+        earliest_due_date = datetime.now(UTC)
 
-        earliest_due_date = min(
-            order.bill.due_date for order in orders if order.bill.due_date is not None
-        )
+        if orders:
+            valid_due_dates = [
+                order.bill.due_date
+                for order in orders
+                if order.bill.due_date is not None
+            ]
+            if valid_due_dates:
+                earliest_due_date = min(valid_due_dates)
+
         return BaseResponse[DriverHeldFundsDto].success(
             "Driver orders fetched successfully.",
             DriverHeldFundsDto(

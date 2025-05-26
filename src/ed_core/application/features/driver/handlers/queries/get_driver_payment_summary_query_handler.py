@@ -23,14 +23,8 @@ class GetDriverPaymentSummaryQueryHandler(RequestHandler):
     ) -> BaseResponse[DriverPaymentSummaryDto]:
         orders = self._uow.order_repository.get_all(
             driver_id=request.driver_id)
-        if not orders:
-            raise ApplicationException(
-                Exceptions.NotFoundException,
-                "Driver payment summary cannot be fetched.",
-                [f"Held funds for driver with id {request.driver_id} not found."],
-            )
-
         total, debt = self._get_total_and_outstanding_payment_sum(orders)
+
         return BaseResponse[DriverPaymentSummaryDto].success(
             "Driver payment summary fetched successfully.",
             DriverPaymentSummaryDto(
@@ -53,7 +47,7 @@ class GetDriverPaymentSummaryQueryHandler(RequestHandler):
             if bill is None:
                 raise ApplicationException(
                     Exceptions.NotFoundException,
-                    "Driver payemnt summary cannot be fetched.",
+                    "Driver payment summary cannot be fetched.",
                     [
                         f"Bill could not be retrieved for the order with id: {order['id']}"
                     ],
