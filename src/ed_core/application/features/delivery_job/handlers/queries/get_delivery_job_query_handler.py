@@ -21,12 +21,12 @@ class GetDeliveryJobQueryHandler(RequestHandler):
             id=request.delivery_job_id
         ):
             return BaseResponse[DeliveryJobDto].success(
-                "Delivery jobs fetched successfully.",
+                "Delivery job fetched successfully.",
                 DeliveryJobDto.from_delivery_job(delivery_job, self._uow),
             )
 
         raise ApplicationException(
             Exceptions.NotFoundException,
-            "Delivery jobs not found.",
-            [f"Delivery jobs for driver with id {request.delivery_job_id} not found."],
+            "Delivery job not found.",
+            [f"Delivery job with id {request.delivery_job_id} not found."],
         )
