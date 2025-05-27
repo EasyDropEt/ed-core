@@ -1,4 +1,3 @@
-from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
@@ -17,19 +16,14 @@ class GetDriverDeliveryJobsQueryHandler(RequestHandler):
     async def handle(
         self, request: GetDriverDeliveryJobsQuery
     ) -> BaseResponse[list[DeliveryJobDto]]:
-        if delivery_jobs := self._uow.delivery_job_repository.get_all(
+        delivery_jobs = self._uow.delivery_job_repository.get_all(
             driver_id=request.driver_id
-        ):
-            return BaseResponse[list[DeliveryJobDto]].success(
-                "Driver delivery jobs fetched successfully.",
-                [
-                    DeliveryJobDto.from_delivery_job(delivery_job, self._uow)
-                    for delivery_job in delivery_jobs
-                ],
-            )
+        )
 
-        raise ApplicationException(
-            Exceptions.NotFoundException,
-            "Driver delivery jobs could not fetched.",
-            [f"Delivery jobs for driver with id {request.driver_id} not found."],
+        return BaseResponse[list[DeliveryJobDto]].success(
+            "Driver delivery jobs fetched successfully.",
+            [
+                DeliveryJobDto.from_delivery_job(delivery_job, self._uow)
+                for delivery_job in delivery_jobs
+            ],
         )
