@@ -1,21 +1,25 @@
 from typing import Annotated
 
-from ed_auth.documentation.auth_api_client import AuthApiClient
+from ed_auth.documentation.api.auth_api_client import AuthApiClient
+from ed_auth.documentation.message_queue.rabbitmq.auth_rabbitmq_subscriber import \
+    AuthRabbitMQSubscriber
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
-from ed_domain.queues.common.abc_producer import ABCProducer
-from ed_domain.queues.common.abc_subscriber import ABCSubscriber
 from ed_domain.utils.otp.abc_otp_generator import ABCOtpGenerator
 from ed_infrastructure.persistence.mongo_db.db_client import DbClient
 from ed_infrastructure.persistence.mongo_db.unit_of_work import UnitOfWork
-from ed_infrastructure.queues.rabbitmq.producer import RabbitMQProducer
-from ed_infrastructure.queues.rabbitmq.subscriber import RabbitMQSubscriber
 from ed_infrastructure.utils.otp.otp_generator import OtpGenerator
-from ed_notification.documentation.notification_api_client import \
+from ed_notification.documentation.api.notification_api_client import \
     NotificationApiClient
+from ed_notification.documentation.message_queue.rabbitmq.notification_rabbitmq_subscriber import \
+    NotificationRabbitMQSubscriber
+from ed_optimization.documentation.message_queue.rabbitmq.optimization_rabbitmq_subscriber import \
+    OptimizationRabbitMQSubscriber
 from fastapi import Depends
 from rmediator.mediator import Mediator
 
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
+from ed_core.application.contracts.infrastructure.api.abc_rabbitmq_handler import \
+    ABCRabbitMQHandler
 from ed_core.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler, CreateOrdersCommandHandler,
     UpdateBusinessCommandHandler)
@@ -78,8 +82,9 @@ from ed_core.application.features.order.requests.commands import \
 from ed_core.application.features.order.requests.queries import (
     GetOrderQuery, GetOrdersQuery, TrackOrderQuery)
 from ed_core.common.generic_helpers import get_config
-from ed_core.common.typing.config import Config, Environment, TestMessage
+from ed_core.common.typing.config import Config, Environment
 from ed_core.infrastructure.api.api_handler import ApiHandler
+from ed_core.infrastructure.api.rabbitmq_handler import RabbitMQHandler
 
 
 def get_otp_generator(
@@ -95,10 +100,18 @@ def get_api(config: Annotated[Config, Depends(get_config)]) -> ABCApi:
     )
 
 
+def get_rabbitmq_handler(config: Annotated[Config, Depends]) -> ABCRabbitMQHandler:
+    return RabbitMQHandler(
+        AuthRabbitMQSubscriber(config["rabbitmq"]["url"]),
+        NotificationRabbitMQSubscriber(config["rabbitmq"]["url"]),
+        OptimizationRabbitMQSubscriber(config["rabbitmq"]["url"]),
+    )
+
+
 def get_db_client(config: Annotated[Config, Depends(get_config)]) -> DbClient:
     return DbClient(
-        config["mongo_db_connection_string"],
-        config["db_name"],
+        config["db"]["connection_string"],
+        config["db"]["db_name"],
     )
 
 
@@ -106,30 +119,11 @@ def get_uow(db_client: Annotated[DbClient, Depends(get_db_client)]) -> ABCUnitOf
     return UnitOfWork(db_client)
 
 
-def get_producer(config: Annotated[Config, Depends(get_config)]) -> ABCProducer:
-    producer = RabbitMQProducer[TestMessage](
-        config["rabbitmq_url"],
-        config["rabbitmq_queue"],
-    )
-    producer.start()
-
-    return producer
-
-
-def get_subscriber(config: Annotated[Config, Depends(get_config)]) -> ABCSubscriber:
-    subscriber = RabbitMQSubscriber[TestMessage](
-        config["rabbitmq_url"],
-        config["rabbitmq_queue"],
-    )
-    subscriber.start()
-
-    return subscriber
-
-
 def mediator(
     uow: Annotated[ABCUnitOfWork, Depends(get_uow)],
     api: Annotated[ABCApi, Depends(get_api)],
     otp: Annotated[ABCOtpGenerator, Depends(get_otp_generator)],
+    rabbitmq_handler: Annotated[ABCRabbitMQHandler, Depends(get_rabbitmq_handler)],
 ) -> Mediator:
     mediator = Mediator()
 
@@ -160,7 +154,7 @@ def mediator(
         (CancelDeliveryJobCommand, CancelDeliveryJobCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
-        (CreateOrdersCommand, CreateOrdersCommandHandler(uow, api)),
+        (CreateOrdersCommand, CreateOrdersCommandHandler(uow, api, rabbitmq_handler)),
         (GetBusinessQuery, GetBusinessQueryHandler(uow)),
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),

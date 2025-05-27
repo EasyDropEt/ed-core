@@ -1,5 +1,5 @@
-from ed_auth.documentation.abc_auth_api_client import ABCAuthApiClient
-from ed_notification.documentation.abc_notification_api_client import \
+from ed_auth.documentation.api.abc_auth_api_client import ABCAuthApiClient
+from ed_notification.documentation.api.abc_notification_api_client import \
     ABCNotificationApiClient
 
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi

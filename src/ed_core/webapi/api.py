@@ -11,7 +11,7 @@ from ed_core.webapi.controllers import (business_controller,
                                         delivery_job_controller,
                                         driver_controller,
                                         notification_controller,
-                                        order_controller)
+                                        order_controller, rabbitmq_controller)
 
 LOG = get_logger()
 
@@ -30,6 +30,7 @@ class API(FastAPI, metaclass=SingletonMeta):
             order_controller.router,
             consumer_controller.router,
             notification_controller.router,
+            rabbitmq_controller.router,
         ]
         self._include_routers()
         self._contain_exceptions()
@@ -49,6 +50,11 @@ class API(FastAPI, metaclass=SingletonMeta):
         async def application_exception_handler(
             request: Request, exception: ApplicationException
         ) -> JSONResponse:
+            LOG.error(
+                f"ApplicationException occurred: {exception.message} while handling {request.url}",
+                f"with error code {exception.error_code}",
+                f"with the following errors {exception.errors}",
+            )
             return JSONResponse(
                 status_code=exception.error_code,
                 content=GenericResponse(

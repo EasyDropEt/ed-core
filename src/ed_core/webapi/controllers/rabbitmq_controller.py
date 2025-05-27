@@ -14,8 +14,10 @@ from ed_core.common.generic_helpers import get_config
 from ed_core.webapi.dependency_setup import mediator
 
 config = get_config()
-router = RabbitRouter(config["rabbitmq_url"])
-queue = RabbitQueue(name=config["rabbitmq_queue"], durable=True)
+router = RabbitRouter(config["rabbitmq"]["url"])
+queue = RabbitQueue(
+    name=config["rabbitmq"]["queues"]["subscribe_create_delivery_job"], durable=True
+)
 
 LOG = get_logger()
 

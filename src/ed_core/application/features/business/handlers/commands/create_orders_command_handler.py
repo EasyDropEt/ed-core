@@ -14,6 +14,8 @@ from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
+from ed_core.application.contracts.infrastructure.api.abc_rabbitmq_handler import \
+    ABCRabbitMQHandler
 from ed_core.application.features.business.dtos import CreateLocationDto
 from ed_core.application.features.business.dtos.create_orders_dto import \
     CreateConsumerDto
@@ -30,9 +32,12 @@ LOG = get_logger()
 
 @request_handler(CreateOrdersCommand, BaseResponse[list[OrderDto]])
 class CreateOrdersCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork, api: ABCApi):
+    def __init__(
+        self, uow: ABCUnitOfWork, api: ABCApi, rabbitmq_producer: ABCRabbitMQHandler
+    ):
         self._uow = uow
         self._api = api
+        self._rabbitmq_producer = rabbitmq_producer
 
     async def handle(
         self, request: CreateOrdersCommand
@@ -71,7 +76,7 @@ class CreateOrdersCommandHandler(RequestHandler):
             ]
         )
 
-        # self._publish_orders(created_orders, consumers)
+        self._publish_orders(created_orders, consumers)
 
         return BaseResponse[list[OrderDto]].success(
             "Order created successfully.",
@@ -151,7 +156,7 @@ class CreateOrdersCommandHandler(RequestHandler):
 
     def _publish_orders(self, orders: list[Order], consumers: list[Consumer]) -> None:
         for order, consumer in zip(orders, consumers):
-            self._producer.publish(
+            self._rabbitmq_producer.optimization_subscriber.create_order(
                 OrderModel(
                     **order,  # type: ignore
                     consumer=ConsumerModel(**consumer),  # type: ignore

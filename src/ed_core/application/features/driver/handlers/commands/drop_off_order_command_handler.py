@@ -10,7 +10,8 @@ from ed_domain.core.entities.order import OrderStatus
 from ed_domain.core.entities.otp import OtpVerificationAction
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from ed_domain.utils.otp.abc_otp_generator import ABCOtpGenerator
-from ed_notification.documentation.endpoints import NotificationDto
+from ed_notification.documentation.api.abc_notification_api_client import \
+    NotificationDto
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -54,7 +55,8 @@ class DropOffOrderCommandHandler(RequestHandler):
             "waypoint_status"
         ] = WaypointStatus.IN_PROGRESS
 
-        self._uow.delivery_job_repository.update(delivery_job["id"], delivery_job)
+        self._uow.delivery_job_repository.update(
+            delivery_job["id"], delivery_job)
         self._uow.otp_repository.create(
             {
                 "id": get_new_id(),
@@ -112,7 +114,8 @@ class DropOffOrderCommandHandler(RequestHandler):
         )
 
     def _validate_delivery_job(self, delivery_job_id: UUID) -> DeliveryJob:
-        delivery_job = self._uow.delivery_job_repository.get(id=delivery_job_id)
+        delivery_job = self._uow.delivery_job_repository.get(
+            id=delivery_job_id)
         if not delivery_job or "driver_id" not in delivery_job:
             raise ApplicationException(
                 Exceptions.NotFoundException,
