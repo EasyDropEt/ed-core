@@ -1,6 +1,6 @@
 from fastapi.middleware.cors import CORSMiddleware
 
-from ed_core.common.logging_helpers import get_logger
+from ed_domain.common.logging import get_logger
 from ed_core.webapi.api import API
 
 LOG = get_logger()

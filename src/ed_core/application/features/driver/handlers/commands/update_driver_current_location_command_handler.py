@@ -15,7 +15,7 @@ from ed_core.application.features.driver.dtos.validators.update_driver_dto_valid
 from ed_core.application.features.driver.requests.commands import \
     UpdateDriverCurrentLocationCommand
 from ed_core.common.generic_helpers import get_new_id
-from ed_core.common.logging_helpers import get_logger
+from ed_domain.common.logging import get_logger
 
 LOG = get_logger()
 

@@ -100,7 +100,9 @@ def get_api(config: Annotated[Config, Depends(get_config)]) -> ABCApi:
     )
 
 
-def get_rabbitmq_handler(config: Annotated[Config, Depends]) -> ABCRabbitMQHandler:
+def get_rabbitmq_handler(
+    config: Annotated[Config, Depends(get_config)],
+) -> ABCRabbitMQHandler:
     return RabbitMQHandler(
         AuthRabbitMQSubscriber(config["rabbitmq"]["url"]),
         NotificationRabbitMQSubscriber(config["rabbitmq"]["url"]),

@@ -3,7 +3,7 @@ from ed_domain.common.exceptions import ApplicationException
 from fastapi import FastAPI, Request
 from starlette.responses import JSONResponse
 
-from ed_core.common.logging_helpers import get_logger
+from ed_domain.common.logging import get_logger
 from ed_core.common.singleton_helpers import SingletonMeta
 from ed_core.webapi.common.helpers import GenericResponse
 from ed_core.webapi.controllers import (business_controller,
@@ -17,21 +17,25 @@ LOG = get_logger()
 
 
 class API(FastAPI, metaclass=SingletonMeta):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self._routers = [
+            business_controller.router,
+            consumer_controller.router,
+            delivery_job_controller.router,
+            driver_controller.router,
+            notification_controller.router,
+            order_controller.router,
+            rabbitmq_controller.router,
+        ]
+
     @property
     def app(self):
         return self
 
     def start(self) -> None:
         LOG.info("Starting api...")
-        self._routers = [
-            business_controller.router,
-            driver_controller.router,
-            delivery_job_controller.router,
-            order_controller.router,
-            consumer_controller.router,
-            notification_controller.router,
-            rabbitmq_controller.router,
-        ]
+
         self._include_routers()
         self._contain_exceptions()
 
@@ -43,6 +47,7 @@ class API(FastAPI, metaclass=SingletonMeta):
     def _include_routers(self) -> None:
         LOG.info("Including routers...")
         for router in self._routers:
+            LOG.info(f"Including router: {router.prefix}")
             self.include_router(router)
 
     def _contain_exceptions(self) -> None:

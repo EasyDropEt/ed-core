@@ -25,7 +25,7 @@ from ed_core.application.features.business.requests.commands import \
     CreateOrdersCommand
 from ed_core.application.features.common.dtos import OrderDto
 from ed_core.common.generic_helpers import get_new_id
-from ed_core.common.logging_helpers import get_logger
+from ed_domain.common.logging import get_logger
 
 LOG = get_logger()
 

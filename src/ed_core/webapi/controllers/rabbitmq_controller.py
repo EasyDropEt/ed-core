@@ -15,14 +15,15 @@ from ed_core.webapi.dependency_setup import mediator
 
 config = get_config()
 router = RabbitRouter(config["rabbitmq"]["url"])
-queue = RabbitQueue(
-    name=config["rabbitmq"]["queues"]["subscribe_create_delivery_job"], durable=True
-)
 
 LOG = get_logger()
 
 
-@router.subscriber(queue)
+@router.subscriber(
+    RabbitQueue(
+        name=config["rabbitmq"]["queues"]["subscribe_create_delivery_job"], durable=True
+    )
+)
 async def create_delivery_job(
     model: CreateDeliveryJobDto,
     mediator: Annotated[Mediator, Depends(mediator)],

@@ -1,7 +1,8 @@
+from typing import Annotated
 from uuid import UUID
 
+from ed_domain.common.logging import get_logger
 from fastapi import APIRouter, Depends
-from rmediator.decorators.request_handler import Annotated
 from rmediator.mediator import Mediator
 
 from ed_core.application.features.common.dtos.consumer_dto import ConsumerDto
@@ -13,7 +14,6 @@ from ed_core.application.features.consumer.requests.commands import (
 from ed_core.application.features.consumer.requests.queries import (
     GetConsumerByUserIdQuery, GetConsumerOrdersQuery, GetConsumerQuery,
     GetConsumersQuery)
-from ed_core.common.logging_helpers import get_logger
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
 

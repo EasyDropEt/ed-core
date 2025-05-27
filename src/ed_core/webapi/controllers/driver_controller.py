@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Depends
-from rmediator.decorators.request_handler import Annotated
+from typing import Annotated
 from rmediator.mediator import Mediator
 
 from ed_core.application.features.common.dtos import DeliveryJobDto, DriverDto
@@ -26,7 +26,7 @@ from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
     GetDriverHeldFundsQuery, GetDriverOrdersQuery,
     GetDriverPaymentSummaryQuery, GetDriverQuery)
-from ed_core.common.logging_helpers import get_logger
+from ed_domain.common.logging import get_logger
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
 
