@@ -14,11 +14,14 @@ class CoreRabbitMQSubscriber(ABCCoreRabbitMQSubscriber):
         self._connection_url = connection_url
         self._queues = CoreQueueDescriptions(connection_url)
 
-    def create_delivery_job(self, delivery_job_dto: CreateDeliveryJobDto) -> None:
+    def create_delivery_job(
+        self, create_delivery_job_dto: CreateDeliveryJobDto
+    ) -> None:
         queue = self._queues.get_queue("create_delivery_job")
         producer = RabbitMQProducer[CreateDeliveryJobDto](
-            queue["connection_url"], queue["name"]
+            queue["connection_parameters"]["url"],
+            queue["connection_parameters"]["queue"],
         )
         producer.start()
-        producer.publish(delivery_job_dto)
+        producer.publish(create_delivery_job_dto)
         producer.stop()

@@ -5,14 +5,21 @@ from ed_domain.documentation.message_queue.rabbitmq.definitions.queue_descriptio
 
 from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto import \
     CreateDeliveryJobDto
+from ed_core.common.generic_helpers import get_config
 
 
 class CoreQueueDescriptions(ABCQueueDescriptions):
     def __init__(self, connection_url: str) -> None:
+        self._config = get_config()
+        self._connection_url = connection_url
+
         self._descriptions: list[QueueDescription] = [
             {
-                "name": "delivery_job",
-                "connection_url": connection_url,
+                "name": "create_delivery_job",
+                "connection_parameters": {
+                    "url": self._connection_url,
+                    "queue": "delivery_job",
+                },
                 "durable": True,
                 "request_model": CreateDeliveryJobDto,
             }

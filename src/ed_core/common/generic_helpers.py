@@ -14,21 +14,42 @@ def get_config() -> Config:
     load_dotenv()
 
     return {
-        "mongo_db_connection_string": os.getenv("CONNECTION_STRING") or "",
-        "db_name": os.getenv("DB_NAME") or "",
-        "rabbitmq_url": os.getenv("RABBITMQ_URL") or "",
-        "rabbitmq_queue": os.getenv("RABBITMQ_QUEUE") or "",
-        "cloudinary": {
-            "cloud_name": os.getenv("CLOUDINARY_CLOUD_NAME") or "",
-            "api_key": os.getenv("CLOUDINARY_API_KEY") or "",
-            "api_secret": os.getenv("CLOUDINARY_API_SECRET") or "",
-            "env_variable": os.getenv("CLOUDINARY_ENV_VARIABLE") or "",
+        "db": {
+            "connection_string": _get_env_variable("CONNECTION_STRING"),
+            "db_name": _get_env_variable("DB_NAME"),
         },
-        "auth_api": os.getenv("AUTH_API") or "",
-        "notification_api": os.getenv("NOTIFICATION_API") or "",
+        "rabbitmq": {
+            "url": _get_env_variable("RABBITMQ_URL"),
+            "queues": {
+                "subscribe_create_delivery_job": _get_env_variable(
+                    "RABBITMQ_QUEUE_SUBSCRIBE_CREATE_DELIVERY_JOB"
+                ),
+                "produce_notification": _get_env_variable(
+                    "RABBITMQ_QUEUE_SEND_NOTIFICATION"
+                ),
+                "produce_order": _get_env_variable("RABBITMQ_QUEUE_SEND_NOTIFICATION"),
+            },
+        },
+        "auth_api": _get_env_variable("AUTH_API"),
+        "notification_api": _get_env_variable("NOTIFICATION_API"),
         "environment": (
             Environment.PROD
-            if os.getenv("ENVIRONMENT") == "production"
+            if _get_env_variable("ENVIRONMENT") == "production"
             else Environment.DEV
         ),
     }
+
+
+def _get_env_variable(name: str) -> str:
+    value = os.getenv(name)
+    if value is None:
+        raise ValueError(f"Environment variable '{name}' is not set.")
+
+    if not isinstance(value, str):
+        raise TypeError(f"Environment variable '{name}' must be a string.")
+
+    value = value.strip()
+    if not value:
+        raise ValueError(f"Environment variable '{name}' cannot be empty.")
+
+    return value
