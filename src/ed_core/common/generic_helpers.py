@@ -23,11 +23,7 @@ def get_config() -> Config:
             "queues": {
                 "subscribe_create_delivery_job": _get_env_variable(
                     "RABBITMQ_QUEUE_SUBSCRIBE_CREATE_DELIVERY_JOB"
-                ),
-                "produce_notification": _get_env_variable(
-                    "RABBITMQ_QUEUE_SEND_NOTIFICATION"
-                ),
-                "produce_order": _get_env_variable("RABBITMQ_QUEUE_SEND_NOTIFICATION"),
+                )
             },
         },
         "auth_api": _get_env_variable("AUTH_API"),
