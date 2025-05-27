@@ -2558,13 +2558,13 @@ jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
 name = "rmediator"
-version = "0.2.6"
+version = "0.2.7"
 description = "Request Mediator PyPI (Python Package Index) Package"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
 files = [
-    {file = "rmediator-0.2.6-py3-none-any.whl", hash = "sha256:a756c411c3013f57c3f79744ad86dc9b47acddbcf32711b31181cde5000c7adb"},
+    {file = "rmediator-0.2.7-py3-none-any.whl", hash = "sha256:82bee056bd6f481a9923323b71a0327a8cd36f78d7deb6bc43be297115db56b4"},
 ]
 
 [package.extras]
@@ -3349,4 +3349,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "f85ded69d99bfb8a0f3aa7187c403df0d9c1098be268c095a9ddd1cdf7f6cd48"
+content-hash = "d581df81597bbb4631ad6c0aeb7d096308f411aadf34fbd7341eadc84062cd0a"
