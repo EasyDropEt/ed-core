@@ -4,15 +4,15 @@ from ed_domain.documentation.api.definitions import (EndpointDescription,
                                                      HttpMethod)
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateOrdersDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
+                                                      CreateConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
                                                       NotificationDto,
-                                                      OrderDto, TrackOrderDto)
-from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
-                                                        UpdateConsumerDto)
+                                                      OrderDto, TrackOrderDto,
+                                                      UpdateLocationDto)
+from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       DriverHeldFundsDto,
@@ -20,9 +20,10 @@ from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,
                                                       PickUpOrderDto,
-                                                      PickUpOrderVerifyDto)
-from ed_core.application.features.driver.dtos.update_driver_dto import (
-    UpdateDriverDto, UpdateLocationDto)
+                                                      PickUpOrderVerifyDto,
+                                                      UpdateDriverDto)
+from src.ed_core.application.features.business.requests.commands.create_orders_command import \
+    CreateOrdersDto
 
 
 class CoreEndpointDescriptions(ABCEndpointDescriptions):

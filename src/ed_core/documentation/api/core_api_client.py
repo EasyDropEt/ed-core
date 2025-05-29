@@ -5,12 +5,13 @@ from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrdersDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
+                                                      CreateConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
                                                       NotificationDto,
-                                                      OrderDto, TrackOrderDto)
-from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
-                                                        UpdateConsumerDto)
+                                                      OrderDto, TrackOrderDto,
+                                                      UpdateLocationDto)
+from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       DriverHeldFundsDto,
@@ -20,8 +21,6 @@ from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       PickUpOrderDto,
                                                       PickUpOrderVerifyDto,
                                                       UpdateDriverDto)
-from ed_core.application.features.driver.dtos.update_driver_dto import \
-    UpdateLocationDto
 from ed_core.documentation.api.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.api.core_endpoint_descriptionss import \
     CoreEndpointDescriptions

@@ -38,3 +38,7 @@ class CreateOrderDto(BaseModel):
         )
 
         return created_order
+
+
+class CreateOrdersDto(BaseModel):
+    orders: list[CreateOrderDto]
