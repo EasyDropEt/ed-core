@@ -1,3 +1,4 @@
+from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
@@ -20,7 +21,8 @@ class GetBusinessQueryHandler(RequestHandler):
                 BusinessDto.from_business(business, self._uow),
             )
 
-        return BaseResponse[BusinessDto].error(
+        raise ApplicationException(
+            Exceptions.NotFoundException,
             "Business not found.",
             [f"Buisness with id {request.business_id} not found."],
         )

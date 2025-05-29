@@ -1,4 +1,3 @@
-from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
@@ -17,16 +16,10 @@ class GetConsumerOrdersQueryHandler(RequestHandler):
     async def handle(
         self, request: GetConsumerOrdersQuery
     ) -> BaseResponse[list[OrderDto]]:
-        if orders := self._uow.order_repository.get_all(
-            consumer_id=request.consumer_id
-        ):
-            return BaseResponse[list[OrderDto]].success(
-                "Order fetched successfully.",
-                [OrderDto.from_order(order, self._uow) for order in orders],
-            )
+        orders = self._uow.order_repository.get_all(
+            consumer_id=request.consumer_id)
 
-        raise ApplicationException(
-            Exceptions.NotFoundException,
-            "Orders not found.",
-            [f"Orders for consumer with id {request.consumer_id} not found."],
+        return BaseResponse[list[OrderDto]].success(
+            "Consumer orders fetched successfully.",
+            [OrderDto.from_order(order, self._uow) for order in orders],
         )

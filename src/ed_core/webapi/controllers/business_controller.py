@@ -6,10 +6,11 @@ from fastapi import APIRouter, Depends
 from rmediator.mediator import Mediator
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateOrdersDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.business.requests.commands import (
     CreateBusinessCommand, CreateOrdersCommand, UpdateBusinessCommand)
+from ed_core.application.features.business.requests.commands.create_orders_command import \
+    CreateOrdersDto
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
     GetBusinessQuery)

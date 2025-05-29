@@ -19,12 +19,9 @@ class GetAllDriversQueryHandler(RequestHandler):
     async def handle(
         self, request: GetAllDriversQuery
     ) -> BaseResponse[list[DriverDto]]:
-        if drivers := self._uow.driver_repository.get_all():
-            return BaseResponse[list[DriverDto]].success(
-                "Drivers fetched successfully.",
-                [DriverDto.from_driver(driver, self._uow) for driver in drivers],
-            )
+        drivers = self._uow.driver_repository.get_all()
 
-        return BaseResponse[list[DriverDto]].error(
-            "Drivers couldn't be fetched.", ["There are no drivers."]
+        return BaseResponse[list[DriverDto]].success(
+            "Drivers fetched successfully.",
+            [DriverDto.from_driver(driver, self._uow) for driver in drivers],
         )

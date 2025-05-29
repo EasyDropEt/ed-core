@@ -1,25 +1,16 @@
-from typing import TypedDict
+from datetime import UTC, datetime
 from uuid import UUID
 
+from ed_domain.core.entities import Driver
+from pydantic import BaseModel
 
-class CreateCarDto(TypedDict):
-    make: str
-    model: str
-    year: int
-    color: str
-    seats: int
-    license_plate: str
-    registration_number: str
+from ed_core.application.features.common.dtos import CreateLocationDto
+from ed_core.application.features.driver.dtos.create_car_dto import \
+    CreateCarDto
+from ed_core.common.generic_helpers import get_new_id
 
 
-class CreateLocationDto(TypedDict):
-    address: str
-    latitude: float
-    longitude: float
-    postal_code: str
-
-
-class CreateDriverDto(TypedDict):
+class CreateDriverDto(BaseModel):
     user_id: UUID
     first_name: str
     last_name: str
@@ -28,3 +19,27 @@ class CreateDriverDto(TypedDict):
     email: str
     location: CreateLocationDto
     car: CreateCarDto
+
+    def create_driver(self, uow) -> Driver:
+        created_location = self.location.create_location(uow)
+        created_car = self.car.create_car(uow)
+        created_driver = uow.driver_repository.create(
+            Driver(
+                id=get_new_id(),
+                user_id=self.user_id,
+                first_name=self.first_name,
+                last_name=self.last_name,
+                profile_image=self.profile_image,
+                phone_number=self.phone_number,
+                email=self.email,
+                current_location_id=created_location["id"],
+                location_id=created_location["id"],
+                car_id=created_car["id"],
+                create_datetime=datetime.now(UTC),
+                update_datetime=datetime.now(UTC),
+                deleted=False,
+                active_status=True,
+            )
+        )
+
+        return created_driver

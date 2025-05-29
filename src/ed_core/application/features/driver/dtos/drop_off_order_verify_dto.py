@@ -1,5 +1,5 @@
-from typing import TypedDict
+from pydantic import BaseModel
 
 
-class DropOffOrderVerifyDto(TypedDict):
+class DropOffOrderVerifyDto(BaseModel):
     otp: str

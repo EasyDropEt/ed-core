@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
 
 from ed_domain.common.exceptions import ApplicationException, Exceptions
+from ed_domain.common.logging import get_logger
 from ed_domain.core.entities import Consumer, Location
 from ed_domain.core.repositories import ABCUnitOfWork
 from rmediator.decorators import request_handler
@@ -15,7 +16,6 @@ from ed_core.application.features.consumer.dtos.validators import \
 from ed_core.application.features.consumer.requests.commands import \
     UpdateConsumerCommand
 from ed_core.common.generic_helpers import get_new_id
-from ed_domain.common.logging import get_logger
 
 LOG = get_logger()
 
@@ -29,8 +29,10 @@ class UpdateConsumerCommandHandler(RequestHandler):
         dto_validator = UpdateConsumerDtoValidator().validate(request.dto)
 
         if not dto_validator.is_valid:
-            return BaseResponse[ConsumerDto].error(
-                "Update consumer failed.", dto_validator.errors
+            raise ApplicationException(
+                Exceptions.ValidationException,
+                "Update consumer failed.",
+                dto_validator.errors,
             )
 
         dto = request.dto
@@ -60,7 +62,7 @@ class UpdateConsumerCommandHandler(RequestHandler):
     async def _create_location(self, location: UpdateLocationDto) -> Location:
         return self._uow.location_repository.create(
             Location(
-                **location,
+                **location,  # type: ignore
                 id=get_new_id(),
                 city="Addis Ababa",
                 country="Ethiopia",

@@ -1,12 +1,10 @@
-from typing import NotRequired, TypedDict
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from ed_core.application.features.common.dtos.update_location_dto import \
+    UpdateLocationDto
 
 
-class UpdateLocationDto(TypedDict):
-    address: str
-    latitude: float
-    longitude: float
-    postal_code: str
-
-
-class UpdateConsumerDto(TypedDict):
-    location: NotRequired[UpdateLocationDto]
+class UpdateConsumerDto(BaseModel):
+    location: Optional[UpdateLocationDto] = Field(None)

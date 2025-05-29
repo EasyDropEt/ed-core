@@ -1,4 +1,4 @@
-from ed_core.application.features.driver.dtos.validators.create_driver_dto_validator import \
-    CreateDriverDtoValidator
+from ed_core.application.features.delivery_job.dtos.validators.create_delivery_job_dto_validator import \
+    CreateDeliveryJobDtoValidator
 
-__all__ = ["CreateDriverDtoValidator"]
+__all__ = ["CreateDeliveryJobDtoValidator"]

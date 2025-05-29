@@ -5,10 +5,10 @@ from ed_domain.common.logging import get_logger
 from fastapi import APIRouter, Depends
 from rmediator.mediator import Mediator
 
-from ed_core.application.features.common.dtos.consumer_dto import ConsumerDto
-from ed_core.application.features.common.dtos.order_dto import OrderDto
-from ed_core.application.features.consumer.dtos import (CreateConsumerDto,
-                                                        UpdateConsumerDto)
+from ed_core.application.features.common.dtos import (ConsumerDto,
+                                                      CreateConsumerDto,
+                                                      OrderDto)
+from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.consumer.requests.commands import (
     CreateConsumerCommand, UpdateConsumerCommand)
 from ed_core.application.features.consumer.requests.queries import (
