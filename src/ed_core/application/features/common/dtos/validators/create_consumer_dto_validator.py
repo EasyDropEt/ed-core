@@ -11,13 +11,13 @@ class CreateConsumerDtoValidator(ABCDtoValidator[CreateConsumerDto]):
         errors = []
 
         if not dto.first_name:
-            errors.append("First name of consmer is required.")
+            errors.append("First name of consumer is required.")
 
         if not dto.last_name:
-            errors.append("Last name of consmer is required.")
+            errors.append("Last name of consumer is required.")
 
         if not dto.phone_number:
-            errors.append("Phone number of consmer is required")
+            errors.append("Phone number of consumer is required")
 
         errors.extend(
             CreateLocationDtoValidator().validate(dto.location).errors,

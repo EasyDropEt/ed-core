@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from typing import TypedDict
 from uuid import UUID
 
+from pydantic import BaseModel
 from rmediator.decorators import request
 from rmediator.mediator import Request
 
@@ -10,7 +10,7 @@ from ed_core.application.features.business.dtos import CreateOrderDto
 from ed_core.application.features.common.dtos import OrderDto
 
 
-class CreateOrdersDto(TypedDict):
+class CreateOrdersDto(BaseModel):
     orders: list[CreateOrderDto]
 
 

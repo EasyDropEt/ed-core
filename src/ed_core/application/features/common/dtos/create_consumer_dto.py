@@ -21,7 +21,7 @@ class CreateConsumerDto(BaseModel):
     def create_consumer(self, uow: ABCUnitOfWork) -> Consumer:
         created_location = self.location.create_location(uow)
 
-        created_business = uow.consumer_repository.create(
+        created_consumer = uow.consumer_repository.create(
             Consumer(
                 id=get_new_id(),
                 user_id=self.user_id,
@@ -37,4 +37,4 @@ class CreateConsumerDto(BaseModel):
             )
         )
 
-        return created_business
+        return created_consumer

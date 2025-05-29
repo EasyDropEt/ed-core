@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 from ed_domain.core.entities import Driver
+from ed_domain.core.repositories import ABCUnitOfWork
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos import CreateLocationDto
@@ -20,7 +21,7 @@ class CreateDriverDto(BaseModel):
     location: CreateLocationDto
     car: CreateCarDto
 
-    def create_driver(self, uow) -> Driver:
+    def create_driver(self, uow: ABCUnitOfWork) -> Driver:
         created_location = self.location.create_location(uow)
         created_car = self.car.create_car(uow)
         created_driver = uow.driver_repository.create(

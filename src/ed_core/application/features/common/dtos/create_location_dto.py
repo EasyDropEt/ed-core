@@ -6,6 +6,9 @@ from pydantic import BaseModel
 
 from ed_core.common.generic_helpers import get_new_id
 
+CITY = "Addis Ababa"
+COUNTRY = "Ethiopia"
+
 
 class CreateLocationDto(BaseModel):
     address: str
@@ -24,8 +27,8 @@ class CreateLocationDto(BaseModel):
                 create_datetime=datetime.now(UTC),
                 update_datetime=datetime.now(UTC),
                 last_used=datetime.now(UTC),
-                city="Addis Ababa",
-                country="Ethiopia",
+                city=CITY,
+                country=COUNTRY,
                 deleted=False,
             )
         )
