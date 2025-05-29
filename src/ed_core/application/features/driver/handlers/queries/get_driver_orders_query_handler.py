@@ -1,4 +1,3 @@
-from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
@@ -19,12 +18,6 @@ class GetDriverOrdersQueryHandler(RequestHandler):
     ) -> BaseResponse[list[OrderDto]]:
         orders = self._uow.order_repository.get_all(
             driver_id=request.driver_id)
-        if not orders:
-            raise ApplicationException(
-                Exceptions.NotFoundException,
-                "Driver orders could not fetched.",
-                [f"Orders for driver with id {request.driver_id} not found."],
-            )
 
         return BaseResponse[list[OrderDto]].success(
             "Driver orders fetched successfully.",

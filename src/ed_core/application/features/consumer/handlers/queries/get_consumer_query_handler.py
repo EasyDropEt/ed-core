@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
@@ -23,7 +24,8 @@ class GetConsumerQueryHandler(RequestHandler):
                 ConsumerDto.from_consumer(consumer, self._uow),
             )
 
-        return BaseResponse[ConsumerDto].error(
+        raise ApplicationException(
+            Exceptions.NotFoundException,
             "Consumer couldn't be fetched.",
             [f"Consumer with id {request.consumer_id} does not exist."],
         )

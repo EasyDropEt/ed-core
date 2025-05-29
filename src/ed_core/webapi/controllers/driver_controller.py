@@ -1,11 +1,13 @@
+from typing import Annotated
 from uuid import UUID
 
+from ed_domain.common.logging import get_logger
 from fastapi import APIRouter, Depends
-from typing import Annotated
 from rmediator.mediator import Mediator
 
-from ed_core.application.features.common.dtos import DeliveryJobDto, DriverDto
-from ed_core.application.features.common.dtos.order_dto import OrderDto
+from ed_core.application.features.common.dtos import (DeliveryJobDto,
+                                                      DriverDto, OrderDto,
+                                                      UpdateLocationDto)
 from ed_core.application.features.delivery_job.requests.commands import (
     CancelDeliveryJobCommand, ClaimDeliveryJobCommand)
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
@@ -16,8 +18,6 @@ from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       PickUpOrderDto,
                                                       PickUpOrderVerifyDto,
                                                       UpdateDriverDto)
-from ed_core.application.features.driver.dtos.update_driver_dto import \
-    UpdateLocationDto
 from ed_core.application.features.driver.requests.commands import (
     CreateDriverCommand, DropOffOrderCommand, DropOffOrderVerifyCommand,
     PickUpOrderCommand, PickUpOrderVerifyCommand, UpdateDriverCommand,
@@ -26,7 +26,6 @@ from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
     GetDriverHeldFundsQuery, GetDriverOrdersQuery,
     GetDriverPaymentSummaryQuery, GetDriverQuery)
-from ed_domain.common.logging import get_logger
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
 

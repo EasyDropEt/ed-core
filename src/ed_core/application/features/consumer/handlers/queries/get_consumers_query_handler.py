@@ -19,15 +19,10 @@ class GetConsumersQueryHandler(RequestHandler):
     async def handle(
         self, request: GetConsumersQuery
     ) -> BaseResponse[list[ConsumerDto]]:
-        if consumers := self._uow.consumer_repository.get_all():
-            return BaseResponse[list[ConsumerDto]].success(
-                "Consumers fetched successfully.",
-                [
-                    ConsumerDto.from_consumer(consumer, self._uow)
-                    for consumer in consumers
-                ],
-            )
+        consumers = self._uow.consumer_repository.get_all()
 
-        return BaseResponse[list[ConsumerDto]].error(
-            "Consumers couldn't be fetched.", ["There are no consumers."]
+        return BaseResponse[list[ConsumerDto]].success(
+            "Consumers fetched successfully.",
+            [ConsumerDto.from_consumer(consumer, self._uow)
+             for consumer in consumers],
         )

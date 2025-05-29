@@ -11,26 +11,23 @@ class CreateBusinessDtoValidator(ABCDtoValidator[CreateBusinessDto]):
         errors = []
         # TODO: Properly validate the create user dto
 
-        if not dto["business_name"]:
+        if not dto.business_name:
             errors.append("Business name is required")
 
-        if not dto["owner_first_name"]:
+        if not dto.owner_first_name:
             errors.append("Business owner first name is required")
 
-        if not dto["owner_last_name"]:
+        if not dto.owner_last_name:
             errors.append("Business owner last name is required")
 
-        if not dto["phone_number"]:
+        if not dto.phone_number:
             errors.append("Phone number is required")
 
-        if not dto["email"]:
+        if not dto.email:
             errors.append("Email is required")
 
-        if not dto["billing_details"]:
-            errors.append("Billing details is required")
-
         errors.extend(
-            CreateLocationDtoValidator().validate(dto["location"]).errors,
+            CreateLocationDtoValidator().validate(dto.location).errors,
         )
 
         if len(errors):

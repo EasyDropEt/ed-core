@@ -16,12 +16,10 @@ class GetBusinessOrdersQueryHandler(RequestHandler):
     async def handle(
         self, request: GetBusinessOrdersQuery
     ) -> BaseResponse[list[OrderDto]]:
+        orders = self._uow.order_repository.get_all(
+            business_id=request.business_id)
+
         return BaseResponse[list[OrderDto]].success(
             "Orders fetched successfully.",
-            [
-                OrderDto.from_order(order, self._uow)
-                for order in self._uow.order_repository.get_all(
-                    business_id=request.business_id
-                )
-            ],
+            [OrderDto.from_order(order, self._uow) for order in orders],
         )

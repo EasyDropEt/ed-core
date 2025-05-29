@@ -1,3 +1,5 @@
+from ed_core.application.features.driver.dtos.validators.create_car_dto_validator import \
+    CreateCarDtoValidator
 from ed_core.application.features.driver.dtos.validators.create_driver_dto_validator import \
     CreateDriverDtoValidator
 from ed_core.application.features.driver.dtos.validators.drop_off_order_verify_dto_validator import \
@@ -8,6 +10,7 @@ from ed_core.application.features.driver.dtos.validators.update_driver_dto_valid
     UpdateDriverDtoValidator
 
 __all__ = [
+    "CreateCarDtoValidator",
     "CreateDriverDtoValidator",
     "DropOffOrderVerifyDtoValidator",
     "UpdateDriverDtoValidator",

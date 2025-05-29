@@ -1,33 +1,32 @@
 from datetime import UTC, datetime
 from uuid import UUID
 
-from ed_domain.core.entities import Business
+from ed_domain.core.entities import Consumer
 from ed_domain.core.repositories import ABCUnitOfWork
 from pydantic import BaseModel
 
-from ed_core.application.features.common.dtos import CreateLocationDto
+from ed_core.application.features.common.dtos.create_location_dto import \
+    CreateLocationDto
 from ed_core.common.generic_helpers import get_new_id
 
 
-class CreateBusinessDto(BaseModel):
+class CreateConsumerDto(BaseModel):
     user_id: UUID
-    business_name: str
-    owner_first_name: str
-    owner_last_name: str
+    first_name: str
+    last_name: str
     phone_number: str
     email: str
     location: CreateLocationDto
 
-    def create_business(self, uow: ABCUnitOfWork) -> Business:
+    def create_consumer(self, uow: ABCUnitOfWork) -> Consumer:
         created_location = self.location.create_location(uow)
 
-        created_business = uow.business_repository.create(
-            Business(
+        created_business = uow.consumer_repository.create(
+            Consumer(
                 id=get_new_id(),
                 user_id=self.user_id,
-                business_name=self.business_name,
-                owner_first_name=self.owner_first_name,
-                owner_last_name=self.owner_last_name,
+                first_name=self.first_name,
+                last_name=self.last_name,
                 phone_number=self.phone_number,
                 email=self.email,
                 location_id=created_location["id"],
