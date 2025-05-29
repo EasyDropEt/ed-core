@@ -2,6 +2,7 @@ from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from ed_domain.common.exceptions import ApplicationException, Exceptions
+from ed_domain.common.logging import get_logger
 from ed_domain.core.entities import Business, DeliveryJob, Driver, Order
 from ed_domain.core.entities.delivery_job import (WayPoint, WaypointStatus,
                                                   WayPointType)
@@ -21,6 +22,8 @@ from ed_core.application.features.driver.dtos import PickUpOrderDto
 from ed_core.application.features.driver.requests.commands import \
     PickUpOrderCommand
 from ed_core.common.generic_helpers import get_new_id
+
+LOG = get_logger()
 
 
 @request_handler(PickUpOrderCommand, BaseResponse[PickUpOrderDto])
@@ -78,10 +81,13 @@ class PickUpOrderCommandHandler(RequestHandler):
         )
 
     def _send_notification(self, user_id: UUID, message: str) -> NotificationDto:
+        LOG.info(
+            f"Sending notification to business with user id {user_id} for delivery job."
+        )
         notification_response = self._api.notification_api.send_notification(
             {
                 "user_id": user_id,
-                "notification_type": NotificationType.SMS,
+                "notification_type": NotificationType.EMAIL,
                 "message": message,
             }
         )
