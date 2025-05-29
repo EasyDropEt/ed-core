@@ -31,7 +31,7 @@ class DropOffOrderVerifyCommandHandler(RequestHandler):
         order = self._validate_order(request.order_id)
 
         # Validate otp
-        self._validate_otp(driver["user_id"], request.dto["otp"])
+        self._validate_otp(driver["user_id"], request.dto.otp)
 
         # Update db
         waypoint_index = self._get_order_waypoint(
@@ -41,7 +41,8 @@ class DropOffOrderVerifyCommandHandler(RequestHandler):
             "waypoint_status"
         ] = WaypointStatus.DONE
         order["order_status"] = OrderStatus.COMPLETED
-        self._uow.delivery_job_repository.update(delivery_job["id"], delivery_job)
+        self._uow.delivery_job_repository.update(
+            delivery_job["id"], delivery_job)
 
         # Send notifications
         self._api.notification_api.send_notification(
@@ -72,7 +73,8 @@ class DropOffOrderVerifyCommandHandler(RequestHandler):
         )
 
     def _validate_delivery_job(self, delivery_job_id: UUID) -> DeliveryJob:
-        delivery_job = self._uow.delivery_job_repository.get(id=delivery_job_id)
+        delivery_job = self._uow.delivery_job_repository.get(
+            id=delivery_job_id)
         if not delivery_job or "driver_id" not in delivery_job:
             raise ApplicationException(
                 Exceptions.NotFoundException,

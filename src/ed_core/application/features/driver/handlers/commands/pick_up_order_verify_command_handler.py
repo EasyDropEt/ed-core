@@ -31,7 +31,7 @@ class PickUpOrderVerifyCommandHandler(RequestHandler):
         bill = self._validate_bill(order["bill_id"])
 
         # Validate otp
-        self._validate_otp(driver["user_id"], request.dto["otp"])
+        self._validate_otp(driver["user_id"], request.dto.otp)
 
         # Update db
         waypoint_index = self._get_order_waypoint(

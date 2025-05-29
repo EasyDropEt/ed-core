@@ -45,7 +45,7 @@ class DropOffOrderCommandHandler(RequestHandler):
         consumer = self._validate_consumer(order["consumer_id"])
         sms_otp = self._otp.generate()
         self._send_notification(
-            consumer["id"],
+            consumer["user_id"],
             f"Your OTP for delivery job {delivery_job['id']} is {sms_otp}.",
         )
 

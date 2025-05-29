@@ -1,4 +1,5 @@
 from ed_domain.common.exceptions import ApplicationException, Exceptions
+from ed_domain.core.entities.delivery_job import DeliveryJobStatus
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
@@ -17,7 +18,8 @@ class ClaimDeliveryJobCommandHandler(RequestHandler):
     async def handle(
         self, request: ClaimDeliveryJobCommand
     ) -> BaseResponse[DeliveryJobDto]:
-        delivery_job = self._uow.delivery_job_repository.get(id=request.delivery_job_id)
+        delivery_job = self._uow.delivery_job_repository.get(
+            id=request.delivery_job_id)
         if not delivery_job:
             raise ApplicationException(
                 Exceptions.NotFoundException,
@@ -49,6 +51,7 @@ class ClaimDeliveryJobCommandHandler(RequestHandler):
             )
 
         delivery_job["driver_id"] = driver["id"]
+        delivery_job["status"] = DeliveryJobStatus.IN_PROGRESS
         self._uow.delivery_job_repository.update(
             request.delivery_job_id,
             delivery_job,

@@ -336,4 +336,4 @@ class CoreApiClient(ABCCoreApiClient):
 
 
 if __name__ == "__main__":
-    CoreEndpointClient("")
+    CoreApiClient("")

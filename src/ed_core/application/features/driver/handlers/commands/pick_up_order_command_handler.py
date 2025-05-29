@@ -46,7 +46,7 @@ class PickUpOrderCommandHandler(RequestHandler):
         business = self._validate_business(order["business_id"])
         sms_otp = self._otp.generate()
         self._send_notification(
-            business["id"],
+            business["user_id"],
             f"Your OTP for delivery job {delivery_job['id']} is {sms_otp}.",
         )
 
@@ -92,6 +92,9 @@ class PickUpOrderCommandHandler(RequestHandler):
             }
         )
 
+        LOG.info(
+            f"Notification response for business with user id {user_id}: {notification_response}"
+        )
         if not notification_response["is_success"]:
             raise ApplicationException(
                 Exceptions.InternalServerException,
