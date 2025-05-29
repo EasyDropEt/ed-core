@@ -6,6 +6,7 @@ from ed_domain.core.entities.delivery_job import (DeliveryJob,
                                                   DeliveryJobStatus, WayPoint,
                                                   WayPointType)
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.core.value_objects.money import Money
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos.order_dto import OrderDto
@@ -36,7 +37,7 @@ class DeliveryJobDto(BaseModel):
     estimated_time_in_minutes: int
     driver_id: Optional[UUID]
     status: DeliveryJobStatus
-    estimated_payment: float
+    estimated_payment: Money
     estimated_completion_time: datetime
 
     @classmethod
@@ -57,7 +58,6 @@ class DeliveryJobDto(BaseModel):
             estimated_time_in_minutes=delivery_job["estimated_time_in_minutes"],
             driver_id=delivery_job.get("driver_id"),
             status=delivery_job["status"],
-            driver_payment=None,
             estimated_payment=delivery_job["estimated_payment"],
             estimated_completion_time=delivery_job["estimated_completion_time"],
         )
