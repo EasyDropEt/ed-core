@@ -24,5 +24,5 @@ class GetBusinessQueryHandler(RequestHandler):
         raise ApplicationException(
             Exceptions.NotFoundException,
             "Business not found.",
-            [f"Buisness with id {request.business_id} not found."],
+            [f"Business with id {request.business_id} not found."],
         )

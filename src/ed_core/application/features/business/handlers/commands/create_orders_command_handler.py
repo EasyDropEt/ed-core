@@ -42,7 +42,7 @@ class CreateOrdersCommandHandler(RequestHandler):
     ) -> BaseResponse[list[OrderDto]]:
         business_id = request.business_id
         dto = request.dto
-        for order in dto["orders"]:
+        for order in dto.orders:
             dto_validator = CreateOrderDtoValidator().validate(order)
 
             if not dto_validator.is_valid:
@@ -59,7 +59,7 @@ class CreateOrdersCommandHandler(RequestHandler):
                     self._create_bill()["id"],
                     self._uow,
                 )
-                for order in dto["orders"]
+                for order in dto.orders
             ]
         )
 
