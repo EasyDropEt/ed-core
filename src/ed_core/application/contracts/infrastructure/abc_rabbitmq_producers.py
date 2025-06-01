@@ -8,15 +8,15 @@ from ed_optimization.documentation.message_queue.rabbitmq.abc_optimization_rabbi
     ABCOptimizationRabbitMQSubscriber
 
 
-class ABCRabbitMQHandler(metaclass=ABCMeta):
+class ABCRabbitMQProducers(metaclass=ABCMeta):
     @property
     @abstractmethod
-    def optimization_subscriber(self) -> ABCOptimizationRabbitMQSubscriber: ...
+    def optimization(self) -> ABCOptimizationRabbitMQSubscriber: ...
 
     @property
     @abstractmethod
-    def notification_subscriber(self) -> ABCNotificationRabbitMQSubscriber: ...
+    def notification(self) -> ABCNotificationRabbitMQSubscriber: ...
 
     @property
     @abstractmethod
-    def auth_subscriber(self) -> ABCAuthRabbitMQSubscriber: ...
+    def auth(self) -> ABCAuthRabbitMQSubscriber: ...
