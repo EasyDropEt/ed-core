@@ -2,27 +2,24 @@ from datetime import UTC, datetime
 
 from ed_domain.common.exceptions import EXCEPTION_NAMES, ApplicationException
 from ed_domain.common.logging import get_logger
-from ed_domain.core.entities import Bill, Consumer, Order
+from ed_domain.core.entities import Bill, Consumer
 from ed_domain.core.entities.bill import BillStatus
 from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
 from ed_domain.core.value_objects.money import Currency, Money
-from ed_domain.queues.ed_optimization.order_model import (BusinessModel,
-                                                          ConsumerModel,
-                                                          OrderModel)
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
+from ed_core.application.contracts.infrastructure.abc_rabbitmq_producers import \
+    ABCRabbitMQProducers
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
-from ed_core.application.contracts.infrastructure.api.abc_rabbitmq_handler import \
-    ABCRabbitMQHandler
+from ed_core.application.features.business.dtos.create_consumer_dto import \
+    CreateConsumerDto
 from ed_core.application.features.business.dtos.validators import \
     CreateOrderDtoValidator
 from ed_core.application.features.business.requests.commands import \
     CreateOrdersCommand
 from ed_core.application.features.common.dtos import OrderDto
-from ed_core.application.features.common.dtos.create_consumer_dto import \
-    CreateConsumerDto
 from ed_core.common.generic_helpers import get_new_id
 
 LOG = get_logger()
@@ -31,7 +28,7 @@ LOG = get_logger()
 @request_handler(CreateOrdersCommand, BaseResponse[list[OrderDto]])
 class CreateOrdersCommandHandler(RequestHandler):
     def __init__(
-        self, uow: ABCUnitOfWork, api: ABCApi, rabbitmq_producer: ABCRabbitMQHandler
+        self, uow: ABCUnitOfWork, api: ABCApi, rabbitmq_producer: ABCRabbitMQProducers
     ):
         self._uow = uow
         self._api = api
@@ -63,8 +60,6 @@ class CreateOrdersCommandHandler(RequestHandler):
             ]
         )
 
-        self._publish_orders(created_orders)
-
         return BaseResponse[list[OrderDto]].success(
             "Order created successfully.",
             [OrderDto.from_order(order, self._uow)
@@ -77,6 +72,9 @@ class CreateOrdersCommandHandler(RequestHandler):
         ):
             return existing_consumer
 
+        LOG.info(
+            f"Consumer with phone number {consumer.phone_number} does not exist. Creating a new consumer. Calling create_get_otp API with data: {consumer}"
+        )
         create_user_response = self._api.auth_api.create_get_otp(
             {
                 "first_name": consumer.first_name,
@@ -85,6 +83,8 @@ class CreateOrdersCommandHandler(RequestHandler):
                 "email": consumer.email,
             }
         )
+
+        LOG.info(f"Response from create_get_otp API: {create_user_response}")
         if not create_user_response["is_success"]:
             raise ApplicationException(
                 EXCEPTION_NAMES[create_user_response["http_status_code"]],
@@ -92,8 +92,8 @@ class CreateOrdersCommandHandler(RequestHandler):
                 ["Could not create consumers."],
             )
 
-        consumer.user_id = create_user_response["data"]["id"]
-        return consumer.create_consumer(self._uow)
+        user_id = create_user_response["data"]["id"]
+        return consumer.create_consumer(user_id, self._uow)
 
     def _create_bill(self) -> Bill:
         return self._uow.bill_repository.create(
@@ -110,21 +110,3 @@ class CreateOrdersCommandHandler(RequestHandler):
                 deleted=False,
             )
         )
-
-    def _publish_orders(self, orders: list[Order]) -> None:
-        for order in orders:
-            self._rabbitmq_producer.optimization_subscriber.create_order(
-                OrderModel(
-                    **order,  # type: ignore
-                    consumer=ConsumerModel(
-                        **self._uow.business_repository.get(
-                            id=order["consumer_id"],
-                        )  # type: ignore
-                    ),
-                    business=BusinessModel(
-                        **self._uow.business_repository.get(
-                            id=order["business_id"],
-                        )  # type: ignore
-                    ),
-                )
-            )

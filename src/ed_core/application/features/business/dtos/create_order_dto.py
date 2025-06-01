@@ -6,7 +6,8 @@ from ed_domain.core.entities.order import OrderStatus, Parcel
 from ed_domain.core.repositories import ABCUnitOfWork
 from pydantic import BaseModel
 
-from ed_core.application.features.common.dtos import CreateConsumerDto
+from ed_core.application.features.business.dtos.create_consumer_dto import \
+    CreateConsumerDto
 from ed_core.common.generic_helpers import get_new_id
 
 

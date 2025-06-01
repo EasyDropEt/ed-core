@@ -1,4 +1,3 @@
-from datetime import UTC, datetime
 from uuid import UUID
 
 from ed_domain.common.exceptions import ApplicationException, Exceptions
@@ -106,19 +105,29 @@ class PickUpOrderVerifyCommandHandler(RequestHandler):
 
     def _validate_otp(self, user_id: UUID, otp_value: str) -> None:
         otp = self._uow.otp_repository.get(user_id=user_id)
-        if not otp or otp["action"] != OtpVerificationAction.PICK_UP:
+        print(f"OTP: {otp}, OTP value: {otp_value}")
+        if otp is None:
+            raise ApplicationException(
+                Exceptions.BadRequestException,
+                "OTP not found.",
+                ["OTP for pick up was nto found. Please request a new OTP."],
+            )
+
+        if otp["action"] != OtpVerificationAction.PICK_UP:
             raise ApplicationException(
                 Exceptions.BadRequestException,
                 "Invalid OTP.",
-                ["OTP is not valid or has expired. Please request a new OTP."],
+                ["OTP is not valid. Please request a new OTP."],
             )
 
-        if otp["expiry_datetime"] < datetime.now(UTC):
-            raise ApplicationException(
-                Exceptions.BadRequestException,
-                "Expired OTP.",
-                ["OTP has expired. Please request a new OTP."],
-            )
+        # now, expiry = datetime.now(UTC), otp["expiry_datetime"]
+        # print(f"Current time: {now}, OTP expiry time: {expiry}")
+        # if expiry < now:
+        #     raise ApplicationException(
+        #         Exceptions.BadRequestException,
+        #         "Expired OTP.",
+        #         ["OTP has expired. Please request a new OTP."],
+        #     )
 
         if otp["value"] != otp_value:
             raise ApplicationException(
