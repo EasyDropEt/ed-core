@@ -1,0 +1,342 @@
+{
+  "is_success": true,
+  "message": "Order created successfully.",
+  "data": [
+    {
+      "id": "1b971db0-a9ef-4b18-ac20-abb45de14b02",
+      
+    },
+    {
+      "id": "a853b05d-39dc-4140-a713-1382a5937fd2",
+       "fragile": true
+      },
+    },
+    {
+      "id": "04e01b82-29d8-49cf-b80c-ed89a754ed80",
+      
+    },
+    {
+      "id": "65e1aeaa-9105-4113-aed0-67cfcb2cc874",
+      "business": {
+        "id": "da93283b-3b86-4df6-bd4d-5f64e4c49de3",
+        "business_name": "Shamil",
+        "owner_first_name": "Shamil",
+        "owner_last_name": "Shamil",
+        "phone_number": "251945454545",
+        "email": "shamil@ed.com",
+        "location": {
+          "address": "string",
+          "latitude": 9,
+          "longitude": 38.7,
+          "postal_code": "string",
+          "city": "Addis Ababa"
+        },
+        "billing_details": []
+      },
+      "consumer": {
+        "id": "8d741383-5767-4f15-afa2-7c6bbd56657d",
+        "first_name": "Eyob",
+        "last_name": "Getachew",
+        "phone_number": "+251933445566",
+        "email": "eyob.getachew@example.com",
+        "location": {
+          "address": "Arat Kilo, Addis Ababa",
+          "latitude": 9.0389,
+          "longitude": 38.7532,
+          "postal_code": "1030",
+          "city": "Addis Ababa"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-11T07:50:00Z",
+      "parcel": {
+        "size": "medium",
+        "weight": 3.6,
+        "dimensions": {
+          "length": 35,
+          "width": 25,
+          "height": 20
+        },
+        "fragile": false
+      },
+      "order_status": "pending",
+      "delivery_job_id": null
+    },
+    {
+      "id": "e1e67573-5a9a-4c1a-8503-d97f9f293623",
+      "business": {
+        "id": "da93283b-3b86-4df6-bd4d-5f64e4c49de3",
+        "business_name": "Shamil",
+        "owner_first_name": "Shamil",
+        "owner_last_name": "Shamil",
+        "phone_number": "251945454545",
+        "email": "shamil@ed.com",
+        "location": {
+          "address": "string",
+          "latitude": 9,
+          "longitude": 38.7,
+          "postal_code": "string",
+          "city": "Addis Ababa"
+        },
+        "billing_details": []
+      },
+      "consumer": {
+        "id": "c4bd7603-8666-4212-bf27-67af003dcff4",
+        "first_name": "Sara",
+        "last_name": "Tilahun",
+        "phone_number": "+251944556677",
+        "email": "sara.tilahun@example.com",
+        "location": {
+          "address": "Piassa, Addis Ababa",
+          "latitude": 9.0372,
+          "longitude": 38.7489,
+          "postal_code": "1040",
+          "city": "Addis Ababa"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-11T11:00:00Z",
+      "parcel": {
+        "size": "large",
+        "weight": 10.2,
+        "dimensions": {
+          "length": 60,
+          "width": 50,
+          "height": 45
+        },
+        "fragile": true
+      },
+      "order_status": "pending",
+      "delivery_job_id": null
+    },
+    {
+      "id": "34fecead-1d15-4b82-90dc-2ef0dbcfc6ea",
+      "business": {
+        "id": "da93283b-3b86-4df6-bd4d-5f64e4c49de3",
+        "business_name": "Shamil",
+        "owner_first_name": "Shamil",
+        "owner_last_name": "Shamil",
+        "phone_number": "251945454545",
+        "email": "shamil@ed.com",
+        "location": {
+          "address": "string",
+          "latitude": 9,
+          "longitude": 38.7,
+          "postal_code": "string",
+          "city": "Addis Ababa"
+        },
+        "billing_details": []
+      },
+      "consumer": {
+        "id": "dd170dab-aaa3-466d-9dbb-c68f59be1cc1",
+        "first_name": "Yonas",
+        "last_name": "Alemu",
+        "phone_number": "+251955667788",
+        "email": "yonas.alemu@example.com",
+        "location": {
+          "address": "CMC, Addis Ababa",
+          "latitude": 9.0481,
+          "longitude": 38.8102,
+          "postal_code": "1050",
+          "city": "Addis Ababa"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-11T09:40:00Z",
+      "parcel": {
+        "size": "small",
+        "weight": 0.9,
+        "dimensions": {
+          "length": 18,
+          "width": 12,
+          "height": 8
+        },
+        "fragile": false
+      },
+      "order_status": "pending",
+      "delivery_job_id": null
+    },
+    {
+      "id": "582c4d30-8747-4938-bf95-8a5a4a40ee22",
+      "business": {
+        "id": "da93283b-3b86-4df6-bd4d-5f64e4c49de3",
+        "business_name": "Shamil",
+        "owner_first_name": "Shamil",
+        "owner_last_name": "Shamil",
+        "phone_number": "251945454545",
+        "email": "shamil@ed.com",
+        "location": {
+          "address": "string",
+          "latitude": 9,
+          "longitude": 38.7,
+          "postal_code": "string",
+          "city": "Addis Ababa"
+        },
+        "billing_details": []
+      },
+      "consumer": {
+        "id": "63287eca-43f5-448f-8961-31e82a30e516",
+        "first_name": "Selam",
+        "last_name": "Wondimu",
+        "phone_number": "+251966778899",
+        "email": "selam.wondimu@example.com",
+        "location": {
+          "address": "Lebu, Addis Ababa",
+          "latitude": 8.9882,
+          "longitude": 38.7405,
+          "postal_code": "1060",
+          "city": "Addis Ababa"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-11T13:20:00Z",
+      "parcel": {
+        "size": "medium",
+        "weight": 3.3,
+        "dimensions": {
+          "length": 33,
+          "width": 23,
+          "height": 17
+        },
+        "fragile": true
+      },
+      "order_status": "pending",
+      "delivery_job_id": null
+    },
+    {
+      "id": "b0357cef-926b-42ae-b5ff-9f9761939bed",
+      "business": {
+        "id": "da93283b-3b86-4df6-bd4d-5f64e4c49de3",
+        "business_name": "Shamil",
+        "owner_first_name": "Shamil",
+        "owner_last_name": "Shamil",
+        "phone_number": "251945454545",
+        "email": "shamil@ed.com",
+        "location": {
+          "address": "string",
+          "latitude": 9,
+          "longitude": 38.7,
+          "postal_code": "string",
+          "city": "Addis Ababa"
+        },
+        "billing_details": []
+      },
+      "consumer": {
+        "id": "cc5a0d00-8711-43cf-9200-f9461c81ef16",
+        "first_name": "Nahom",
+        "last_name": "Berhanu",
+        "phone_number": "+251977889900",
+        "email": "nahom.berhanu@example.com",
+        "location": {
+          "address": "Gulele, Addis Ababa",
+          "latitude": 9.0765,
+          "longitude": 38.709,
+          "postal_code": "1070",
+          "city": "Addis Ababa"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-11T06:55:00Z",
+      "parcel": {
+        "size": "large",
+        "weight": 12.7,
+        "dimensions": {
+          "length": 65,
+          "width": 55,
+          "height": 50
+        },
+        "fragile": false
+      },
+      "order_status": "pending",
+      "delivery_job_id": null
+    },
+    {
+      "id": "be4cdf5d-953b-4887-a759-e46b118b461d",
+      "business": {
+        "id": "da93283b-3b86-4df6-bd4d-5f64e4c49de3",
+        "business_name": "Shamil",
+        "owner_first_name": "Shamil",
+        "owner_last_name": "Shamil",
+        "phone_number": "251945454545",
+        "email": "shamil@ed.com",
+        "location": {
+          "address": "string",
+          "latitude": 9,
+          "longitude": 38.7,
+          "postal_code": "string",
+          "city": "Addis Ababa"
+        },
+        "billing_details": []
+      },
+      "consumer": {
+        "id": "0bded686-0099-4c30-b2da-e4d12280620c",
+        "first_name": "Tigist",
+        "last_name": "Degu",
+        "phone_number": "+251988990011",
+        "email": "tigist.degu@example.com",
+        "location": {
+          "address": "Mexico, Addis Ababa",
+          "latitude": 9.0023,
+          "longitude": 38.7431,
+          "postal_code": "1080",
+          "city": "Addis Ababa"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-11T14:10:00Z",
+      "parcel": {
+        "size": "small",
+        "weight": 0.7,
+        "dimensions": {
+          "length": 15,
+          "width": 10,
+          "height": 6
+        },
+        "fragile": true
+      },
+      "order_status": "pending",
+      "delivery_job_id": null
+    },
+    {
+      "id": "b7b7b320-d146-432b-b803-22474f86251c",
+      "business": {
+        "id": "da93283b-3b86-4df6-bd4d-5f64e4c49de3",
+        "business_name": "Shamil",
+        "owner_first_name": "Shamil",
+        "owner_last_name": "Shamil",
+        "phone_number": "251945454545",
+        "email": "shamil@ed.com",
+        "location": {
+          "address": "string",
+          "latitude": 9,
+          "longitude": 38.7,
+          "postal_code": "string",
+          "city": "Addis Ababa"
+        },
+        "billing_details": []
+      },
+      "consumer": {
+        "id": "a4e14bf5-f689-4c45-ad72-1f34bf2c5ae8",
+        "first_name": "Samuel",
+        "last_name": "Negash",
+        "phone_number": "+251911223344",
+        "email": "samuel.negash@example.com",
+        "location": {
+          "address": "Bole Bulbula, Addis Ababa",
+          "latitude": 8.9851,
+          "longitude": 38.8225,
+          "postal_code": "1090",
+          "city": "Addis Ababa"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-11T07:25:00Z",
+      "parcel": {
+        "size": "medium",
+        "weight": 4.2,
+        "dimensions": {
+          "length": 40,
+          "width": 30,
+          "height": 25
+        },
+        "fragile": false
+      },
+      "order_status": "pending",
+      "delivery_job_id": null
+    }
+  ],
+  "errors": []
+}

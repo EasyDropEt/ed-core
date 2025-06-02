@@ -1,0 +1,128 @@
+{
+  "waypoints": [
+    {
+      "order_id": "d9b0deac-ec7d-447d-b09f-fc31a99d7048",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 0
+    },
+    {
+      "order_id": "d9b0deac-ec7d-447d-b09f-fc31a99d7048",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 1
+    },
+    {
+      "order_id": "11d249ca-a570-493a-8f5a-174265998140",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 2
+    },
+    {
+      "order_id": "11d249ca-a570-493a-8f5a-174265998140",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 3
+    },
+    {
+      "order_id": "fdb2dd88-f16d-4194-ad0f-17e22bacdadd",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 4
+    },
+    {
+      "order_id": "fdb2dd88-f16d-4194-ad0f-17e22bacdadd",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 5
+    },
+    {
+      "order_id": "3ee41d7f-8a56-4827-bd68-dfe4269dd8d6",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 6
+    },
+    {
+      "order_id": "3ee41d7f-8a56-4827-bd68-dfe4269dd8d6",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 7
+    },
+    {
+      "order_id": "49082491-a0aa-497c-b222-180114ef6c70",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 8
+    },
+    {
+      "order_id": "49082491-a0aa-497c-b222-180114ef6c70",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 9
+    },
+    {
+      "order_id": "75944f10-d115-43a3-b94b-45fb26f07884",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 10
+    },
+    {
+      "order_id": "75944f10-d115-43a3-b94b-45fb26f07884",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 11
+    },
+    {
+      "order_id": "f5d61baf-9607-4466-bd1a-6c732ed7aabe",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 12
+    },
+    {
+      "order_id": "f5d61baf-9607-4466-bd1a-6c732ed7aabe",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 13
+    },
+    {
+      "order_id": "b21c348b-8c6e-4d0d-a432-2d976f0173e0",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 14
+    },
+    {
+      "order_id": "b21c348b-8c6e-4d0d-a432-2d976f0173e0",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 15
+    },
+    {
+      "order_id": "75e23dff-0781-4d3b-8909-148b9bd046e9",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 16
+    },
+    {
+      "order_id": "75e23dff-0781-4d3b-8909-148b9bd046e9",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 17
+    },
+    {
+      "order_id": "5b8191c9-d3d5-4837-bad3-dfff733994af",
+      "type": "PICKUP",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 18
+    },
+    {
+      "order_id": "5b8191c9-d3d5-4837-bad3-dfff733994af",
+      "type": "DROP_OFF",
+      "eta": "2025-05-08T06:27:02.870Z",
+      "sequence": 19
+    }
+  ],
+  "estimated_distance_in_kms": 20,
+  "estimated_time_in_minutes": 60,
+  "estimated_payment": 40.0,
+  "estimated_completion_time": "2025-05-09T06:27:02.870Z"
+}

@@ -5,11 +5,11 @@ from ed_notification.documentation.message_queue.rabbitmq.abc_notification_rabbi
 from ed_optimization.documentation.message_queue.rabbitmq.abc_optimization_rabbitmq_subscriber import \
     ABCOptimizationRabbitMQSubscriber
 
-from ed_core.application.contracts.infrastructure.api.abc_rabbitmq_handler import \
-    ABCRabbitMQHandler
+from ed_core.application.contracts.infrastructure.abc_rabbitmq_producers import \
+    ABCRabbitMQProducers
 
 
-class RabbitMQHandler(ABCRabbitMQHandler):
+class RabbitMQHandler(ABCRabbitMQProducers):
     def __init__(
         self,
         auth_subscriber: ABCAuthRabbitMQSubscriber,
@@ -21,13 +21,13 @@ class RabbitMQHandler(ABCRabbitMQHandler):
         self._optimization_subscriber = optimization_subscriber
 
     @property
-    def optimization_subscriber(self) -> ABCOptimizationRabbitMQSubscriber:
+    def optimization(self) -> ABCOptimizationRabbitMQSubscriber:
         return self._optimization_subscriber
 
     @property
-    def notification_subscriber(self) -> ABCNotificationRabbitMQSubscriber:
+    def notification(self) -> ABCNotificationRabbitMQSubscriber:
         return self._notification_subscriber
 
     @property
-    def auth_subscriber(self) -> ABCAuthRabbitMQSubscriber:
+    def auth(self) -> ABCAuthRabbitMQSubscriber:
         return self._auth_subscriber

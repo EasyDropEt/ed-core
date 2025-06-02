@@ -1,0 +1,254 @@
+{
+  "orders": [
+    {
+      "consumer": {
+        "first_name": "Mekdes",
+        "last_name": "Tadesse",
+        "phone_number": "+251911123456",
+        "email": "mekdes.tadesse@example.com",
+        "location": {
+          "address": "Bole, Addis Ababa",
+          "latitude": 8.9954,
+          "longitude": 38.7832,
+          "postal_code": "1000"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T10:30:00Z",
+      "parcel": {
+        "size": "medium",
+        "weight": 2.5,
+        "dimensions": {
+          "length": 30,
+          "width": 20,
+          "height": 15
+        },
+        "fragile": false
+      }
+    },
+    {
+      "consumer": {
+        "first_name": "Kebede",
+        "last_name": "Abebe",
+        "phone_number": "+251911654321",
+        "email": "kebede.abebe@example.com",
+        "location": {
+          "address": "Kazanchis, Addis Ababa",
+          "latitude": 9.0378,
+          "longitude": 38.7573,
+          "postal_code": "1010"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T12:45:00Z",
+      "parcel": {
+        "size": "large",
+        "weight": 7.8,
+        "dimensions": {
+          "length": 50,
+          "width": 40,
+          "height": 35
+        },
+        "fragile": true
+      }
+    },
+    {
+      "consumer": {
+        "first_name": "Lily",
+        "last_name": "Mengistu",
+        "phone_number": "+251922112233",
+        "email": "lily.mengistu@example.com",
+        "location": {
+          "address": "Megenagna, Addis Ababa",
+          "latitude": 9.02,
+          "longitude": 38.792,
+          "postal_code": "1020"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T08:15:00Z",
+      "parcel": {
+        "size": "small",
+        "weight": 1.2,
+        "dimensions": {
+          "length": 20,
+          "width": 15,
+          "height": 10
+        },
+        "fragile": true
+      }
+    },
+    {
+      "consumer": {
+        "first_name": "Eyob",
+        "last_name": "Getachew",
+        "phone_number": "+251933445566",
+        "email": "eyob.getachew@example.com",
+        "location": {
+          "address": "Arat Kilo, Addis Ababa",
+          "latitude": 9.0389,
+          "longitude": 38.7532,
+          "postal_code": "1030"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T07:50:00Z",
+      "parcel": {
+        "size": "medium",
+        "weight": 3.6,
+        "dimensions": {
+          "length": 35,
+          "width": 25,
+          "height": 20
+        },
+        "fragile": false
+      }
+    },
+    {
+      "consumer": {
+        "first_name": "Sara",
+        "last_name": "Tilahun",
+        "phone_number": "+251944556677",
+        "email": "sara.tilahun@example.com",
+        "location": {
+          "address": "Piassa, Addis Ababa",
+          "latitude": 9.0372,
+          "longitude": 38.7489,
+          "postal_code": "1040"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T11:00:00Z",
+      "parcel": {
+        "size": "large",
+        "weight": 10.2,
+        "dimensions": {
+          "length": 60,
+          "width": 50,
+          "height": 45
+        },
+        "fragile": true
+      }
+    },
+    {
+      "consumer": {
+        "first_name": "Yonas",
+        "last_name": "Alemu",
+        "phone_number": "+251955667788",
+        "email": "yonas.alemu@example.com",
+        "location": {
+          "address": "CMC, Addis Ababa",
+          "latitude": 9.0481,
+          "longitude": 38.8102,
+          "postal_code": "1050"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T09:40:00Z",
+      "parcel": {
+        "size": "small",
+        "weight": 0.9,
+        "dimensions": {
+          "length": 18,
+          "width": 12,
+          "height": 8
+        },
+        "fragile": false
+      }
+    },
+    {
+      "consumer": {
+        "first_name": "Selam",
+        "last_name": "Wondimu",
+        "phone_number": "+251966778899",
+        "email": "selam.wondimu@example.com",
+        "location": {
+          "address": "Lebu, Addis Ababa",
+          "latitude": 8.9882,
+          "longitude": 38.7405,
+          "postal_code": "1060"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T13:20:00Z",
+      "parcel": {
+        "size": "medium",
+        "weight": 3.3,
+        "dimensions": {
+          "length": 33,
+          "width": 23,
+          "height": 17
+        },
+        "fragile": true
+      }
+    },
+    {
+      "consumer": {
+        "first_name": "Nahom",
+        "last_name": "Berhanu",
+        "phone_number": "+251977889900",
+        "email": "nahom.berhanu@example.com",
+        "location": {
+          "address": "Gulele, Addis Ababa",
+          "latitude": 9.0765,
+          "longitude": 38.709,
+          "postal_code": "1070"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T06:55:00Z",
+      "parcel": {
+        "size": "large",
+        "weight": 12.7,
+        "dimensions": {
+          "length": 65,
+          "width": 55,
+          "height": 50
+        },
+        "fragile": false
+      }
+    },
+    {
+      "consumer": {
+        "first_name": "Tigist",
+        "last_name": "Degu",
+        "phone_number": "+251988990011",
+        "email": "tigist.degu@example.com",
+        "location": {
+          "address": "Mexico, Addis Ababa",
+          "latitude": 9.0023,
+          "longitude": 38.7431,
+          "postal_code": "1080"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T14:10:00Z",
+      "parcel": {
+        "size": "small",
+        "weight": 0.7,
+        "dimensions": {
+          "length": 15,
+          "width": 10,
+          "height": 6
+        },
+        "fragile": true
+      }
+    },
+    {
+      "consumer": {
+        "first_name": "Samuel",
+        "last_name": "Negash",
+        "phone_number": "+251911223344",
+        "email": "samuel.negash@example.com",
+        "location": {
+          "address": "Bole Bulbula, Addis Ababa",
+          "latitude": 8.9851,
+          "longitude": 38.8225,
+          "postal_code": "1090"
+        }
+      },
+      "latest_time_of_delivery": "2025-05-27T07:25:00Z",
+      "parcel": {
+        "size": "medium",
+        "weight": 4.2,
+        "dimensions": {
+          "length": 40,
+          "width": 30,
+          "height": 25
+        },
+        "fragile": false
+      }
+    }
+  ]
+}
