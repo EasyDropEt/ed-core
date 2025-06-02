@@ -2,7 +2,7 @@ from ed_domain.documentation.api.definitions import ApiResponse
 from ed_infrastructure.documentation.api.endpoint_client import EndpointClient
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateOrdersDto,
+                                                        CreateOrderDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       CreateConsumerDto,
@@ -240,14 +240,13 @@ class CoreApiClient(ABCCoreApiClient):
         api_client = EndpointClient[list[OrderDto]](endpoint)
         return await api_client({"path_params": {"business_id": business_id}})
 
-    async def create_business_orders(
-        self, business_id: str, create_orders_dto: CreateOrdersDto
-    ) -> ApiResponse[list[OrderDto]]:
+    async def create_business_order(
+        self, business_id: str, create_order_dto: CreateOrderDto
+    ) -> ApiResponse[OrderDto]:
         endpoint = self._endpoints.get_description("create_business_orders")
-        api_client = EndpointClient[list[OrderDto]](endpoint)
+        api_client = EndpointClient[OrderDto](endpoint)
         return await api_client(
-            {"path_params": {"business_id": business_id},
-                "request": create_orders_dto}
+            {"path_params": {"business_id": business_id}, "request": create_order_dto}
         )
 
     async def get_delivery_jobs(self) -> ApiResponse[list[DeliveryJobDto]]:

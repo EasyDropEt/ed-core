@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 from ed_domain.documentation.api.definitions import ApiResponse
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
-                                                        CreateOrdersDto,
+                                                        CreateOrderDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       CreateConsumerDto,
@@ -138,9 +138,9 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     ) -> ApiResponse[list[OrderDto]]: ...
 
     @abstractmethod
-    async def create_business_orders(
-        self, business_id: str, create_orders_dto: CreateOrdersDto
-    ) -> ApiResponse[list[OrderDto]]: ...
+    async def create_business_order(
+        self, business_id: str, create_order_dto: CreateOrderDto
+    ) -> ApiResponse[OrderDto]: ...
 
     # Delivery job features
     @abstractmethod

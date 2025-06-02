@@ -4,9 +4,8 @@ from ed_domain.documentation.api.definitions import (EndpointDescription,
                                                      HttpMethod)
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
+                                                        CreateOrderDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.business.requests.commands.create_orders_command import \
-    CreateOrdersDto
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       CreateConsumerDto,
                                                       DeliveryJobDto,
@@ -78,7 +77,7 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "method": HttpMethod.POST,
                 "path": f"{self._base_url}/businesses/{{business_id}}/orders",
                 "path_params": {"business_id": str},
-                "request_model": CreateOrdersDto,
+                "request_model": CreateOrderDto,
                 "response_model": OrderDto,
             },
             # Driver endpoints
