@@ -11,9 +11,9 @@ from ed_core.application.features.delivery_job.dtos.create_delivery_job_dto impo
 from ed_core.application.features.delivery_job.requests.commands.create_delivery_job_command import \
     CreateDeliveryJobCommand
 from ed_core.common.generic_helpers import get_config
-from ed_core.webapi.dependency_setup import mediator
-from src.ed_core.documentation.message_queue.rabbitmq.abc_core_rabbitmq_subscriber import \
+from ed_core.documentation.message_queue.rabbitmq.abc_core_rabbitmq_subscriber import \
     CoreQueues
+from ed_core.webapi.dependency_setup import mediator
 
 config = get_config()
 router = RabbitRouter(config["rabbitmq"]["url"])
