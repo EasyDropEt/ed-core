@@ -12,6 +12,8 @@ from ed_core.application.features.delivery_job.requests.commands.create_delivery
     CreateDeliveryJobCommand
 from ed_core.common.generic_helpers import get_config
 from ed_core.webapi.dependency_setup import mediator
+from src.ed_core.documentation.message_queue.rabbitmq.abc_core_rabbitmq_subscriber import \
+    CoreQueues
 
 config = get_config()
 router = RabbitRouter(config["rabbitmq"]["url"])
@@ -19,11 +21,10 @@ router = RabbitRouter(config["rabbitmq"]["url"])
 LOG = get_logger()
 
 
-@router.subscriber(
-    RabbitQueue(
-        name=config["rabbitmq"]["queues"]["subscribe_create_delivery_job"], durable=True
-    )
-)
+queue = RabbitQueue(name=CoreQueues.CREATE_DELIVERY_JOB, durable=True)
+
+
+@router.subscriber(queue)
 async def create_delivery_job(
     model: CreateDeliveryJobDto,
     mediator: Annotated[Mediator, Depends(mediator)],
