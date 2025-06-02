@@ -663,13 +663,13 @@ pgp = ["gpg"]
 
 [[package]]
 name = "ed-auth"
-version = "0.1.15"
+version = "0.2.2"
 description = "EasyDrop auth model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_auth-0.1.15-py3-none-any.whl", hash = "sha256:c41b7f362a0ae078748a6305dd61da3d40f008588199a6f9f5a70721125045b0"},
+    {file = "ed_auth-0.2.2-py3-none-any.whl", hash = "sha256:caaf90b578ae1f73f6bb13f27e2fd6bbe7e61fc71138cb1af706826e6e837279"},
 ]
 
 [package.extras]
@@ -677,13 +677,13 @@ dev = ["check-manifest"]
 
 [[package]]
 name = "ed-domain"
-version = "0.3.22"
+version = "0.3.25"
 description = "EasyDrop domain model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_domain-0.3.22-py3-none-any.whl", hash = "sha256:c99e661ce1da07dd38dabe9db5414dd88142aab69a8ca80552062fa58ed39df0"},
+    {file = "ed_domain-0.3.25-py3-none-any.whl", hash = "sha256:1bdc5ef522acd0342c0ce017487f35a5a40014fbe3b79176c38dc664ec94625d"},
 ]
 
 [package.extras]
@@ -691,13 +691,13 @@ dev = ["check-manifest"]
 
 [[package]]
 name = "ed-infrastructure"
-version = "0.2.3"
+version = "0.2.7"
 description = "EasyDrop infrastructure Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_infrastructure-0.2.3-py3-none-any.whl", hash = "sha256:95bd670331686a046949dbb6df8c9e20761530ff3c4cf771a42af15f018f2c7f"},
+    {file = "ed_infrastructure-0.2.7-py3-none-any.whl", hash = "sha256:07b88df4b120b745ceed614ba5ad0cf948e322c830b195f021e0f16792141038"},
 ]
 
 [package.extras]
@@ -705,13 +705,13 @@ dev = ["check-manifest"]
 
 [[package]]
 name = "ed-notification"
-version = "0.1.13"
+version = "0.1.16"
 description = "EasyDrop notification model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_notification-0.1.13-py3-none-any.whl", hash = "sha256:78ebbdf877b0e9b0fffd51954c4e788d07fb74f23e875b037adc1668c9c54b96"},
+    {file = "ed_notification-0.1.16-py3-none-any.whl", hash = "sha256:05fe11e38862f4866da06a0c2742f0837cb53402ad7ada3d1a6815f0a6005a2b"},
 ]
 
 [package.extras]
@@ -3349,4 +3349,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "05cb6e130986046688ca1af9068c62b59677f63857d8ca4aabe9cd9d01534d10"
+content-hash = "8ae4a5ee7a306a38f33dd5b9f9654280601dc46d03428589cbd199f51057470c"
