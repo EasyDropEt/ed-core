@@ -22,7 +22,7 @@ from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       PickUpOrderVerifyDto,
                                                       UpdateDriverDto)
 from ed_core.documentation.api.abc_core_api_client import ABCCoreApiClient
-from ed_core.documentation.api.core_endpoint_descriptionss import \
+from ed_core.documentation.api.core_endpoint_descriptions import \
     CoreEndpointDescriptions
 
 

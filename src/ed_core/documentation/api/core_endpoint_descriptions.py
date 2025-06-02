@@ -5,6 +5,8 @@ from ed_domain.documentation.api.definitions import (EndpointDescription,
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         UpdateBusinessDto)
+from ed_core.application.features.business.requests.commands.create_orders_command import \
+    CreateOrdersDto
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       CreateConsumerDto,
                                                       DeliveryJobDto,
@@ -22,8 +24,6 @@ from ed_core.application.features.driver.dtos import (CreateDriverDto,
                                                       PickUpOrderDto,
                                                       PickUpOrderVerifyDto,
                                                       UpdateDriverDto)
-from src.ed_core.application.features.business.requests.commands.create_orders_command import \
-    CreateOrdersDto
 
 
 class CoreEndpointDescriptions(ABCEndpointDescriptions):
