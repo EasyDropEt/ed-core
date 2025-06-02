@@ -1,17 +1,18 @@
 import uvicorn
 from ed_domain.common.exceptions import ApplicationException
+from ed_domain.common.logging import get_logger
 from fastapi import FastAPI, Request
 from starlette.responses import JSONResponse
 
-from ed_domain.common.logging import get_logger
 from ed_core.common.singleton_helpers import SingletonMeta
 from ed_core.webapi.common.helpers import GenericResponse
 from ed_core.webapi.controllers import (business_controller,
                                         consumer_controller,
                                         delivery_job_controller,
+                                        delivery_job_rabbitmq_controller,
                                         driver_controller,
                                         notification_controller,
-                                        order_controller, rabbitmq_controller)
+                                        order_controller)
 
 LOG = get_logger()
 
@@ -26,7 +27,7 @@ class API(FastAPI, metaclass=SingletonMeta):
             driver_controller.router,
             notification_controller.router,
             order_controller.router,
-            rabbitmq_controller.router,
+            delivery_job_rabbitmq_controller.router,
         ]
 
     @property
