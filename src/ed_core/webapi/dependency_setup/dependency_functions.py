@@ -15,13 +15,13 @@ from ed_core.application.contracts.infrastructure.abc_rabbitmq_producers import 
     ABCRabbitMQProducers
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.business.handlers.commands import (
-    CreateBusinessCommandHandler, CreateOrdersCommandHandler,
+    CreateBusinessCommandHandler, CreateOrderCommandHandler,
     UpdateBusinessCommandHandler)
 from ed_core.application.features.business.handlers.queries import (
     GetAllBusinessesQueryHandler, GetBusinessByUserIdQueryHandler,
     GetBusinessOrdersQueryHandler, GetBusinessQueryHandler)
 from ed_core.application.features.business.requests.commands import (
-    CreateBusinessCommand, CreateOrdersCommand, UpdateBusinessCommand)
+    CreateBusinessCommand, CreateOrderCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
     GetBusinessQuery)
@@ -140,7 +140,7 @@ def mediator(
         (CancelDeliveryJobCommand, CancelDeliveryJobCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
-        (CreateOrdersCommand, CreateOrdersCommandHandler(uow, api, rabbitmq_handler)),
+        (CreateOrderCommand, CreateOrderCommandHandler(uow, api, rabbitmq_handler)),
         (GetBusinessQuery, GetBusinessQueryHandler(uow)),
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),

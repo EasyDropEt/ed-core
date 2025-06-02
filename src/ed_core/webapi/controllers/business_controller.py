@@ -6,11 +6,10 @@ from fastapi import APIRouter, Depends
 from rmediator.mediator import Mediator
 
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
+                                                        CreateOrderDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.business.requests.commands import (
-    CreateBusinessCommand, CreateOrdersCommand, UpdateBusinessCommand)
-from ed_core.application.features.business.requests.commands.create_orders_command import \
-    CreateOrdersDto
+    CreateBusinessCommand, CreateOrderCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
     GetBusinessQuery)
@@ -28,7 +27,6 @@ async def create_business(
     request_dto: CreateBusinessDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    LOG.info(f"Satisfying request {request_dto}")
     return await mediator.send(CreateBusinessCommand(dto=request_dto))
 
 
@@ -81,10 +79,10 @@ async def get_business_orders(
 @rest_endpoint
 async def create_order(
     business_id: UUID,
-    request_dto: CreateOrdersDto,
+    request_dto: CreateOrderDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     LOG.info(f"Satisfying request {request_dto}")
     return await mediator.send(
-        CreateOrdersCommand(business_id=business_id, dto=request_dto)
+        CreateOrderCommand(business_id=business_id, dto=request_dto)
     )
