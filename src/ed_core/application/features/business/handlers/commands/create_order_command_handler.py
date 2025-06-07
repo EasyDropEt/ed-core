@@ -91,7 +91,7 @@ class CreateOrderCommandHandler(RequestHandler):
 
     async def _send_notification(self, consumer: Consumer) -> None:
         LOG.info(f"Sending notification to consumer {consumer.id}")
-        await self._rabbitmq_producer.notification.send_notification(
+        await self._api.notification_api.send_notification(
             {
                 "user_id": consumer.user_id,
                 "notification_type": NotificationType.EMAIL,

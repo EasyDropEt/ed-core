@@ -9,6 +9,8 @@ from ed_optimization.documentation.message_queue.rabbitmq.abc_optimization_rabbi
 
 
 class ABCRabbitMQProducers(metaclass=ABCMeta):
+    async def start(self): ...
+
     @property
     @abstractmethod
     def optimization(self) -> ABCOptimizationRabbitMQSubscriber: ...
