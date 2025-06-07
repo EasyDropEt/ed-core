@@ -1,5 +1,5 @@
 from ed_domain.common.logging import get_logger
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -15,7 +15,7 @@ LOG = get_logger()
 
 @request_handler(CreateBusinessCommand, BaseResponse[BusinessDto])
 class CreateBusinessCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
     async def handle(self, request: CreateBusinessCommand) -> BaseResponse[BusinessDto]:
@@ -26,9 +26,11 @@ class CreateBusinessCommandHandler(RequestHandler):
                 "Create business failed.", dto_validator.errors
             )
 
-        business = request.dto.create_business(self._uow)
+        async with self._uow.transaction():
+            business = await request.dto.create_business(self._uow)
 
+        print(business)
         return BaseResponse[BusinessDto].success(
             "Business created successfully.",
-            BusinessDto.from_business(business, self._uow),
+            BusinessDto(**business.__dict__),
         )

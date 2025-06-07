@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 from uuid import UUID
 
-from ed_domain.core.entities import Consumer
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.core.aggregate_roots import Consumer
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos.create_location_dto import \
@@ -18,10 +18,10 @@ class CreateConsumerDto(BaseModel):
     email: str
     location: CreateLocationDto
 
-    def create_consumer(self, uow: ABCUnitOfWork) -> Consumer:
-        created_location = self.location.create_location(uow)
+    async def create_consumer(self, uow: ABCAsyncUnitOfWork) -> Consumer:
+        created_location = await self.location.create_location(uow)
 
-        created_consumer = uow.consumer_repository.create(
+        created_consumer = await uow.consumer_repository.create(
             Consumer(
                 id=get_new_id(),
                 user_id=self.user_id,
@@ -29,11 +29,12 @@ class CreateConsumerDto(BaseModel):
                 last_name=self.last_name,
                 phone_number=self.phone_number,
                 email=self.email,
-                location_id=created_location["id"],
+                profile_image_url="",
+                location=created_location,
                 create_datetime=datetime.now(UTC),
                 update_datetime=datetime.now(UTC),
                 deleted=False,
-                active_status=True,
+                deleted_datetime=None,
             )
         )
 

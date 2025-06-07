@@ -1,8 +1,6 @@
 from typing import Optional
 
-from ed_domain.core.entities import DeliveryJob, Driver
-from ed_domain.core.entities.order import Order
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.core.aggregate_roots import DeliveryJob, Driver, Order
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos.delivery_job_dto import \
@@ -20,16 +18,14 @@ class TrackOrderDto(BaseModel):
     def from_entities(
         cls,
         order: Order,
-        uow: ABCUnitOfWork,
         delivery_job: Optional[DeliveryJob] = None,
         driver: Optional[Driver] = None,
     ) -> "TrackOrderDto":
         return cls(
-            order=OrderDto.from_order(order, uow),
+            order=OrderDto.from_order(order),
             delivery_job=(
-                DeliveryJobDto.from_delivery_job(delivery_job, uow)
-                if delivery_job
-                else None
+                DeliveryJobDto.from_delivery_job(
+                    delivery_job) if delivery_job else None
             ),
-            driver=DriverDto.from_driver(driver, uow) if driver else None,
+            driver=DriverDto.from_driver(driver) if driver else None,
         )

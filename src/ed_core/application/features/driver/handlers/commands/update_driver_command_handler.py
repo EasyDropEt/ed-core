@@ -1,6 +1,6 @@
 from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.common.logging import get_logger
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -16,7 +16,7 @@ LOG = get_logger()
 
 @request_handler(UpdateDriverCommand, BaseResponse[DriverDto])
 class UpdateDriverCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
     async def handle(self, request: UpdateDriverCommand) -> BaseResponse[DriverDto]:
@@ -27,17 +27,18 @@ class UpdateDriverCommandHandler(RequestHandler):
                 "Update driver failed.", dto_validator.errors
             )
 
-        driver = self._uow.driver_repository.get(id=request.driver_id)
-        if driver is None:
-            raise ApplicationException(
-                Exceptions.NotFoundException,
-                "Driver update failed.",
-                ["Driver not found."],
-            )
+        async with self._uow.transaction():
+            driver = await self._uow.driver_repository.get(id=request.driver_id)
+            if driver is None:
+                raise ApplicationException(
+                    Exceptions.NotFoundException,
+                    "Driver update failed.",
+                    ["Driver not found."],
+                )
 
-        updated_driver = request.dto.update_driver(driver, self._uow)
+            updated_driver = await request.dto.update_driver(driver, self._uow)
 
         return BaseResponse[DriverDto].success(
             "Driver updated successfully.",
-            DriverDto.from_driver(updated_driver, self._uow),
+            DriverDto.from_driver(updated_driver),
         )

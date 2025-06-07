@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 from typing import Optional
 
-from ed_domain.core.entities import Driver
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.core.aggregate_roots import Driver
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from pydantic import BaseModel, Field
 
 from ed_core.application.features.common.dtos import CreateLocationDto
@@ -14,20 +14,24 @@ class UpdateDriverDto(BaseModel):
     email: Optional[str] = Field(None)
     location: Optional[CreateLocationDto] = Field(None)
 
-    def update_driver(self, driver: Driver, uow: ABCUnitOfWork) -> Driver:
+    async def update_driver(self, driver: Driver, uow: ABCAsyncUnitOfWork) -> Driver:
+        updated = False
         if self.location:
-            created_location = self.location.create_location(uow)
-            driver["location_id"] = created_location["id"]
+            updated = True
+            created_location = await self.location.create_location(uow)
+            driver.current_location = created_location
 
         if self.phone_number:
-            driver["phone_number"] = self.phone_number
+            updated = True
+            driver.phone_number = self.phone_number
 
         if self.email:
-            driver["email"] = self.email
+            updated = True
+            driver.email = self.email
 
-        if any([self.email, self.phone_number, self.location]):
-            driver["update_datetime"] = datetime.now(UTC)
+        if updated:
+            driver.update_datetime = datetime.now(UTC)
 
-        uow.driver_repository.update(driver["id"], driver)
+        await uow.driver_repository.update(driver.id, driver)
 
         return driver

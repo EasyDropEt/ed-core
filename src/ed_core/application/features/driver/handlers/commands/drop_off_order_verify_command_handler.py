@@ -2,13 +2,13 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 from ed_domain.common.exceptions import ApplicationException, Exceptions
-from ed_domain.core.entities import DeliveryJob, Driver, Order
-from ed_domain.core.entities.delivery_job import (WayPoint, WaypointStatus,
-                                                  WayPointType)
+from ed_domain.core.aggregate_roots import DeliveryJob, Driver, Order
+from ed_domain.core.aggregate_roots.waypoint import (Waypoint, WaypointStatus,
+                                                     WaypointType)
 from ed_domain.core.entities.notification import NotificationType
-from ed_domain.core.entities.order import OrderStatus
-from ed_domain.core.entities.otp import OtpVerificationAction
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.core.entities.otp import OtpType
+from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
+    ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -20,49 +20,50 @@ from ed_core.application.features.driver.requests.commands import \
 
 @request_handler(DropOffOrderVerifyCommand, BaseResponse[None])
 class DropOffOrderVerifyCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork, api: ABCApi):
+    def __init__(self, uow: ABCAsyncUnitOfWork, api: ABCApi):
         self._uow = uow
         self._api = api
 
     async def handle(self, request: DropOffOrderVerifyCommand) -> BaseResponse[None]:
-        # Get entities
-        delivery_job = self._validate_delivery_job(request.delivery_job_id)
-        driver = self._validate_driver(request.driver_id, delivery_job)
-        order = self._validate_order(request.order_id)
+        async with self._uow.transaction():
+            # Get entities
+            delivery_job = await self._validate_delivery_job(request.delivery_job_id)
+            driver = await self._validate_driver(request.driver_id, delivery_job)
+            order = await self._validate_order(request.order_id)
 
-        # Validate otp
-        self._validate_otp(driver["user_id"], request.dto.otp)
+            # Validate otp
+            await self._validate_otp(driver.user_id, request.dto.otp)
 
-        # Update db
-        waypoint_index = self._get_order_waypoint(
-            order["id"], delivery_job["waypoints"]
-        )
-        delivery_job["waypoints"][waypoint_index][
-            "waypoint_status"
-        ] = WaypointStatus.DONE
-        order["order_status"] = OrderStatus.COMPLETED
-        self._uow.delivery_job_repository.update(
-            delivery_job["id"], delivery_job)
+            # Update db
+            waypoint_index = self._get_order_waypoint(
+                order.id, delivery_job.waypoints)
+            delivery_job.waypoints[waypoint_index][
+                "waypoint_status"
+            ] = WaypointStatus.DONE
+            await self._uow.delivery_job_repository.update(
+                delivery_job.id, delivery_job
+            )
+            order.complete_order()
 
-        # Send notifications
-        self._api.notification_api.send_notification(
-            {
-                "user_id": order["consumer_id"],
-                "notification_type": NotificationType.IN_APP,
-                "message": f"Order {order['id']} has been dropped off by driver {driver['id']}.",
-            }
-        )
+            # Send notifications
+            await self._api.notification_api.send_notification(
+                {
+                    "user_id": order.consumer.id,
+                    "notification_type": NotificationType.IN_APP,
+                    "message": f"Order {order.id} has been dropped off by driver {driver.id}.",
+                }
+            )
 
         return BaseResponse[None].success(
             "Delivery job dropped off successfully.",
             None,
         )
 
-    def _get_order_waypoint(self, order_id: UUID, waypoints: list[WayPoint]) -> int:
+    def _get_order_waypoint(self, order_id: UUID, waypoints: list[Waypoint]) -> int:
         for index, waypoint in enumerate(waypoints):
             if (
-                waypoint["order_id"] == order_id
-                and waypoint["type"] == WayPointType.DROP_OFF
+                waypoint.order.id == order_id
+                and waypoint.waypoint_type == WaypointType.DROP_OFF
             ):
                 return index
 
@@ -72,10 +73,10 @@ class DropOffOrderVerifyCommandHandler(RequestHandler):
             [f"Order with id {order_id} is not in the delivery job waypoints."],
         )
 
-    def _validate_delivery_job(self, delivery_job_id: UUID) -> DeliveryJob:
-        delivery_job = self._uow.delivery_job_repository.get(
-            id=delivery_job_id)
-        if not delivery_job or "driver_id" not in delivery_job:
+    async def _validate_delivery_job(self, delivery_job_id: UUID) -> DeliveryJob:
+        delivery_job = await self._uow.delivery_job_repository.get(id=delivery_job_id)
+
+        if not delivery_job or delivery_job.driver is None:
             raise ApplicationException(
                 Exceptions.NotFoundException,
                 "Delivery job not found.",
@@ -83,16 +84,20 @@ class DropOffOrderVerifyCommandHandler(RequestHandler):
             )
         return delivery_job
 
-    def _validate_driver(self, driver_id: UUID, delivery_job: DeliveryJob) -> Driver:
-        driver = self._uow.driver_repository.get(id=driver_id)
-        if not driver:
+    async def _validate_driver(
+        self, driver_id: UUID, delivery_job: DeliveryJob
+    ) -> Driver:
+        driver = await self._uow.driver_repository.get(id=driver_id)
+        if driver is None:
             raise ApplicationException(
                 Exceptions.NotFoundException,
                 "Driver not found.",
                 [f"Driver with id {driver_id} not found."],
             )
 
-        if driver["id"] != delivery_job.get("driver_id"):
+        assert delivery_job.driver is not None
+
+        if driver.id != delivery_job.driver:
             raise ApplicationException(
                 Exceptions.BadRequestException,
                 "Driver mismatch.",
@@ -100,37 +105,39 @@ class DropOffOrderVerifyCommandHandler(RequestHandler):
                     "Driver ID is different from the one registered for the delivery job."
                 ],
             )
+
         return driver
 
-    def _validate_otp(self, user_id: UUID, otp_value: str) -> None:
-        otp = self._uow.otp_repository.get(user_id=user_id)
-        if not otp or otp["action"] != OtpVerificationAction.PICK_UP:
+    async def _validate_otp(self, user_id: UUID, otp_value: str) -> None:
+        otp = await self._uow.otp_repository.get(user_id=user_id)
+        if not otp or otp.otp_type != OtpType.PICK_UP:
             raise ApplicationException(
                 Exceptions.BadRequestException,
                 "Invalid OTP.",
                 ["OTP is not valid or has expired. Please request a new OTP."],
             )
 
-        if otp["expiry_datetime"] < datetime.now(UTC):
+        if otp.expiry_datetime < datetime.now(UTC):
             raise ApplicationException(
                 Exceptions.BadRequestException,
                 "Expired OTP.",
                 ["OTP has expired. Please request a new OTP."],
             )
 
-        if otp["value"] != otp_value:
+        if otp.value != otp_value:
             raise ApplicationException(
                 Exceptions.BadRequestException,
                 "Invalid OTP.",
                 ["OTP is not valid. Please request a new OTP."],
             )
 
-    def _validate_order(self, order_id: UUID) -> Order:
-        order = self._uow.order_repository.get(id=order_id)
+    async def _validate_order(self, order_id: UUID) -> Order:
+        order = await self._uow.order_repository.get(id=order_id)
         if not order:
             raise ApplicationException(
                 Exceptions.NotFoundException,
                 "Order not found.",
                 [f"Order with id {order_id} not found."],
             )
+
         return order

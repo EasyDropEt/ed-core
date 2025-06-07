@@ -1,10 +1,10 @@
 from typing import Annotated
 
 from ed_auth.documentation.api.auth_api_client import AuthApiClient
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
+    ABCAsyncUnitOfWork
 from ed_domain.utils.otp.abc_otp_generator import ABCOtpGenerator
-from ed_infrastructure.persistence.mongo_db.db_client import DbClient
-from ed_infrastructure.persistence.mongo_db.unit_of_work import UnitOfWork
+from ed_infrastructure.persistence.sqlalchemy.unit_of_work import UnitOfWork
 from ed_infrastructure.utils.otp.otp_generator import OtpGenerator
 from ed_notification.documentation.api.notification_api_client import \
     NotificationApiClient
@@ -52,17 +52,15 @@ from ed_core.application.features.driver.handlers.commands import (
     UpdateDriverCurrentLocationCommandHandler)
 from ed_core.application.features.driver.handlers.queries import (
     GetAllDriversQueryHandler, GetDriverByUserIdQueryHandler,
-    GetDriverDeliveryJobsQueryHandler, GetDriverHeldFundsQueryHandler,
-    GetDriverOrdersQueryHandler, GetDriverPaymentSummaryQueryHandler,
-    GetDriverQueryHandler)
+    GetDriverDeliveryJobsQueryHandler, GetDriverOrdersQueryHandler,
+    GetDriverPaymentSummaryQueryHandler, GetDriverQueryHandler)
 from ed_core.application.features.driver.requests.commands import (
     CreateDriverCommand, DropOffOrderCommand, DropOffOrderVerifyCommand,
     PickUpOrderCommand, PickUpOrderVerifyCommand, UpdateDriverCommand,
     UpdateDriverCurrentLocationCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
-    GetDriverHeldFundsQuery, GetDriverOrdersQuery,
-    GetDriverPaymentSummaryQuery, GetDriverQuery)
+    GetDriverOrdersQuery, GetDriverPaymentSummaryQuery, GetDriverQuery)
 from ed_core.application.features.notification.handlers.queries import \
     GetNotificationsQueryHandler
 from ed_core.application.features.notification.requests.queries import \
@@ -94,19 +92,12 @@ def get_api(config: Annotated[Config, Depends(get_config)]) -> ABCApi:
     )
 
 
-def get_db_client(config: Annotated[Config, Depends(get_config)]) -> DbClient:
-    return DbClient(
-        config["db"]["connection_string"],
-        config["db"]["db_name"],
-    )
-
-
-def get_uow(db_client: Annotated[DbClient, Depends(get_db_client)]) -> ABCUnitOfWork:
-    return UnitOfWork(db_client)
+def get_uow(config: Annotated[Config, Depends(get_config)]) -> ABCAsyncUnitOfWork:
+    return UnitOfWork(config["db"])
 
 
 def mediator(
-    uow: Annotated[ABCUnitOfWork, Depends(get_uow)],
+    uow: Annotated[ABCAsyncUnitOfWork, Depends(get_uow)],
     api: Annotated[ABCApi, Depends(get_api)],
     otp: Annotated[ABCOtpGenerator, Depends(get_otp_generator)],
     rabbitmq_handler: Annotated[ABCRabbitMQProducers, Depends(get_rabbitmq_handler)],
@@ -126,7 +117,6 @@ def mediator(
         (GetDriverDeliveryJobsQuery, GetDriverDeliveryJobsQueryHandler(uow)),
         (GetDriverQuery, GetDriverQueryHandler(uow)),
         (GetDriverByUserIdQuery, GetDriverByUserIdQueryHandler(uow)),
-        (GetDriverHeldFundsQuery, GetDriverHeldFundsQueryHandler(uow)),
         (GetDriverPaymentSummaryQuery, GetDriverPaymentSummaryQueryHandler(uow)),
         (DropOffOrderCommand, DropOffOrderCommandHandler(uow, api, otp)),
         (DropOffOrderVerifyCommand, DropOffOrderVerifyCommandHandler(uow, api)),

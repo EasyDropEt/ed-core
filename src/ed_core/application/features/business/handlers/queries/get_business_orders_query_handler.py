@@ -1,4 +1,5 @@
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
+    ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -10,16 +11,18 @@ from ed_core.application.features.common.dtos import OrderDto
 
 @request_handler(GetBusinessOrdersQuery, BaseResponse[list[OrderDto]])
 class GetBusinessOrdersQueryHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
     async def handle(
         self, request: GetBusinessOrdersQuery
     ) -> BaseResponse[list[OrderDto]]:
-        orders = self._uow.order_repository.get_all(
-            business_id=request.business_id)
+        async with self._uow.transaction():
+            orders = await self._uow.order_repository.get_all(
+                business_id=request.business_id
+            )
 
         return BaseResponse[list[OrderDto]].success(
             "Orders fetched successfully.",
-            [OrderDto.from_order(order, self._uow) for order in orders],
+            [OrderDto.from_order(order) for order in orders],
         )

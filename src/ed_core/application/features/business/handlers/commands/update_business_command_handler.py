@@ -1,6 +1,6 @@
 from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.common.logging import get_logger
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -16,7 +16,7 @@ LOG = get_logger()
 
 @request_handler(UpdateBusinessCommand, BaseResponse[BusinessDto])
 class UpdateBusinessCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
     async def handle(self, request: UpdateBusinessCommand) -> BaseResponse[BusinessDto]:
@@ -27,17 +27,18 @@ class UpdateBusinessCommandHandler(RequestHandler):
                 "Update business failed.", dto_validator.errors
             )
 
-        business = self._uow.business_repository.get(id=request.id)
-        if business is None:
-            raise ApplicationException(
-                Exceptions.NotFoundException,
-                "Business update failed.",
-                ["Business not found."],
-            )
+        async with self._uow.transaction():
+            business = await self._uow.business_repository.get(id=request.id)
+            if business is None:
+                raise ApplicationException(
+                    Exceptions.NotFoundException,
+                    "Business update failed.",
+                    ["Business not found."],
+                )
 
-        request.dto.update_business(business, self._uow)
+            await request.dto.update_business(business, self._uow)
 
         return BaseResponse[BusinessDto].success(
             "Business updated successfully.",
-            BusinessDto.from_business(business, self._uow),
+            BusinessDto.from_business(business),
         )

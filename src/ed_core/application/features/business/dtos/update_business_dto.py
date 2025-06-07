@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 from typing import Optional
 
-from ed_domain.core.entities import Business
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.core.aggregate_roots import Business
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from pydantic import BaseModel, Field
 
 from ed_core.application.features.common.dtos import CreateLocationDto
@@ -13,20 +13,26 @@ class UpdateBusinessDto(BaseModel):
     email: Optional[str] = Field(None)
     location: Optional[CreateLocationDto] = Field(None)
 
-    def update_business(self, business: Business, uow: ABCUnitOfWork) -> Business:
+    async def update_business(
+        self, business: Business, uow: ABCAsyncUnitOfWork
+    ) -> Business:
+        updated = False
         if self.location:
-            created_location = self.location.create_location(uow)
-            business["location_id"] = created_location["id"]
+            updated = True
+            created_location = await self.location.create_location(uow)
+            business.location = created_location
 
         if self.phone_number:
-            business["phone_number"] = self.phone_number
+            updated = True
+            business.phone_number = self.phone_number
 
         if self.email:
-            business["email"] = self.email
+            updated = True
+            business.email = self.email
 
-        if any([self.email, self.phone_number, self.location]):
-            business["update_datetime"] = datetime.now(UTC)
+        if updated:
+            business.update_datetime = datetime.now(UTC)
 
-        uow.business_repository.update(business["id"], business)
+        await uow.business_repository.update(business.id, business)
 
         return business

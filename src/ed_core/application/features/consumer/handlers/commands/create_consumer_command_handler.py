@@ -1,6 +1,6 @@
 from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.common.logging import get_logger
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -16,7 +16,7 @@ LOG = get_logger()
 
 @request_handler(CreateConsumerCommand, BaseResponse[ConsumerDto])
 class CreateConsumerCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
     async def handle(self, request: CreateConsumerCommand) -> BaseResponse[ConsumerDto]:
@@ -29,9 +29,10 @@ class CreateConsumerCommandHandler(RequestHandler):
                 dto_validator.errors,
             )
 
-        consumer = request.dto.create_consumer(self._uow)
+        async with self._uow.transaction():
+            consumer = await request.dto.create_consumer(self._uow)
 
         return BaseResponse[ConsumerDto].success(
             "Consumer created successfully.",
-            ConsumerDto.from_consumer(consumer, self._uow),
+            ConsumerDto.from_consumer(consumer),
         )

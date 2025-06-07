@@ -2,14 +2,15 @@ from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from ed_domain.common.exceptions import ApplicationException, Exceptions
-from ed_domain.common.logging import get_logger
-from ed_domain.core.entities import Business, DeliveryJob, Driver, Order
-from ed_domain.core.entities.delivery_job import (WayPoint, WaypointStatus,
-                                                  WayPointType)
+from ed_domain.core.aggregate_roots import Business, DeliveryJob, Driver, Order
+from ed_domain.core.aggregate_roots.order import OrderStatus
+from ed_domain.core.aggregate_roots.waypoint import (Waypoint, WaypointStatus,
+                                                     WaypointType)
+from ed_domain.core.entities import Otp
 from ed_domain.core.entities.notification import NotificationType
-from ed_domain.core.entities.order import OrderStatus
-from ed_domain.core.entities.otp import OtpVerificationAction
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.core.entities.otp import OtpType
+from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
+    ABCAsyncUnitOfWork
 from ed_domain.utils.otp.abc_otp_generator import ABCOtpGenerator
 from ed_notification.documentation.api.abc_notification_api_client import \
     NotificationDto
@@ -23,82 +24,77 @@ from ed_core.application.features.driver.requests.commands import \
     PickUpOrderCommand
 from ed_core.common.generic_helpers import get_new_id
 
-LOG = get_logger()
-
 
 @request_handler(PickUpOrderCommand, BaseResponse[PickUpOrderDto])
 class PickUpOrderCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork, api: ABCApi, otp: ABCOtpGenerator):
+    def __init__(self, uow: ABCAsyncUnitOfWork, api: ABCApi, otp: ABCOtpGenerator):
         self._uow = uow
         self._api = api
         self._otp = otp
 
     async def handle(self, request: PickUpOrderCommand) -> BaseResponse[PickUpOrderDto]:
-        delivery_job = self._validate_delivery_job(request.delivery_job_id)
-        driver = self._validate_driver(request.driver_id, delivery_job)
-        order = self._validate_order(request.order_id)
+        async with self._uow.transaction():
+            delivery_job = await self._get_delivery_job(request.delivery_job_id)
+            driver = await self._get_driver(request.driver_id, delivery_job)
+            order = await self._get_order(request.order_id)
 
-        waypoint_index = self._get_order_waypoint(
-            order["id"], delivery_job["waypoints"]
-        )
+            waypoint_index = self._get_order_waypoint(
+                order.id, delivery_job.waypoints)
 
-        # Send otp to business
-        business = self._validate_business(order["business_id"])
-        sms_otp = self._otp.generate()
-        self._send_notification(
-            business["user_id"],
-            f"Your OTP for delivery job {delivery_job['id']} is {sms_otp}.",
-        )
+            # Send otp to business
+            business = await self._get_business(order.business.id)
+            sms_otp = await self._otp.generate()
+            await self._send_notification(
+                business.user_id,
+                f"Your OTP for delivery job {delivery_job.id} is {sms_otp}.",
+            )
 
-        # Update db
-        order["order_status"] = OrderStatus.IN_PROGRESS
-        delivery_job["waypoints"][waypoint_index][
-            "waypoint_status"
-        ] = WaypointStatus.IN_PROGRESS
+            # Update db
+            order.update_status(OrderStatus.IN_PROGRESS)
+            delivery_job.waypoints[waypoint_index][
+                "waypoint_status"
+            ] = WaypointStatus.IN_PROGRESS
 
-        self._uow.delivery_job_repository.update(
-            delivery_job["id"], delivery_job)
-        self._uow.otp_repository.create(
-            {
-                "id": get_new_id(),
-                "user_id": driver["user_id"],
-                "value": sms_otp,
-                "action": OtpVerificationAction.PICK_UP,
-                "expiry_datetime": datetime.now(UTC) + timedelta(minutes=5),
-                "create_datetime": datetime.now(UTC),
-                "update_datetime": datetime.now(UTC),
-                "deleted": False,
-            }
-        )
-        self._uow.order_repository.update(order["id"], order)
-        self._uow.driver_repository.update(driver["id"], driver)
+            await self._uow.delivery_job_repository.update(
+                delivery_job.id, delivery_job
+            )
+            await self._uow.otp_repository.create(
+                Otp(
+                    id=get_new_id(),
+                    user_id=driver.user_id,
+                    value=sms_otp,
+                    otp_type=OtpType.DROP_OFF,
+                    expiry_datetime=datetime.now(UTC) + timedelta(minutes=5),
+                    create_datetime=datetime.now(UTC),
+                    update_datetime=datetime.now(UTC),
+                    deleted=False,
+                    deleted_datetime=None,
+                )
+            )
+            await self._uow.order_repository.update(order.id, order)
 
         return BaseResponse[PickUpOrderDto].success(
             "Delivery job verification OTP sent to business.",
             PickUpOrderDto(
-                order_id=order["id"], driver_id=driver["id"], business_id=business["id"]
+                order_id=order.id,
+                driver_id=driver.id,
+                business_id=order.business.id,
             ),
         )
 
-    def _send_notification(self, user_id: UUID, message: str) -> NotificationDto:
-        LOG.info(
-            f"Sending notification to business with user id {user_id} for delivery job."
-        )
-        notification_response = self._api.notification_api.send_notification(
+    async def _send_notification(self, user_id: UUID, message: str) -> NotificationDto:
+        notification_response = await self._api.notification_api.send_notification(
             {
                 "user_id": user_id,
-                "notification_type": NotificationType.EMAIL,
+                "notification_type": NotificationType.SMS,
                 "message": message,
             }
         )
 
-        LOG.info(
-            f"Notification response for business with user id {user_id}: {notification_response}"
-        )
         if not notification_response["is_success"]:
             raise ApplicationException(
                 Exceptions.InternalServerException,
-                "Delivery job not picked up.",
+                "Delivery job not droped off.",
                 [
                     f"Failed to send notification to business with id {user_id}.",
                     notification_response["message"],
@@ -107,11 +103,11 @@ class PickUpOrderCommandHandler(RequestHandler):
 
         return notification_response["data"]
 
-    def _get_order_waypoint(self, order_id: UUID, waypoints: list[WayPoint]) -> int:
+    def _get_order_waypoint(self, order_id: UUID, waypoints: list[Waypoint]) -> int:
         for index, waypoint in enumerate(waypoints):
             if (
-                waypoint["order_id"] == order_id
-                and waypoint["type"] == WayPointType.PICK_UP
+                waypoint.order.id == order_id
+                and waypoint.waypoint_type == WaypointType.PICK_UP
             ):
                 return index
 
@@ -121,19 +117,19 @@ class PickUpOrderCommandHandler(RequestHandler):
             [f"Order with id {order_id} is not in the delivery job waypoints."],
         )
 
-    def _validate_delivery_job(self, delivery_job_id: UUID) -> DeliveryJob:
-        delivery_job = self._uow.delivery_job_repository.get(
-            id=delivery_job_id)
-        if not delivery_job or "driver_id" not in delivery_job:
+    async def _get_delivery_job(self, delivery_job_id: UUID) -> DeliveryJob:
+        delivery_job = await self._uow.delivery_job_repository.get(id=delivery_job_id)
+        if not delivery_job or delivery_job.driver is None:
             raise ApplicationException(
                 Exceptions.NotFoundException,
                 "Delivery job not found.",
                 [f"Delivery job with id {delivery_job_id} not found."],
             )
+
         return delivery_job
 
-    def _validate_driver(self, driver_id: UUID, delivery_job: DeliveryJob) -> Driver:
-        driver = self._uow.driver_repository.get(id=driver_id)
+    async def _get_driver(self, driver_id: UUID, delivery_job: DeliveryJob) -> Driver:
+        driver = await self._uow.driver_repository.get(id=driver_id)
         if not driver:
             raise ApplicationException(
                 Exceptions.NotFoundException,
@@ -141,7 +137,7 @@ class PickUpOrderCommandHandler(RequestHandler):
                 [f"Driver with id {driver_id} not found."],
             )
 
-        if driver["id"] != delivery_job.get("driver_id"):
+        if driver.id != delivery_job.driver_id:
             raise ApplicationException(
                 Exceptions.BadRequestException,
                 "Driver mismatch.",
@@ -149,25 +145,27 @@ class PickUpOrderCommandHandler(RequestHandler):
                     "Driver ID is different from the one registered for the delivery job."
                 ],
             )
+
         return driver
 
-    def _validate_order(self, order_id: UUID) -> Order:
-        order = self._uow.order_repository.get(id=order_id)
+    async def _get_order(self, order_id: UUID) -> Order:
+        order = await self._uow.order_repository.get(id=order_id)
         if not order:
             raise ApplicationException(
                 Exceptions.NotFoundException,
                 "Order not found.",
                 [f"Order with id {order_id} not found."],
             )
+
         return order
 
-    def _validate_business(self, business_id: UUID) -> Business:
-        business = self._uow.business_repository.get(id=business_id)
+    async def _get_business(self, business_id: UUID) -> Business:
+        business = await self._uow.business_repository.get(id=business_id)
         if not business:
             raise ApplicationException(
                 Exceptions.NotFoundException,
-                "Delivery job not picked up.",
-                [f"Business with id {business_id} not found."],
+                "Delivery job not droped off.",
+                [f"business with id {business_id} not found."],
             )
 
         return business

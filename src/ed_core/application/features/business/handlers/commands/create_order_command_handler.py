@@ -3,11 +3,12 @@ from datetime import UTC, datetime
 from ed_domain.common.exceptions import (EXCEPTION_NAMES, ApplicationException,
                                          Exceptions)
 from ed_domain.common.logging import get_logger
-from ed_domain.core.entities import Bill, Consumer
+from ed_domain.core.aggregate_roots import Consumer
+from ed_domain.core.entities import Bill
 from ed_domain.core.entities.bill import BillStatus
 from ed_domain.core.entities.notification import NotificationType
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
-from ed_domain.core.value_objects.money import Currency, Money
+from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
+    ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -26,11 +27,16 @@ from ed_core.common.generic_helpers import get_new_id
 
 LOG = get_logger()
 
+BILL_AMOUNT = 10
+
 
 @request_handler(CreateOrderCommand, BaseResponse[OrderDto])
 class CreateOrderCommandHandler(RequestHandler):
     def __init__(
-        self, uow: ABCUnitOfWork, api: ABCApi, rabbitmq_producer: ABCRabbitMQProducers
+        self,
+        uow: ABCAsyncUnitOfWork,
+        api: ABCApi,
+        rabbitmq_producer: ABCRabbitMQProducers,
     ):
         self._uow = uow
         self._api = api
@@ -47,24 +53,25 @@ class CreateOrderCommandHandler(RequestHandler):
                 dto_validator.errors,
             )
 
-        bill = self._create_bill()["id"]
-        consumer = await self._create_or_get_consumer(request.dto.consumer)
-        created_order = request.dto.create_order(
-            business_id,
-            consumer["id"],
-            bill,
-            self._uow,
-        )
+        async with self._uow.transaction():
+            bill = await self._create_bill()
+            consumer = await self._create_or_get_consumer(request.dto.consumer)
+            created_order = request.dto.create_order(
+                business_id,
+                consumer.id,
+                bill.id,
+                self._uow,
+            )
 
         await self._send_notification(consumer)
 
         return BaseResponse[OrderDto].success(
             "Order created successfully.",
-            OrderDto.from_order(created_order, self._uow),
+            OrderDto.from_order(created_order),
         )
 
     async def _create_or_get_consumer(self, consumer: CreateConsumerDto) -> Consumer:
-        if existing_consumer := self._uow.consumer_repository.get(
+        if existing_consumer := await self._uow.consumer_repository.get(
             phone_number=consumer.phone_number
         ):
             return existing_consumer
@@ -90,31 +97,29 @@ class CreateOrderCommandHandler(RequestHandler):
             )
 
         user_id = create_user_response["data"]["id"]
-        return consumer.create_consumer(user_id, self._uow)
+        return await consumer.create_consumer(user_id, self._uow)
 
-    def _create_bill(self) -> Bill:
-        return self._uow.bill_repository.create(
+    async def _create_bill(self) -> Bill:
+        return await self._uow.bill_repository.create(
             Bill(
                 id=get_new_id(),
-                amount=Money(
-                    amount=10,
-                    currency=Currency.ETB,
-                ),
+                amount_in_birr=BILL_AMOUNT,
                 bill_status=BillStatus.PENDING,
                 due_date=datetime.now(UTC),
                 create_datetime=datetime.now(UTC),
                 update_datetime=datetime.now(UTC),
                 deleted=False,
+                deleted_datetime=None,
             )
         )
 
     async def _send_notification(self, consumer: Consumer) -> None:
-        LOG.info(f"Sending notification to consumer {consumer['id']}")
+        LOG.info(f"Sending notification to consumer {consumer.id}")
         await self._rabbitmq_producer.notification.send_notification(
             {
-                "user_id": consumer["user_id"],
+                "user_id": consumer.user_id,
                 "notification_type": NotificationType.EMAIL,
-                "message": f"Dear {consumer['first_name']}, an order has been created for you. More information will be provided soon.",
+                "message": f"Dear {consumer.first_name}, an order has been created for you. More information will be provided soon.",
             }
         )
         LOG.info("Notification sent successfully.")

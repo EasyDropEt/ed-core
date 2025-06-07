@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
+    ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -13,15 +14,16 @@ from ed_core.application.features.driver.requests.queries.get_all_drivers_query 
 @request_handler(GetAllDriversQuery, BaseResponse[list[DriverDto]])
 @dataclass
 class GetAllDriversQueryHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
     async def handle(
         self, request: GetAllDriversQuery
     ) -> BaseResponse[list[DriverDto]]:
-        drivers = self._uow.driver_repository.get_all()
+        async with self._uow.transaction():
+            drivers = await self._uow.driver_repository.get_all()
 
         return BaseResponse[list[DriverDto]].success(
             "Drivers fetched successfully.",
-            [DriverDto.from_driver(driver, self._uow) for driver in drivers],
+            [DriverDto.from_driver(driver) for driver in drivers],
         )

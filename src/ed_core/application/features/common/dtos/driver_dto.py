@@ -1,8 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
-from ed_domain.core.entities import Driver
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.core.aggregate_roots import Driver
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos.business_dto import LocationDto
@@ -21,24 +20,15 @@ class DriverDto(BaseModel):
     current_location: Optional[LocationDto]
 
     @classmethod
-    def from_driver(cls, driver: Driver, uow: ABCUnitOfWork) -> "DriverDto":
-        car = uow.car_repository.get(id=driver["car_id"])
-        assert car is not None, "Car not found"
-
-        location = uow.location_repository.get(id=driver["location_id"])
-        assert location is not None, "Location not found"
-
-        current_location = uow.location_repository.get(id=driver["current_location_id"])
-        assert current_location is not None, "Current location not found"
-
+    def from_driver(cls, driver: Driver) -> "DriverDto":
         return cls(
-            id=driver["id"],
-            first_name=driver["first_name"],
-            last_name=driver["last_name"],
-            profile_image=driver["profile_image"],
-            phone_number=driver["phone_number"],
-            email=driver.get("email"),
-            car=CarDto.from_car(car),
-            location=LocationDto.from_location(location),
-            current_location=LocationDto.from_location(current_location),
+            id=driver.id,
+            first_name=driver.first_name,
+            last_name=driver.last_name,
+            profile_image=driver.profile_image,
+            phone_number=driver.phone_number,
+            email=driver.email or None,
+            car=CarDto(**driver.car.__dict__),
+            location=LocationDto(**driver.residence_location.__dict__),
+            current_location=LocationDto(**driver.current_location.__dict__),
         )

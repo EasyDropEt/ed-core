@@ -1,6 +1,6 @@
 from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.common.logging import get_logger
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -16,7 +16,7 @@ LOG = get_logger()
 
 @request_handler(UpdateDriverCurrentLocationCommand, BaseResponse[DriverDto])
 class UpdateDriverCurrentLocationCommandHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
     async def handle(
@@ -29,19 +29,21 @@ class UpdateDriverCurrentLocationCommandHandler(RequestHandler):
                 "Update driver current location failed.", dto_validator.errors
             )
 
-        driver = self._uow.driver_repository.get(id=request.driver_id)
-        if driver is None:
-            raise ApplicationException(
-                Exceptions.NotFoundException,
-                "Driver update failed.",
-                ["Driver not found."],
-            )
+        async with self._uow.transaction():
+            driver = await self._uow.driver_repository.get(id=request.driver_id)
+            if driver is None:
+                raise ApplicationException(
+                    Exceptions.NotFoundException,
+                    "Driver update failed.",
+                    ["Driver not found."],
+                )
 
-        location = request.dto.update_location(self._uow)
-        driver["current_location_id"] = location["id"]
-        self._uow.driver_repository.update(driver["id"], driver)
+            driver.current_location = await request.dto.update_location(
+                driver.current_location.id, self._uow
+            )
+            await self._uow.driver_repository.update(driver.id, driver)
 
         return BaseResponse[DriverDto].success(
             "Driver current location updated successfully.",
-            DriverDto.from_driver(driver, self._uow),
+            DriverDto.from_driver(driver),
         )

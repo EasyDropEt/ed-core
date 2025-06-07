@@ -4,8 +4,6 @@ from ed_core.application.features.driver.handlers.queries.get_driver_by_user_id_
     GetDriverByUserIdQueryHandler
 from ed_core.application.features.driver.handlers.queries.get_driver_delivery_jobs_query_handler import \
     GetDriverDeliveryJobsQueryHandler
-from ed_core.application.features.driver.handlers.queries.get_driver_held_funds_query_handler import \
-    GetDriverHeldFundsQueryHandler
 from ed_core.application.features.driver.handlers.queries.get_driver_orders_query_handler import \
     GetDriverOrdersQueryHandler
 from ed_core.application.features.driver.handlers.queries.get_driver_payment_summary_query_handler import \
@@ -16,7 +14,6 @@ from ed_core.application.features.driver.handlers.queries.get_driver_query_handl
 __all__ = [
     "GetDriverByUserIdQueryHandler",
     "GetDriverDeliveryJobsQueryHandler",
-    "GetDriverHeldFundsQueryHandler",
     "GetDriverOrdersQueryHandler",
     "GetDriverPaymentSummaryQueryHandler",
     "GetDriverQueryHandler",

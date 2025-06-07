@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 from ed_domain.common.exceptions import ApplicationException, Exceptions
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
+    ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -14,18 +15,21 @@ from ed_core.application.features.consumer.requests.queries.get_consumer_query i
 @request_handler(GetConsumerQuery, BaseResponse[ConsumerDto])
 @dataclass
 class GetConsumerQueryHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
     async def handle(self, request: GetConsumerQuery) -> BaseResponse[ConsumerDto]:
-        if consumer := self._uow.consumer_repository.get(id=request.consumer_id):
-            return BaseResponse[ConsumerDto].success(
-                "Consumer fetched successfully.",
-                ConsumerDto.from_consumer(consumer, self._uow),
+        async with self._uow.transaction():
+            consumer = await self._uow.consumer_repository.get(id=request.consumer_id)
+
+        if consumer is None:
+            raise ApplicationException(
+                Exceptions.NotFoundException,
+                "Consumer couldn't be fetched.",
+                [f"Consumer with id {request.consumer_id} does not exist."],
             )
 
-        raise ApplicationException(
-            Exceptions.NotFoundException,
-            "Consumer couldn't be fetched.",
-            [f"Consumer with id {request.consumer_id} does not exist."],
+        return BaseResponse[ConsumerDto].success(
+            "Consumer fetched successfully.",
+            ConsumerDto.from_consumer(consumer),
         )

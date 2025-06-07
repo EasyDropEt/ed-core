@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 from uuid import UUID
 
-from ed_domain.core.entities import Driver
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.core.aggregate_roots import Driver
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos import CreateLocationDto
@@ -21,10 +21,10 @@ class CreateDriverDto(BaseModel):
     location: CreateLocationDto
     car: CreateCarDto
 
-    def create_driver(self, uow: ABCUnitOfWork) -> Driver:
-        created_location = self.location.create_location(uow)
-        created_car = self.car.create_car(uow)
-        created_driver = uow.driver_repository.create(
+    async def create_driver(self, uow: ABCAsyncUnitOfWork) -> Driver:
+        created_location = await self.location.create_location(uow)
+        created_car = await self.car.create_car(uow)
+        created_driver = await uow.driver_repository.create(
             Driver(
                 id=get_new_id(),
                 user_id=self.user_id,
@@ -33,13 +33,13 @@ class CreateDriverDto(BaseModel):
                 profile_image=self.profile_image,
                 phone_number=self.phone_number,
                 email=self.email,
-                current_location_id=created_location["id"],
-                location_id=created_location["id"],
-                car_id=created_car["id"],
+                current_location=created_location,
+                residence_location=created_location,
+                car=created_car,
                 create_datetime=datetime.now(UTC),
                 update_datetime=datetime.now(UTC),
                 deleted=False,
-                active_status=True,
+                deleted_datetime=None,
             )
         )
 

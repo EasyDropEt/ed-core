@@ -24,8 +24,7 @@ from ed_core.application.features.driver.requests.commands import (
     UpdateDriverCurrentLocationCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
-    GetDriverHeldFundsQuery, GetDriverOrdersQuery,
-    GetDriverPaymentSummaryQuery, GetDriverQuery)
+    GetDriverOrdersQuery, GetDriverPaymentSummaryQuery, GetDriverQuery)
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
 
@@ -135,18 +134,6 @@ async def driver_payment_summary(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(GetDriverPaymentSummaryQuery(driver_id))
-
-
-@router.get(
-    "/{driver_id}/payment/held-funds",
-    response_model=GenericResponse[DriverHeldFundsDto],
-)
-@rest_endpoint
-async def driver_held_funds(
-    driver_id: UUID,
-    mediator: Annotated[Mediator, Depends(mediator)],
-):
-    return await mediator.send(GetDriverHeldFundsQuery(driver_id))
 
 
 @router.get("/{driver_id}/orders", response_model=GenericResponse[list[OrderDto]])

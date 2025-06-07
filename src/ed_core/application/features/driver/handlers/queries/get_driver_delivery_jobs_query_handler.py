@@ -1,4 +1,5 @@
-from ed_domain.core.repositories.abc_unit_of_work import ABCUnitOfWork
+from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
+    ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
@@ -10,20 +11,21 @@ from ed_core.application.features.driver.requests.queries.get_driver_delivery_jo
 
 @request_handler(GetDriverDeliveryJobsQuery, BaseResponse[list[DeliveryJobDto]])
 class GetDriverDeliveryJobsQueryHandler(RequestHandler):
-    def __init__(self, uow: ABCUnitOfWork):
+    def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
     async def handle(
         self, request: GetDriverDeliveryJobsQuery
     ) -> BaseResponse[list[DeliveryJobDto]]:
-        delivery_jobs = self._uow.delivery_job_repository.get_all(
-            driver_id=request.driver_id
-        )
+        async with self._uow.transaction():
+            delivery_jobs = await self._uow.delivery_job_repository.get_all(
+                driver_id=request.driver_id
+            )
 
         return BaseResponse[list[DeliveryJobDto]].success(
             "Driver delivery jobs fetched successfully.",
             [
-                DeliveryJobDto.from_delivery_job(delivery_job, self._uow)
+                DeliveryJobDto.from_delivery_job(delivery_job)
                 for delivery_job in delivery_jobs
             ],
         )

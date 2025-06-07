@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 from uuid import UUID
 
-from ed_domain.core.entities import Business
-from ed_domain.core.repositories import ABCUnitOfWork
+from ed_domain.core.aggregate_roots import Business
+from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos import CreateLocationDto
@@ -18,10 +18,10 @@ class CreateBusinessDto(BaseModel):
     email: str
     location: CreateLocationDto
 
-    def create_business(self, uow: ABCUnitOfWork) -> Business:
-        created_location = self.location.create_location(uow)
+    async def create_business(self, uow: ABCAsyncUnitOfWork) -> Business:
+        created_location = await self.location.create_location(uow)
 
-        created_business = uow.business_repository.create(
+        created_business = await uow.business_repository.create(
             Business(
                 id=get_new_id(),
                 user_id=self.user_id,
@@ -30,11 +30,11 @@ class CreateBusinessDto(BaseModel):
                 owner_last_name=self.owner_last_name,
                 phone_number=self.phone_number,
                 email=self.email,
-                location_id=created_location["id"],
+                location=created_location,
                 create_datetime=datetime.now(UTC),
                 update_datetime=datetime.now(UTC),
                 deleted=False,
-                active_status=True,
+                deleted_datetime=datetime.now(UTC),
             )
         )
 
