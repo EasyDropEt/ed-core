@@ -16,7 +16,6 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
 from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
-                                                      DriverHeldFundsDto,
                                                       DriverPaymentSummaryDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,
@@ -202,13 +201,6 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "path": f"{self._base_url}/drivers/{{driver_id}}/payment/summary",
                 "path_params": {"driver_id": str},
                 "response_model": DriverPaymentSummaryDto,
-            },
-            {
-                "name": "get_driver_held_funds",
-                "method": HttpMethod.GET,
-                "path": f"{self._base_url}/drivers/{{driver_id}}/payment/held-funds",
-                "path_params": {"driver_id": str},
-                "response_model": DriverHeldFundsDto,
             },
             # Delivery job endpoints
             {

@@ -14,7 +14,6 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
 from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
-                                                      DriverHeldFundsDto,
                                                       DriverPaymentSummaryDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,
@@ -60,13 +59,6 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("get_driver_by_user_id")
         api_client = EndpointClient[DriverDto](endpoint)
         return await api_client({"path_params": {"user_id": user_id}})
-
-    async def get_driver_held_funds(
-        self, driver_id: str
-    ) -> ApiResponse[DriverHeldFundsDto]:
-        endpoint = self._endpoints.get_description("get_driver_held_funds")
-        api_client = EndpointClient[DriverHeldFundsDto](endpoint)
-        return await api_client({"path_params": {"driver_id": driver_id}})
 
     async def get_driver_payment_summary(
         self, driver_id: str

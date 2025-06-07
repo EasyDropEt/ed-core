@@ -11,7 +11,6 @@ from ed_core.application.features.common.dtos import (DeliveryJobDto,
 from ed_core.application.features.delivery_job.requests.commands import (
     CancelDeliveryJobCommand, ClaimDeliveryJobCommand)
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
-                                                      DriverHeldFundsDto,
                                                       DriverPaymentSummaryDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,

@@ -15,7 +15,6 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
 from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (CreateDriverDto,
-                                                      DriverHeldFundsDto,
                                                       DriverPaymentSummaryDto,
                                                       DropOffOrderDto,
                                                       DropOffOrderVerifyDto,
@@ -46,11 +45,6 @@ class ABCCoreApiClient(metaclass=ABCMeta):
 
     @abstractmethod
     async def get_driver(self, driver_id: str) -> ApiResponse[DriverDto]: ...
-
-    @abstractmethod
-    async def get_driver_held_funds(
-        self, driver_id: str
-    ) -> ApiResponse[DriverHeldFundsDto]: ...
 
     @abstractmethod
     async def get_driver_payment_summary(
