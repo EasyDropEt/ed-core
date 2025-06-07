@@ -15,7 +15,7 @@ class CreateOrderDtoValidator(ABCDtoValidator[CreateOrderDto]):
         consumer_dto_validation = CreateConsumerDtoValidator().validate(dto.consumer)
         errors = consumer_dto_validation.errors
 
-        print(dto.latest_time_of_delivery, datetime.now(UTC))
+        print("DTO", dto)
         if dto.latest_time_of_delivery <= datetime.now(UTC):
             errors.append("Latest time of delivery must be in the future.")
 

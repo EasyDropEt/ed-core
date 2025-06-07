@@ -32,5 +32,5 @@ class CreateBusinessCommandHandler(RequestHandler):
         print(business)
         return BaseResponse[BusinessDto].success(
             "Business created successfully.",
-            BusinessDto(**business.__dict__),
+            BusinessDto.from_business(business),
         )

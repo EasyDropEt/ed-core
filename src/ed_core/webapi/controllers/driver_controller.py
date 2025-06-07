@@ -10,16 +10,14 @@ from ed_core.application.features.common.dtos import (DeliveryJobDto,
                                                       UpdateLocationDto)
 from ed_core.application.features.delivery_job.requests.commands import (
     CancelDeliveryJobCommand, ClaimDeliveryJobCommand)
-from ed_core.application.features.driver.dtos import (CreateDriverDto,
-                                                      DriverPaymentSummaryDto,
-                                                      DropOffOrderDto,
-                                                      DropOffOrderVerifyDto,
-                                                      PickUpOrderDto,
-                                                      PickUpOrderVerifyDto,
-                                                      UpdateDriverDto)
+from ed_core.application.features.driver.dtos import (
+    CreateDriverDto, DriverPaymentSummaryDto, FinishOrderDeliveryVerifyDto,
+    FinishOrderPickUpVerifyDto, StartOrderDeliveryResponseDto,
+    StartOrderPickUpDto, UpdateDriverDto)
 from ed_core.application.features.driver.requests.commands import (
-    CreateDriverCommand, DropOffOrderCommand, DropOffOrderVerifyCommand,
-    PickUpOrderCommand, PickUpOrderVerifyCommand, UpdateDriverCommand,
+    CreateDriverCommand, FinishOrderDeliveryVerifyCommand,
+    FinishOrderPickUpVerifyCommand, StartOrderDeliveryCommand,
+    StartOrderPickUpCommand, UpdateDriverCommand,
     UpdateDriverCurrentLocationCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
@@ -50,7 +48,7 @@ async def create_driver(
 
 @router.post(
     "/{driver_id}/delivery-jobs/{delivery_job_id}/orders/{order_id}/pick-up",
-    response_model=GenericResponse[PickUpOrderDto],
+    response_model=GenericResponse[StartOrderPickUpDto],
 )
 @rest_endpoint
 async def initiate_order_pick_up(
@@ -59,7 +57,9 @@ async def initiate_order_pick_up(
     order_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(PickUpOrderCommand(driver_id, delivery_job_id, order_id))
+    return await mediator.send(
+        StartOrderPickUpCommand(driver_id, delivery_job_id, order_id)
+    )
 
 
 @router.post(
@@ -71,17 +71,18 @@ async def verify_order_pick_up(
     driver_id: UUID,
     delivery_job_id: UUID,
     order_id: UUID,
-    dto: PickUpOrderVerifyDto,
+    dto: FinishOrderPickUpVerifyDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(
-        PickUpOrderVerifyCommand(driver_id, delivery_job_id, order_id, dto)
+        FinishOrderPickUpVerifyCommand(
+            driver_id, delivery_job_id, order_id, dto)
     )
 
 
 @router.post(
     "/{driver_id}/delivery-jobs/{delivery_job_id}/orders/{order_id}/drop-off",
-    response_model=GenericResponse[DropOffOrderDto],
+    response_model=GenericResponse[StartOrderDeliveryResponseDto],
 )
 @rest_endpoint
 async def initiate_order_drop_off(
@@ -91,7 +92,7 @@ async def initiate_order_drop_off(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(
-        DropOffOrderCommand(driver_id, delivery_job_id, order_id)
+        StartOrderDeliveryCommand(driver_id, delivery_job_id, order_id)
     )
 
 
@@ -104,11 +105,12 @@ async def verify_order_drop_off(
     driver_id: UUID,
     delivery_job_id: UUID,
     order_id: UUID,
-    dto: DropOffOrderVerifyDto,
+    dto: FinishOrderDeliveryVerifyDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(
-        DropOffOrderVerifyCommand(driver_id, delivery_job_id, order_id, dto)
+        FinishOrderDeliveryVerifyCommand(
+            driver_id, delivery_job_id, order_id, dto)
     )
 
 

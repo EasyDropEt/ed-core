@@ -5,13 +5,14 @@ from rmediator.decorators import request
 from rmediator.types import Request
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.driver.dtos import DropOffOrderVerifyDto
+from ed_core.application.features.driver.dtos import \
+    FinishOrderDeliveryVerifyDto
 
 
 @request(BaseResponse[None])
 @dataclass
-class DropOffOrderVerifyCommand(Request):
+class FinishOrderDeliveryVerifyCommand(Request):
     driver_id: UUID
     delivery_job_id: UUID
     order_id: UUID
-    dto: DropOffOrderVerifyDto
+    dto: FinishOrderDeliveryVerifyDto

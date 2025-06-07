@@ -7,5 +7,5 @@ class CarDto(BaseModel):
     year: int
     color: str
     seats: int
-    license_plate: str
+    license_plate_number: str
     registration_number: str

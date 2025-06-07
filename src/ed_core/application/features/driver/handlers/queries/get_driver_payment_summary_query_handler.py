@@ -44,13 +44,7 @@ class GetDriverPaymentSummaryQueryHandler(RequestHandler):
         outstanding_sum: float = 0
 
         for order in orders:
-            bill = await self._uow.bill_repository.get(id=order.bill.id)
-            if bill is None:
-                raise ApplicationException(
-                    Exceptions.NotFoundException,
-                    "Driver payment summary cannot be fetched.",
-                    [f"Bill could not be retrieved for the order with id: {order.id}"],
-                )
+            bill = order.bill
 
             total_sum += bill.amount_in_birr
             if bill.bill_status == BillStatus.WITH_DRIVER:

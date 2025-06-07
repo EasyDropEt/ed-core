@@ -5,12 +5,12 @@ from rmediator.decorators import request
 from rmediator.types import Request
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.driver.dtos import PickUpOrderDto
+from ed_core.application.features.driver.dtos import StartOrderPickUpDto
 
 
-@request(BaseResponse[PickUpOrderDto])
+@request(BaseResponse[StartOrderPickUpDto])
 @dataclass
-class PickUpOrderCommand(Request):
+class StartOrderPickUpCommand(Request):
     driver_id: UUID
     delivery_job_id: UUID
     order_id: UUID

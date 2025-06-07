@@ -1,13 +1,13 @@
 from ed_core.application.features.driver.requests.commands.create_driver_command import \
     CreateDriverCommand
-from ed_core.application.features.driver.requests.commands.drop_off_order_command import \
-    DropOffOrderCommand
-from ed_core.application.features.driver.requests.commands.drop_off_order_verify_command import \
-    DropOffOrderVerifyCommand
-from ed_core.application.features.driver.requests.commands.pick_up_order_command import \
-    PickUpOrderCommand
-from ed_core.application.features.driver.requests.commands.pick_up_order_verify_command import \
-    PickUpOrderVerifyCommand
+from ed_core.application.features.driver.requests.commands.finish_order_delivery_verify_command import \
+    FinishOrderDeliveryVerifyCommand
+from ed_core.application.features.driver.requests.commands.finish_order_pick_up_verify_command import \
+    FinishOrderPickUpVerifyCommand
+from ed_core.application.features.driver.requests.commands.start_order_delivery_command import \
+    StartOrderDeliveryCommand
+from ed_core.application.features.driver.requests.commands.start_order_pick_up_command import \
+    StartOrderPickUpCommand
 from ed_core.application.features.driver.requests.commands.update_driver_command import \
     UpdateDriverCommand
 from ed_core.application.features.driver.requests.commands.update_driver_current_location_command import \
@@ -15,10 +15,10 @@ from ed_core.application.features.driver.requests.commands.update_driver_current
 
 __all__ = [
     "CreateDriverCommand",
-    "DropOffOrderCommand",
-    "DropOffOrderVerifyCommand",
-    "PickUpOrderCommand",
-    "PickUpOrderVerifyCommand",
+    "StartOrderDeliveryCommand",
+    "FinishOrderDeliveryVerifyCommand",
+    "StartOrderPickUpCommand",
+    "FinishOrderPickUpVerifyCommand",
     "UpdateDriverCommand",
     "UpdateDriverCurrentLocationCommand",
 ]

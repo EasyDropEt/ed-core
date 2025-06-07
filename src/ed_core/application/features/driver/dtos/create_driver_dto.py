@@ -34,7 +34,6 @@ class CreateDriverDto(BaseModel):
                 phone_number=self.phone_number,
                 email=self.email,
                 current_location=created_location,
-                residence_location=created_location,
                 car=created_car,
                 create_datetime=datetime.now(UTC),
                 update_datetime=datetime.now(UTC),

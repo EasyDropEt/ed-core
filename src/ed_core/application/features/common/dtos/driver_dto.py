@@ -17,7 +17,6 @@ class DriverDto(BaseModel):
     email: Optional[str]
     car: CarDto
     location: LocationDto
-    current_location: Optional[LocationDto]
 
     @classmethod
     def from_driver(cls, driver: Driver) -> "DriverDto":
@@ -29,6 +28,5 @@ class DriverDto(BaseModel):
             phone_number=driver.phone_number,
             email=driver.email or None,
             car=CarDto(**driver.car.__dict__),
-            location=LocationDto(**driver.residence_location.__dict__),
-            current_location=LocationDto(**driver.current_location.__dict__),
+            location=LocationDto(**driver.current_location.__dict__),
         )
