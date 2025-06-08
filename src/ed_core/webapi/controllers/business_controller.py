@@ -5,11 +5,13 @@ from ed_domain.common.logging import get_logger
 from fastapi import APIRouter, Depends
 from rmediator.mediator import Mediator
 
-from ed_core.application.features.business.dtos import (CreateBusinessDto,
+from ed_core.application.features.business.dtos import (CreateApiKeyDto,
+                                                        CreateBusinessDto,
                                                         CreateOrderDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.business.requests.commands import (
-    CreateBusinessCommand, CreateOrderCommand, UpdateBusinessCommand)
+    CreateApiKeyCommand, CreateBusinessCommand, CreateOrderCommand,
+    UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
     GetBusinessOrdersQuery, GetBusinessQuery)
@@ -95,3 +97,13 @@ async def get_business_api_keys(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(GetBusinessApiKeysQuery(business_id=business_id))
+
+
+@router.post("/{business_id}/api-keys", response_model=GenericResponse[ApiKeyDto])
+@rest_endpoint
+async def create_api_key(
+    business_id: UUID,
+    dto: CreateApiKeyDto,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(CreateApiKeyCommand(business_id=business_id, dto=dto))

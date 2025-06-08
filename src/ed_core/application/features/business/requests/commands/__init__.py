@@ -1,3 +1,5 @@
+from ed_core.application.features.business.requests.commands.create_api_key_command import \
+    CreateApiKeyCommand
 from ed_core.application.features.business.requests.commands.create_business_command import \
     CreateBusinessCommand
 from ed_core.application.features.business.requests.commands.create_order_command import \
@@ -6,6 +8,7 @@ from ed_core.application.features.business.requests.commands.update_business_com
     UpdateBusinessCommand
 
 __all__ = [
+    "CreateApiKeyCommand",
     "CreateBusinessCommand",
     "CreateOrderCommand",
     "UpdateBusinessCommand",

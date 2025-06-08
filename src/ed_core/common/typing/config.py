@@ -27,3 +27,4 @@ class Config(TypedDict):
     auth_api: str
     notification_api: str
     environment: Environment
+    hash_scheme: str
