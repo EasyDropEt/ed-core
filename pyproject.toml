@@ -22,7 +22,7 @@ cloudinary = "^1.42.2"
 python-multipart = "^0.0.20"
 ed-domain = "^0.3.50"
 twine = "^6.1.0"
-ed-infrastructure = "^0.3.20"
+ed-infrastructure = "^0.3.21"
 ed-auth = "^0.2.4"
 ed-notification = "^0.1.16"
 faststream = {extras = ["rabbit"], version = "^0.5.42"}
