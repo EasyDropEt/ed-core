@@ -9,14 +9,14 @@ from ed_core.application.features.common.dtos.order_dto import OrderDto
 class WaypointDto(BaseModel):
     order: OrderDto
     type: WaypointType
-    eta: datetime
+    expected_arrival_time: datetime
     sequence: int
 
     @classmethod
     def from_waypoint(cls, waypoint: Waypoint) -> "WaypointDto":
         return cls(
-            order=OrderDto(**waypoint.order.__dict__),
+            order=OrderDto.from_order(waypoint.order),
             type=waypoint.waypoint_type,
-            eta=waypoint.eta,
+            expected_arrival_time=waypoint.expected_arrival_time,
             sequence=waypoint.sequence,
         )

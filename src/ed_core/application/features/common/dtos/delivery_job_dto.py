@@ -17,7 +17,7 @@ class DeliveryJobDto(BaseModel):
     estimated_time_in_minutes: int
     driver: Optional[UUID]
     status: DeliveryJobStatus
-    estimated_payment: Money
+    estimated_payment_in_birr: float
     estimated_completion_time: datetime
 
     @classmethod
@@ -25,18 +25,16 @@ class DeliveryJobDto(BaseModel):
         cls,
         delivery_job: DeliveryJob,
     ) -> "DeliveryJobDto":
-        assert delivery_job.waypoints, "Waypoints cannot be emp"
-
         return cls(
             id=delivery_job.id,
             waypoints=[
-                WaypointDto.from_waypoint(**waypoint.__dict__)
+                WaypointDto.from_waypoint(waypoint)
                 for waypoint in delivery_job.waypoints
             ],
             estimated_distance_in_kms=delivery_job.estimated_distance_in_kms,
             estimated_time_in_minutes=delivery_job.estimated_time_in_minutes,
             driver=delivery_job.driver_id,
             status=delivery_job.status,
-            estimated_payment=delivery_job.estimated_payment,
+            estimated_payment_in_birr=delivery_job.estimated_payment_in_birr,
             estimated_completion_time=delivery_job.estimated_completion_time,
         )
