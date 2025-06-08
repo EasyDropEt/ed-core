@@ -1,7 +1,9 @@
 from ed_domain.documentation.api.definitions import ApiResponse
 from ed_infrastructure.documentation.api.endpoint_client import EndpointClient
 
-from ed_core.application.features.business.dtos import (CreateBusinessDto,
+from ed_core.application.features.business.dtos import (BusinessReportDto,
+                                                        CreateApiKeyDto,
+                                                        CreateBusinessDto,
                                                         CreateOrderDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
@@ -20,8 +22,6 @@ from ed_core.application.features.driver.dtos import (
 from ed_core.documentation.api.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.api.core_endpoint_descriptions import \
     CoreEndpointDescriptions
-from src.ed_core.application.features.business.dtos.create_api_key_dto import \
-    CreateApiKeyDto
 
 
 class CoreApiClient(ABCCoreApiClient):
@@ -245,6 +245,13 @@ class CoreApiClient(ABCCoreApiClient):
     ) -> ApiResponse[list[ApiKeyDto]]:
         endpoint = self._endpoints.get_description("get_business_api_keys")
         api_client = EndpointClient[list[ApiKeyDto]](endpoint)
+        return await api_client({"path_params": {"business_id": business_id}})
+
+    async def get_business_report(
+        self, business_id: str
+    ) -> ApiResponse[BusinessReportDto]:
+        endpoint = self._endpoints.get_description("get_business_api_keys")
+        api_client = EndpointClient[BusinessReportDto](endpoint)
         return await api_client({"path_params": {"business_id": business_id}})
 
     async def create_business_api_key(
