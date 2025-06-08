@@ -29,6 +29,8 @@ faststream = {extras = ["rabbit"], version = "^0.5.42"}
 ed-optimization-service = "^0.1.6"
 aiohttp = "^3.12.6"
 psycopg = "^3.2.9"
+passlib = "^1.7.4"
+bcrypt = "^4.3.0"
 
 
 [tool.poetry.group.test.dependencies]
