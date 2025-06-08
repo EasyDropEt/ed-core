@@ -1,3 +1,4 @@
+from ed_core.application.features.common.dtos.api_key_dto import ApiKeyDto
 from ed_core.application.features.common.dtos.bill_dto import BillDto
 from ed_core.application.features.common.dtos.business_dto import (BusinessDto,
                                                                    LocationDto)
@@ -19,6 +20,7 @@ from ed_core.application.features.common.dtos.update_location_dto import \
     UpdateLocationDto
 
 __all__ = [
+    "ApiKeyDto",
     "BillDto",
     "BusinessDto",
     "CarDto",
