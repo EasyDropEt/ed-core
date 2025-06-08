@@ -13,13 +13,9 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       UpdateLocationDto)
 from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
-from ed_core.application.features.driver.dtos import (CreateDriverDto,
-                                                      DriverPaymentSummaryDto,
-                                                      DropOffOrderDto,
-                                                      DropOffOrderVerifyDto,
-                                                      PickUpOrderDto,
-                                                      PickUpOrderVerifyDto,
-                                                      UpdateDriverDto)
+from ed_core.application.features.driver.dtos import (
+    CreateDriverDto, DriverPaymentSummaryDto, FinishOrderDeliveryRequestDto,
+    FinishOrderPickUpRequestDto, UpdateDriverDto)
 from ed_core.documentation.api.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.api.core_endpoint_descriptions import \
     CoreEndpointDescriptions
@@ -121,11 +117,11 @@ class CoreApiClient(ABCCoreApiClient):
             }
         )
 
-    async def initiate_order_pick_up(
+    async def start_order_pick_up(
         self, driver_id: str, delivery_job_id: str, order_id: str
-    ) -> ApiResponse[PickUpOrderDto]:
-        endpoint = self._endpoints.get_description("initiate_order_pick_up")
-        api_client = EndpointClient[PickUpOrderDto](endpoint)
+    ) -> ApiResponse[None]:
+        endpoint = self._endpoints.get_description("start_order_pick_up")
+        api_client = EndpointClient[None](endpoint)
         return await api_client(
             {
                 "path_params": {
@@ -136,14 +132,14 @@ class CoreApiClient(ABCCoreApiClient):
             }
         )
 
-    async def verify_order_pick_up(
+    async def finish_order_pick_up(
         self,
         driver_id: str,
         delivery_job_id: str,
         order_id: str,
-        pick_up_order_verify_dto: PickUpOrderVerifyDto,
+        finish_order_pick_up_request_dto: FinishOrderPickUpRequestDto,
     ) -> ApiResponse[None]:
-        endpoint = self._endpoints.get_description("verify_order_pick_up")
+        endpoint = self._endpoints.get_description("finish_order_pick_up")
         api_client = EndpointClient[None](endpoint)
         return await api_client(
             {
@@ -152,15 +148,15 @@ class CoreApiClient(ABCCoreApiClient):
                     "delivery_job_id": delivery_job_id,
                     "order_id": order_id,
                 },
-                "request": pick_up_order_verify_dto,
+                "request": finish_order_pick_up_request_dto,
             }
         )
 
-    async def initiate_order_drop_off(
+    async def start_order_delivery(
         self, driver_id: str, delivery_job_id: str, order_id: str
-    ) -> ApiResponse[DropOffOrderDto]:
-        endpoint = self._endpoints.get_description("initiate_order_drop_off")
-        api_client = EndpointClient[DropOffOrderDto](endpoint)
+    ) -> ApiResponse[None]:
+        endpoint = self._endpoints.get_description("start_order_delivery")
+        api_client = EndpointClient[None](endpoint)
         return await api_client(
             {
                 "path_params": {
@@ -171,14 +167,14 @@ class CoreApiClient(ABCCoreApiClient):
             }
         )
 
-    async def verify_order_drop_off(
+    async def finish_order_delivery(
         self,
         driver_id: str,
         delivery_job_id: str,
         order_id: str,
-        drop_off_order_verify_dto: DropOffOrderVerifyDto,
+        finish_order_delivery_request_dto: FinishOrderDeliveryRequestDto,
     ) -> ApiResponse[None]:
-        endpoint = self._endpoints.get_description("verify_order_drop_off")
+        endpoint = self._endpoints.get_description("finish_order_delivery")
         api_client = EndpointClient[None](endpoint)
         return await api_client(
             {
@@ -187,7 +183,7 @@ class CoreApiClient(ABCCoreApiClient):
                     "delivery_job_id": delivery_job_id,
                     "order_id": order_id,
                 },
-                "request": drop_off_order_verify_dto,
+                "request": finish_order_delivery_request_dto,
             }
         )
 

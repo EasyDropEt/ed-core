@@ -15,13 +15,9 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       UpdateLocationDto)
 from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
-from ed_core.application.features.driver.dtos import (CreateDriverDto,
-                                                      DriverPaymentSummaryDto,
-                                                      DropOffOrderDto,
-                                                      DropOffOrderVerifyDto,
-                                                      PickUpOrderDto,
-                                                      PickUpOrderVerifyDto,
-                                                      UpdateDriverDto)
+from ed_core.application.features.driver.dtos import (
+    CreateDriverDto, DriverPaymentSummaryDto, FinishOrderDeliveryRequestDto,
+    FinishOrderPickUpRequestDto, UpdateDriverDto)
 
 
 class CoreEndpointDescriptions(ABCEndpointDescriptions):
@@ -152,7 +148,7 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "response_model": DeliveryJobDto,
             },
             {
-                "name": "initiate_order_pick_up",
+                "name": "start_order_pick_up",
                 "method": HttpMethod.POST,
                 "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up",
                 "path_params": {
@@ -160,10 +156,9 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                     "delivery_job_id": str,
                     "order_id": str,
                 },
-                "response_model": PickUpOrderDto,
             },
             {
-                "name": "verify_order_pick_up",
+                "name": "finish_order_pick_up",
                 "method": HttpMethod.POST,
                 "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up/verify",
                 "path_params": {
@@ -171,29 +166,28 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                     "delivery_job_id": str,
                     "order_id": str,
                 },
-                "request_model": PickUpOrderVerifyDto,
+                "request_model": FinishOrderPickUpRequestDto,
             },
             {
-                "name": "initiate_order_drop_off",
+                "name": "start_order_delivery",
                 "method": HttpMethod.POST,
-                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/drop-off",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/deliver",
                 "path_params": {
                     "driver_id": str,
                     "delivery_job_id": str,
                     "order_id": str,
                 },
-                "response_model": DropOffOrderDto,
             },
             {
-                "name": "verify_order_drop_off",
+                "name": "finish_order_delivery",
                 "method": HttpMethod.POST,
-                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/pick-up/verify",
+                "path": f"{self._base_url}/drivers/{{driver_id}}/delivery-jobs/{{delivery_job_id}}/orders/{{order_id}}/deliver/verify",
                 "path_params": {
                     "driver_id": str,
                     "delivery_job_id": str,
                     "order_id": str,
                 },
-                "request_model": DropOffOrderVerifyDto,
+                "request_model": FinishOrderDeliveryRequestDto,
             },
             {
                 "name": "get_driver_payment_summary",

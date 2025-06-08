@@ -14,13 +14,9 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       UpdateLocationDto)
 from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
-from ed_core.application.features.driver.dtos import (CreateDriverDto,
-                                                      DriverPaymentSummaryDto,
-                                                      DropOffOrderDto,
-                                                      DropOffOrderVerifyDto,
-                                                      PickUpOrderDto,
-                                                      PickUpOrderVerifyDto,
-                                                      UpdateDriverDto)
+from ed_core.application.features.driver.dtos import (
+    CreateDriverDto, DriverPaymentSummaryDto, FinishOrderDeliveryRequestDto,
+    FinishOrderPickUpRequestDto, UpdateDriverDto)
 
 
 class ABCCoreApiClient(metaclass=ABCMeta):
@@ -76,31 +72,31 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     ) -> ApiResponse[DeliveryJobDto]: ...
 
     @abstractmethod
-    async def initiate_order_pick_up(
+    async def start_order_pick_up(
         self, driver_id: str, delivery_job_id: str, order_id: str
-    ) -> ApiResponse[PickUpOrderDto]: ...
-
-    @abstractmethod
-    async def verify_order_pick_up(
-        self,
-        driver_id: str,
-        delivery_job_id: str,
-        order_id: str,
-        pick_up_order_verify_dto: PickUpOrderVerifyDto,
     ) -> ApiResponse[None]: ...
 
     @abstractmethod
-    async def initiate_order_drop_off(
-        self, driver_id: str, delivery_job_id: str, order_id: str
-    ) -> ApiResponse[DropOffOrderDto]: ...
-
-    @abstractmethod
-    async def verify_order_drop_off(
+    async def finish_order_pick_up(
         self,
         driver_id: str,
         delivery_job_id: str,
         order_id: str,
-        drop_off_order_verify_dto: DropOffOrderVerifyDto,
+        finish_order_pick_up_request_dto: FinishOrderPickUpRequestDto,
+    ) -> ApiResponse[None]: ...
+
+    @abstractmethod
+    async def start_order_delivery(
+        self, driver_id: str, delivery_job_id: str, order_id: str
+    ) -> ApiResponse[None]: ...
+
+    @abstractmethod
+    async def finish_order_delivery(
+        self,
+        driver_id: str,
+        delivery_job_id: str,
+        order_id: str,
+        finish_order_delivery_request_dto: FinishOrderDeliveryRequestDto,
     ) -> ApiResponse[None]: ...
 
     # Business features
