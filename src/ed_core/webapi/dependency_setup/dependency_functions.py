@@ -100,7 +100,6 @@ def mediator(
     uow: Annotated[ABCAsyncUnitOfWork, Depends(get_uow)],
     api: Annotated[ABCApi, Depends(get_api)],
     otp: Annotated[ABCOtpGenerator, Depends(get_otp_generator)],
-    rabbitmq_handler: Annotated[ABCRabbitMQProducers, Depends(get_rabbitmq_handler)],
 ) -> Mediator:
     mediator = Mediator()
 
@@ -136,7 +135,7 @@ def mediator(
         (CancelDeliveryJobCommand, CancelDeliveryJobCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
-        (CreateOrderCommand, CreateOrderCommandHandler(uow, api, rabbitmq_handler)),
+        (CreateOrderCommand, CreateOrderCommandHandler(uow, api)),
         (GetBusinessQuery, GetBusinessQueryHandler(uow)),
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),

@@ -35,11 +35,9 @@ class CreateOrderCommandHandler(RequestHandler):
         self,
         uow: ABCAsyncUnitOfWork,
         api: ABCApi,
-        rabbitmq_producer: ABCRabbitMQProducers,
     ):
         self._uow = uow
         self._api = api
-        self._rabbitmq_producer = rabbitmq_producer
 
         self._error_message = ""
 
