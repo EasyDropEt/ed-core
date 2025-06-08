@@ -51,7 +51,7 @@ class CreateApiKeyCommandHandler(RequestHandler):
 
         return BaseResponse[ApiKeyDto].success(
             self._success_message,
-            ApiKeyDto(**api_key.__dict__),
+            ApiKeyDto(**api_key.__dict__, key=key),
         )
 
     def _generate_api_key(self, key_length: int = 48) -> tuple[str, str]:
