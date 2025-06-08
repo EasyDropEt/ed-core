@@ -10,14 +10,12 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.common.helpers import (get_order,
                                                          get_order_waypoint)
-from ed_core.application.features.driver.dtos import \
-    FinishOrderDeliveryVerifyDto
 from ed_core.application.features.driver.requests.commands import \
-    FinishOrderDeliveryVerifyCommand
+    FinishOrderDeliveryCommand
 
 
-@request_handler(FinishOrderDeliveryVerifyCommand, BaseResponse[None])
-class FinishOrderDeliveryVerifyCommandHandler(RequestHandler):
+@request_handler(FinishOrderDeliveryCommand, BaseResponse[None])
+class FinishOrderDeliveryCommandHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork, api: ABCApi):
         self._uow = uow
         self._api = api
@@ -25,9 +23,7 @@ class FinishOrderDeliveryVerifyCommandHandler(RequestHandler):
         self._success_message = "Order delivered successfully."
         self._error_message = "Order was not delivered successfully."
 
-    async def handle(
-        self, request: FinishOrderDeliveryVerifyCommand
-    ) -> BaseResponse[None]:
+    async def handle(self, request: FinishOrderDeliveryCommand) -> BaseResponse[None]:
         async with self._uow.transaction():
             order = await get_order(request.order_id, self._uow, self._error_message)
             waypoint = await get_order_waypoint(

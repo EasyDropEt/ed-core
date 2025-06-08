@@ -12,13 +12,11 @@ from ed_core.application.features.common.helpers import (create_otp,
                                                          get_consumer,
                                                          get_order,
                                                          send_notification)
-from ed_core.application.features.driver.dtos import \
-    StartOrderDeliveryResponseDto
 from ed_core.application.features.driver.requests.commands import \
     StartOrderDeliveryCommand
 
 
-@request_handler(StartOrderDeliveryCommand, BaseResponse[StartOrderDeliveryResponseDto])
+@request_handler(StartOrderDeliveryCommand, BaseResponse[None])
 class StartOrderDeliveryCommandHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork, api: ABCApi, otp: ABCOtpGenerator):
         self._uow = uow
@@ -28,9 +26,7 @@ class StartOrderDeliveryCommandHandler(RequestHandler):
         self._success_message = "Order delivery initiated successfully."
         self._error_message = "Order delivery was not initiated successfully."
 
-    async def handle(
-        self, request: StartOrderDeliveryCommand
-    ) -> BaseResponse[StartOrderDeliveryResponseDto]:
+    async def handle(self, request: StartOrderDeliveryCommand) -> BaseResponse[None]:
         async with self._uow.transaction():
             order = await get_order(request.order_id, self._uow, self._error_message)
             if request.driver_id != order.driver_id:
@@ -54,11 +50,4 @@ class StartOrderDeliveryCommandHandler(RequestHandler):
             self._error_message,
         )
 
-        return BaseResponse[StartOrderDeliveryResponseDto].success(
-            self._success_message,
-            StartOrderDeliveryResponseDto(
-                order_id=order.id,
-                driver_id=request.driver_id,
-                consumer_id=order.consumer.id,
-            ),
-        )
+        return BaseResponse[None].success(self._success_message, None)

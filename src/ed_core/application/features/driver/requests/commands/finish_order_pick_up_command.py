@@ -6,13 +6,13 @@ from rmediator.types import Request
 
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.driver.dtos import \
-    FinishOrderDeliveryVerifyDto
+    FinishOrderPickUpRequestDto
 
 
 @request(BaseResponse[None])
 @dataclass
-class FinishOrderDeliveryVerifyCommand(Request):
+class FinishOrderPickUpCommand(Request):
     driver_id: UUID
     delivery_job_id: UUID
     order_id: UUID
-    dto: FinishOrderDeliveryVerifyDto
+    dto: FinishOrderPickUpRequestDto

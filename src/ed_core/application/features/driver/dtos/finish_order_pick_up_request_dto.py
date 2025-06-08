@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 
-class FinishOrderPickUpVerifyDto(BaseModel):
+class FinishOrderPickUpRequestDto(BaseModel):
     otp: str

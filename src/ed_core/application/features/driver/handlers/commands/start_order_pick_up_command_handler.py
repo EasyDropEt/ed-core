@@ -12,12 +12,11 @@ from ed_core.application.features.common.helpers import (create_otp,
                                                          get_business,
                                                          get_order,
                                                          send_notification)
-from ed_core.application.features.driver.dtos import StartOrderPickUpDto
 from ed_core.application.features.driver.requests.commands import \
     StartOrderPickUpCommand
 
 
-@request_handler(StartOrderPickUpCommand, BaseResponse[StartOrderPickUpDto])
+@request_handler(StartOrderPickUpCommand, BaseResponse[None])
 class StartOrderPickUpCommandHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork, api: ABCApi, otp: ABCOtpGenerator):
         self._uow = uow
@@ -27,9 +26,7 @@ class StartOrderPickUpCommandHandler(RequestHandler):
         self._success_message = "Order picked up initiated successfully."
         self._error_message = "Order pick up was not  successfully."
 
-    async def handle(
-        self, request: StartOrderPickUpCommand
-    ) -> BaseResponse[StartOrderPickUpDto]:
+    async def handle(self, request: StartOrderPickUpCommand) -> BaseResponse[None]:
         async with self._uow.transaction():
             order = await get_order(request.order_id, self._uow, self._error_message)
             if request.driver_id != order.driver_id:
@@ -53,11 +50,4 @@ class StartOrderPickUpCommandHandler(RequestHandler):
             self._error_message,
         )
 
-        return BaseResponse[StartOrderPickUpDto].success(
-            self._success_message,
-            StartOrderPickUpDto(
-                order_id=order.id,
-                driver_id=request.driver_id,
-                business_id=order.business.id,
-            ),
-        )
+        return BaseResponse[None].success(self._success_message, None)

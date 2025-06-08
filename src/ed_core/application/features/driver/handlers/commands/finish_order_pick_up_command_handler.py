@@ -11,11 +11,11 @@ from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.common.helpers import (get_order,
                                                          get_order_waypoint)
 from ed_core.application.features.driver.requests.commands import \
-    FinishOrderPickUpVerifyCommand
+    FinishOrderPickUpCommand
 
 
-@request_handler(FinishOrderPickUpVerifyCommand, BaseResponse[None])
-class FinishOrderPickUpVerifyCommandHandler(RequestHandler):
+@request_handler(FinishOrderPickUpCommand, BaseResponse[None])
+class FinishOrderPickUpCommandHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork, api: ABCApi):
         self._uow = uow
         self._api = api
@@ -23,9 +23,7 @@ class FinishOrderPickUpVerifyCommandHandler(RequestHandler):
         self._success_message = "Order picked up successfully."
         self._error_message = "Order was not picked up successfully."
 
-    async def handle(
-        self, request: FinishOrderPickUpVerifyCommand
-    ) -> BaseResponse[None]:
+    async def handle(self, request: FinishOrderPickUpCommand) -> BaseResponse[None]:
         async with self._uow.transaction():
             order = await get_order(request.order_id, self._uow, self._error_message)
             waypoint = await get_order_waypoint(
