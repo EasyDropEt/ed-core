@@ -4,8 +4,11 @@ from ed_auth.documentation.api.auth_api_client import AuthApiClient
 from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
     ABCAsyncUnitOfWork
 from ed_domain.utils.otp.abc_otp_generator import ABCOtpGenerator
+from ed_domain.utils.security.password.abc_password_handler import \
+    ABCPasswordHandler
 from ed_infrastructure.persistence.sqlalchemy.unit_of_work import UnitOfWork
 from ed_infrastructure.utils.otp.otp_generator import OtpGenerator
+from ed_infrastructure.utils.password.password_handler import PasswordHandler
 from ed_notification.documentation.api.notification_api_client import \
     NotificationApiClient
 from fastapi import Depends
@@ -13,14 +16,15 @@ from rmediator.mediator import Mediator
 
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.business.handlers.commands import (
-    CreateBusinessCommandHandler, CreateOrderCommandHandler,
-    UpdateBusinessCommandHandler)
+    CreateApiKeyCommandHandler, CreateBusinessCommandHandler,
+    CreateOrderCommandHandler, UpdateBusinessCommandHandler)
 from ed_core.application.features.business.handlers.queries import (
     GetAllBusinessesQueryHandler, GetBusinessApiKeysQueryHandler,
     GetBusinessByUserIdQueryHandler, GetBusinessOrdersQueryHandler,
     GetBusinessQueryHandler)
 from ed_core.application.features.business.requests.commands import (
-    CreateBusinessCommand, CreateOrderCommand, UpdateBusinessCommand)
+    CreateApiKeyCommand, CreateBusinessCommand, CreateOrderCommand,
+    UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
     GetBusinessOrdersQuery, GetBusinessQuery)
@@ -77,6 +81,10 @@ from ed_core.common.typing.config import Config, Environment
 from ed_core.infrastructure.api.api_handler import ApiHandler
 
 
+def get_password(config: Annotated[Config, Depends(get_config)]) -> ABCPasswordHandler:
+    return PasswordHandler(config["hash_scheme"])
+
+
 def get_otp_generator(
     config: Annotated[Config, Depends(get_config)],
 ) -> ABCOtpGenerator:
@@ -95,6 +103,7 @@ def get_uow(config: Annotated[Config, Depends(get_config)]) -> ABCAsyncUnitOfWor
 
 
 def mediator(
+    password: Annotated[ABCPasswordHandler, Depends(get_password)],
     uow: Annotated[ABCAsyncUnitOfWork, Depends(get_uow)],
     api: Annotated[ABCApi, Depends(get_api)],
     otp: Annotated[ABCOtpGenerator, Depends(get_otp_generator)],
@@ -141,6 +150,7 @@ def mediator(
         (UpdateBusinessCommand, UpdateBusinessCommandHandler(uow)),
         (TrackOrderQuery, TrackOrderQueryHandler(uow)),
         (GetBusinessApiKeysQuery, GetBusinessApiKeysQueryHandler(uow)),
+        (CreateApiKeyCommand, CreateApiKeyCommandHandler(uow, password)),
         # Order handlers
         (GetOrdersQuery, GetOrdersQueryHandler(uow)),
         (GetOrderQuery, GetOrderQueryHandler(uow)),
