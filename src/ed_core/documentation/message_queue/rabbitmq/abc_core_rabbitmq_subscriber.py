@@ -12,6 +12,6 @@ class CoreQueues(StrEnum):
 
 class ABCCoreRabbitMQSubscriber(metaclass=ABCMeta):
     @abstractmethod
-    def create_delivery_job(
+    async def create_delivery_job(
         self, create_delivery_job_dto: CreateDeliveryJobDto
     ) -> None: ...

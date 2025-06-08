@@ -27,6 +27,7 @@ class RabbitMQHandler(ABCRabbitMQProducers):
     async def start(self):
         await self._auth_subscriber.start()
         await self._notification_subscriber.start()
+        await self._optimization_subscriber.start()
 
     @property
     def optimization(self) -> ABCOptimizationRabbitMQSubscriber:
