@@ -2,8 +2,6 @@ from datetime import datetime
 from uuid import UUID
 
 from ed_domain.core.aggregate_roots.order import Order, OrderStatus, Parcel
-from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
-    ABCAsyncUnitOfWork
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos import BusinessDto, ConsumerDto

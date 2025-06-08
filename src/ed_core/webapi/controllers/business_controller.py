@@ -75,7 +75,7 @@ async def get_business_orders(
     return await mediator.send(GetBusinessOrdersQuery(business_id=business_id))
 
 
-@router.post("/{business_id}/orders", response_model=GenericResponse[list[OrderDto]])
+@router.post("/{business_id}/orders", response_model=GenericResponse[OrderDto])
 @rest_endpoint
 async def create_order(
     business_id: UUID,

@@ -27,7 +27,6 @@ class API(FastAPI, metaclass=SingletonMeta):
             driver_controller.router,
             notification_controller.router,
             order_controller.router,
-            delivery_job_rabbitmq_controller.router,
         ]
 
     @property

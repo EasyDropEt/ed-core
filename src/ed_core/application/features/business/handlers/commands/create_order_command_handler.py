@@ -66,9 +66,11 @@ class CreateOrderCommandHandler(RequestHandler):
 
         await self._send_notification(consumer)
 
+        dto = OrderDto.from_order(created_order)
+        print(dto)
         return BaseResponse[OrderDto].success(
             "Order created successfully.",
-            OrderDto.from_order(created_order),
+            dto,
         )
 
     async def _create_bill(self) -> Bill:
