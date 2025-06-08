@@ -5,7 +5,8 @@ from ed_domain.documentation.api.definitions import ApiResponse
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrderDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
+from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
+                                                      ConsumerDto,
                                                       CreateConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
@@ -131,6 +132,11 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     async def create_business_order(
         self, business_id: str, create_order_dto: CreateOrderDto
     ) -> ApiResponse[OrderDto]: ...
+
+    @abstractmethod
+    async def get_business_api_keys(
+        self, business_id: str
+    ) -> ApiResponse[list[ApiKeyDto]]: ...
 
     # Delivery job features
     @abstractmethod

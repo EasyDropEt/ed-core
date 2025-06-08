@@ -11,9 +11,10 @@ from ed_core.application.features.business.dtos import (CreateBusinessDto,
 from ed_core.application.features.business.requests.commands import (
     CreateBusinessCommand, CreateOrderCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
-    GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
-    GetBusinessQuery)
+    GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
+    GetBusinessOrdersQuery, GetBusinessQuery)
 from ed_core.application.features.common.dtos import BusinessDto, OrderDto
+from ed_core.application.features.common.dtos.api_key_dto import ApiKeyDto
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
 
@@ -82,7 +83,15 @@ async def create_order(
     request_dto: CreateOrderDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    LOG.info(f"Satisfying request {request_dto}")
     return await mediator.send(
         CreateOrderCommand(business_id=business_id, dto=request_dto)
     )
+
+
+@router.get("/{business_id}/api-keys", response_model=GenericResponse[list[ApiKeyDto]])
+@rest_endpoint
+async def get_business_api_keys(
+    business_id: UUID,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(GetBusinessApiKeysQuery(business_id=business_id))

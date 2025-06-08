@@ -6,7 +6,8 @@ from ed_domain.documentation.api.definitions import (EndpointDescription,
 from ed_core.application.features.business.dtos import (CreateBusinessDto,
                                                         CreateOrderDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
+from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
+                                                      ConsumerDto,
                                                       CreateConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
@@ -74,6 +75,13 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "path_params": {"business_id": str},
                 "request_model": CreateOrderDto,
                 "response_model": OrderDto,
+            },
+            {
+                "name": "get_business_api_keys",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/businesses/{{business_id}}/api-keys",
+                "path_params": {"business_id": str},
+                "response_model": list[ApiKeyDto],
             },
             # Driver endpoints
             {
