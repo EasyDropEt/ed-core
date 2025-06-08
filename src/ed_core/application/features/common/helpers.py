@@ -137,28 +137,9 @@ async def get_order_waypoint(
 
 
 async def create_or_get_consumer(
-    consumer: CreateConsumerDto, uow: ABCAsyncUnitOfWork, api: ABCApi
+    consumer: CreateConsumerDto, uow: ABCAsyncUnitOfWork
 ) -> Consumer:
-    if existing_consumer := await uow.consumer_repository.get(
-        phone_number=consumer.phone_number
-    ):
+    if existing_consumer := await uow.consumer_repository.get(user_id=consumer.user_id):
         return existing_consumer
 
-    create_user_response = await api.auth_api.create_get_otp(
-        {
-            "first_name": consumer.first_name,
-            "last_name": consumer.last_name,
-            "phone_number": consumer.phone_number,
-            "email": consumer.email,
-        }
-    )
-
-    if not create_user_response["is_success"]:
-        raise ApplicationException(
-            EXCEPTION_NAMES[create_user_response["http_status_code"]],
-            "Failed to create orders",
-            ["Could not create consumers."],
-        )
-
-    user_id = create_user_response["data"]["id"]
-    return await consumer.create_consumer(uow, user_id)
+    return await consumer.create_consumer(uow)

@@ -18,14 +18,12 @@ class CreateConsumerDto(BaseModel):
     email: str
     location: CreateLocationDto
 
-    async def create_consumer(
-        self, uow: ABCAsyncUnitOfWork, user_id: UUID | None = None
-    ) -> Consumer:
+    async def create_consumer(self, uow: ABCAsyncUnitOfWork) -> Consumer:
         created_location = await self.location.create_location(uow)
 
         created_consumer = await uow.consumer_repository.create(
             Consumer(
-                id=user_id or get_new_id(),
+                id=get_new_id(),
                 user_id=self.user_id,
                 first_name=self.first_name,
                 last_name=self.last_name,

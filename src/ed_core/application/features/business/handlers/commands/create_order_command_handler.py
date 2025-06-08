@@ -58,9 +58,7 @@ class CreateOrderCommandHandler(RequestHandler):
             business = await get_business(business_id, self._uow, self._error_message)
 
             bill = await self._create_bill()
-            consumer = await create_or_get_consumer(
-                request.dto.consumer, self._uow, self._api
-            )
+            consumer = await create_or_get_consumer(request.dto.consumer_id, self._uow)
             created_order = await request.dto.create_order(
                 business,
                 consumer,

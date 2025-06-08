@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 
 from ed_domain.core.aggregate_roots import Business, Consumer
-from ed_domain.core.aggregate_roots.order import Order, OrderStatus, Parcel
+from ed_domain.core.aggregate_roots.order import Order, OrderStatus
 from ed_domain.core.entities import Bill
 from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from pydantic import BaseModel
@@ -14,7 +14,7 @@ from ed_core.common.generic_helpers import get_new_id
 
 
 class CreateOrderDto(BaseModel):
-    consumer: CreateConsumerDto
+    consumer_id: CreateConsumerDto
     latest_time_of_delivery: datetime
     parcel: CreateParcelDto
 
