@@ -35,6 +35,7 @@ def get_config() -> Config:
             if _get_env_variable("ENVIRONMENT") == "production"
             else Environment.DEV
         ),
+        "hash_scheme": _get_env_variable("HASH_SCHEME"),
     }
 
 
