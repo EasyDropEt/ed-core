@@ -11,6 +11,7 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto,
                                                       UpdateLocationDto)
+from ed_core.application.features.common.dtos.api_key_dto import ApiKeyDto
 from ed_core.application.features.consumer.dtos import UpdateConsumerDto
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (
@@ -226,6 +227,13 @@ class CoreApiClient(ABCCoreApiClient):
     ) -> ApiResponse[list[OrderDto]]:
         endpoint = self._endpoints.get_description("get_business_orders")
         api_client = EndpointClient[list[OrderDto]](endpoint)
+        return await api_client({"path_params": {"business_id": business_id}})
+
+    async def get_business_api_keys(
+        self, business_id: str
+    ) -> ApiResponse[list[ApiKeyDto]]:
+        endpoint = self._endpoints.get_description("get_business_api_keys")
+        api_client = EndpointClient[list[ApiKeyDto]](endpoint)
         return await api_client({"path_params": {"business_id": business_id}})
 
     async def create_business_order(
