@@ -14,7 +14,7 @@ from ed_core.common.generic_helpers import get_new_id
 
 
 class CreateOrderDto(BaseModel):
-    consumer_id: CreateConsumerDto
+    consumer: CreateConsumerDto
     latest_time_of_delivery: datetime
     parcel: CreateParcelDto
 
