@@ -1,11 +1,13 @@
-from typing import Annotated
+from datetime import datetime
+from typing import Annotated, Optional
 from uuid import UUID
 
 from ed_domain.common.logging import get_logger
 from fastapi import APIRouter, Depends
 from rmediator.mediator import Mediator
 
-from ed_core.application.features.business.dtos import (CreateApiKeyDto,
+from ed_core.application.features.business.dtos import (BusinessReportDto,
+                                                        CreateApiKeyDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
                                                         UpdateBusinessDto)
@@ -14,7 +16,7 @@ from ed_core.application.features.business.requests.commands import (
     UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
-    GetBusinessOrdersQuery, GetBusinessQuery)
+    GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery)
 from ed_core.application.features.common.dtos import BusinessDto, OrderDto
 from ed_core.application.features.common.dtos.api_key_dto import ApiKeyDto
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
@@ -107,3 +109,16 @@ async def create_api_key(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(CreateApiKeyCommand(business_id=business_id, dto=dto))
+
+
+@router.get("/{business_id}/report", response_model=GenericResponse[BusinessReportDto])
+@rest_endpoint
+async def get_business_report(
+    business_id: UUID,
+    mediator: Annotated[Mediator, Depends(mediator)],
+    start_date: Optional[datetime] = None,
+    end_date: Optional[datetime] = None,
+):
+    return await mediator.send(
+        GetBusinessReportQuery(business_id, start_date, end_date)
+    )

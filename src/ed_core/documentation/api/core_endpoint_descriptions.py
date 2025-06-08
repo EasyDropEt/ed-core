@@ -3,7 +3,8 @@ from ed_domain.documentation.api.abc_endpoint_descriptions import \
 from ed_domain.documentation.api.definitions import (EndpointDescription,
                                                      HttpMethod)
 
-from ed_core.application.features.business.dtos import (CreateApiKeyDto,
+from ed_core.application.features.business.dtos import (BusinessReportDto,
+                                                        CreateApiKeyDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
                                                         UpdateBusinessDto)
@@ -91,6 +92,13 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "path_params": {"business_id": str},
                 "request_model": CreateApiKeyDto,
                 "response_model": ApiKeyDto,
+            },
+            {
+                "name": "get_business_report",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/businesses/{{business_id}}/report",
+                "path_params": {"business_id": str},
+                "response_model": BusinessReportDto,
             },
             # Driver endpoints
             {

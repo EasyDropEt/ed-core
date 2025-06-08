@@ -2,7 +2,8 @@ from abc import ABCMeta, abstractmethod
 
 from ed_domain.documentation.api.definitions import ApiResponse
 
-from ed_core.application.features.business.dtos import (CreateApiKeyDto,
+from ed_core.application.features.business.dtos import (BusinessReportDto,
+                                                        CreateApiKeyDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
                                                         UpdateBusinessDto)
@@ -143,6 +144,11 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     async def create_business_api_key(
         self, business_id: str, create_api_key_dto: CreateApiKeyDto
     ) -> ApiResponse[ApiKeyDto]: ...
+
+    @abstractmethod
+    async def get_business_report(
+        self, business_id: str
+    ) -> ApiResponse[BusinessReportDto]: ...
 
     # Delivery job features
     @abstractmethod
