@@ -6,5 +6,5 @@ class ApiKeyDto(BaseModel):
     name: str
     description: str
     prefix: str
-    key_hash: str
     status: ApiKeyStatus
+    key: str | None = None
