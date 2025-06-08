@@ -11,20 +11,19 @@ from ed_notification.documentation.api.notification_api_client import \
 from fastapi import Depends
 from rmediator.mediator import Mediator
 
-from ed_core.application.contracts.infrastructure.abc_rabbitmq_producers import \
-    ABCRabbitMQProducers
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.business.handlers.commands import (
     CreateBusinessCommandHandler, CreateOrderCommandHandler,
     UpdateBusinessCommandHandler)
 from ed_core.application.features.business.handlers.queries import (
-    GetAllBusinessesQueryHandler, GetBusinessByUserIdQueryHandler,
-    GetBusinessOrdersQueryHandler, GetBusinessQueryHandler)
+    GetAllBusinessesQueryHandler, GetBusinessApiKeysQueryHandler,
+    GetBusinessByUserIdQueryHandler, GetBusinessOrdersQueryHandler,
+    GetBusinessQueryHandler)
 from ed_core.application.features.business.requests.commands import (
     CreateBusinessCommand, CreateOrderCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
-    GetAllBusinessQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
-    GetBusinessQuery)
+    GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
+    GetBusinessOrdersQuery, GetBusinessQuery)
 from ed_core.application.features.consumer.handlers.commands import (
     CreateConsumerCommandHandler, UpdateConsumerCommandHandler)
 from ed_core.application.features.consumer.handlers.queries import (
@@ -76,7 +75,6 @@ from ed_core.application.features.order.requests.queries import (
 from ed_core.common.generic_helpers import get_config
 from ed_core.common.typing.config import Config, Environment
 from ed_core.infrastructure.api.api_handler import ApiHandler
-from ed_core.webapi.dependency_setup.message_queues import get_rabbitmq_handler
 
 
 def get_otp_generator(
@@ -142,6 +140,7 @@ def mediator(
         (GetAllBusinessQuery, GetAllBusinessesQueryHandler(uow)),
         (UpdateBusinessCommand, UpdateBusinessCommandHandler(uow)),
         (TrackOrderQuery, TrackOrderQueryHandler(uow)),
+        (GetBusinessApiKeysQuery, GetBusinessApiKeysQueryHandler(uow)),
         # Order handlers
         (GetOrdersQuery, GetOrdersQueryHandler(uow)),
         (GetOrderQuery, GetOrderQueryHandler(uow)),
