@@ -46,8 +46,8 @@ from ed_core.application.features.delivery_job.requests.commands import (
 from ed_core.application.features.delivery_job.requests.queries import (
     GetDeliveryJobQuery, GetDeliveryJobsQuery)
 from ed_core.application.features.driver.handlers.commands import (
-    CreateDriverCommandHandler, FinishOrderDeliveryVerifyCommandHandler,
-    FinishOrderPickUpVerifyCommandHandler, StartOrderDeliveryCommandHandler,
+    CreateDriverCommandHandler, FinishOrderDeliveryCommandHandler,
+    FinishOrderPickUpCommandHandler, StartOrderDeliveryCommandHandler,
     StartOrderPickUpCommandHandler, UpdateDriverCommandHandler,
     UpdateDriverCurrentLocationCommandHandler)
 from ed_core.application.features.driver.handlers.queries import (
@@ -55,9 +55,8 @@ from ed_core.application.features.driver.handlers.queries import (
     GetDriverDeliveryJobsQueryHandler, GetDriverOrdersQueryHandler,
     GetDriverPaymentSummaryQueryHandler, GetDriverQueryHandler)
 from ed_core.application.features.driver.requests.commands import (
-    CreateDriverCommand, FinishOrderDeliveryVerifyCommand,
-    FinishOrderPickUpVerifyCommand, StartOrderDeliveryCommand,
-    StartOrderPickUpCommand, UpdateDriverCommand,
+    CreateDriverCommand, FinishOrderDeliveryCommand, FinishOrderPickUpCommand,
+    StartOrderDeliveryCommand, StartOrderPickUpCommand, UpdateDriverCommand,
     UpdateDriverCurrentLocationCommand)
 from ed_core.application.features.driver.requests.queries import (
     GetAllDriversQuery, GetDriverByUserIdQuery, GetDriverDeliveryJobsQuery,
@@ -121,13 +120,13 @@ def mediator(
         (GetDriverPaymentSummaryQuery, GetDriverPaymentSummaryQueryHandler(uow)),
         (StartOrderDeliveryCommand, StartOrderDeliveryCommandHandler(uow, api, otp)),
         (
-            FinishOrderDeliveryVerifyCommand,
-            FinishOrderDeliveryVerifyCommandHandler(uow, api),
+            FinishOrderDeliveryCommand,
+            FinishOrderDeliveryCommandHandler(uow, api),
         ),
         (StartOrderPickUpCommand, StartOrderPickUpCommandHandler(uow, api, otp)),
         (
-            FinishOrderPickUpVerifyCommand,
-            FinishOrderPickUpVerifyCommandHandler(uow, api),
+            FinishOrderPickUpCommand,
+            FinishOrderPickUpCommandHandler(uow, api),
         ),
         (UpdateDriverCommand, UpdateDriverCommandHandler(uow)),
         (
