@@ -21,13 +21,13 @@ from ed_core.application.features.business.handlers.commands import (
 from ed_core.application.features.business.handlers.queries import (
     GetAllBusinessesQueryHandler, GetBusinessApiKeysQueryHandler,
     GetBusinessByUserIdQueryHandler, GetBusinessOrdersQueryHandler,
-    GetBusinessQueryHandler)
+    GetBusinessQueryHandler, GetBusinessReportQueryHandler)
 from ed_core.application.features.business.requests.commands import (
     CreateApiKeyCommand, CreateBusinessCommand, CreateOrderCommand,
     UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
-    GetBusinessOrdersQuery, GetBusinessQuery)
+    GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery)
 from ed_core.application.features.consumer.handlers.commands import (
     CreateConsumerCommandHandler, UpdateConsumerCommandHandler)
 from ed_core.application.features.consumer.handlers.queries import (
@@ -151,6 +151,7 @@ def mediator(
         (TrackOrderQuery, TrackOrderQueryHandler(uow)),
         (GetBusinessApiKeysQuery, GetBusinessApiKeysQueryHandler(uow)),
         (CreateApiKeyCommand, CreateApiKeyCommandHandler(uow, password)),
+        (GetBusinessReportQuery, GetBusinessReportQueryHandler(uow)),
         # Order handlers
         (GetOrdersQuery, GetOrdersQueryHandler(uow)),
         (GetOrderQuery, GetOrderQueryHandler(uow)),
