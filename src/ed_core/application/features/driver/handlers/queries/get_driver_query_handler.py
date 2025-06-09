@@ -9,6 +9,7 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.common.dtos import DriverDto
 from ed_core.application.features.driver.requests.queries.get_driver_query import \
     GetDriverQuery
+from ed_core.application.services import DriverService
 
 
 @request_handler(GetDriverQuery, BaseResponse[DriverDto])
@@ -16,18 +17,20 @@ from ed_core.application.features.driver.requests.queries.get_driver_query impor
 class GetDriverQueryHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
+        self._driver_service = DriverService(uow)
 
     async def handle(self, request: GetDriverQuery) -> BaseResponse[DriverDto]:
         async with self._uow.transaction():
             driver = await self._uow.driver_repository.get(id=request.driver_id)
 
-        if driver is None:
-            return BaseResponse[DriverDto].error(
-                "Driver couldn't be fetched.",
-                [f"Driver with id {request.driver_id} does not exist."],
-            )
+            if driver is None:
+                return BaseResponse[DriverDto].error(
+                    "Driver couldn't be fetched.",
+                    [f"Driver with id {request.driver_id} does not exist."],
+                )
+
+            driver_dto = await self._driver_service.to_dto(driver)
 
         return BaseResponse[DriverDto].success(
-            "Driver fetched successfully.",
-            DriverDto.from_driver(driver),
+            "Driver fetched successfully.", driver_dto
         )

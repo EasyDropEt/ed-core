@@ -8,12 +8,15 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.common.dtos import OrderDto
 from ed_core.application.features.order.requests.commands import \
     CancelOrderCommand
+from ed_core.application.services.order_service import OrderService
 
 
 @request_handler(CancelOrderCommand, BaseResponse[OrderDto])
 class CancelOrderCommandHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
+
+        self._order_service = OrderService(uow)
 
     async def handle(self, request: CancelOrderCommand) -> BaseResponse[OrderDto]:
         async with self._uow.transaction():
@@ -29,6 +32,8 @@ class CancelOrderCommandHandler(RequestHandler):
             order.cancel_order()
             updated = self._uow.order_repository.update(order.id, order)
 
+            order_dto = await self._order_service.to_dto(order)
+
         if not updated:
             raise ApplicationException(
                 Exceptions.InternalServerException,
@@ -38,6 +43,5 @@ class CancelOrderCommandHandler(RequestHandler):
 
         # TODO: Let optimization know about order cancelling
         return BaseResponse[OrderDto].success(
-            "Order cancelled successfully.",
-            OrderDto.from_order(order),
+            "Order cancelled successfully.", order_dto
         )

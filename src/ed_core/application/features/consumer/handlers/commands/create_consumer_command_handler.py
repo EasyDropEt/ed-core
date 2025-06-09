@@ -10,6 +10,7 @@ from ed_core.application.features.common.dtos.validators import \
     CreateConsumerDtoValidator
 from ed_core.application.features.consumer.requests.commands import \
     CreateConsumerCommand
+from ed_core.application.services import ConsumerService
 
 LOG = get_logger()
 
@@ -19,20 +20,23 @@ class CreateConsumerCommandHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
+        self._consumer_service = ConsumerService(uow)
+
+        self._error_message = "Create consumer failed."
+        self._success_message = "Consumer created successfully."
+
     async def handle(self, request: CreateConsumerCommand) -> BaseResponse[ConsumerDto]:
         dto_validator = CreateConsumerDtoValidator().validate(request.dto)
 
         if not dto_validator.is_valid:
             raise ApplicationException(
                 Exceptions.ValidationException,
-                "Create consumer failed.",
+                self._error_message,
                 dto_validator.errors,
             )
 
         async with self._uow.transaction():
-            consumer = await request.dto.create_consumer(self._uow)
+            consumer = await self._consumer_service.create(request.dto)
+            consumer_dto = await self._consumer_service.to_dto(consumer)
 
-        return BaseResponse[ConsumerDto].success(
-            "Consumer created successfully.",
-            ConsumerDto.from_consumer(consumer),
-        )
+        return BaseResponse[ConsumerDto].success(self._success_message, consumer_dto)

@@ -10,6 +10,7 @@ from ed_core.application.features.driver.dtos.validators import \
     UpdateDriverDtoValidator
 from ed_core.application.features.driver.requests.commands import \
     UpdateDriverCommand
+from ed_core.application.services import DriverService
 
 LOG = get_logger()
 
@@ -18,27 +19,34 @@ LOG = get_logger()
 class UpdateDriverCommandHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
+        self._driver_service = DriverService(uow)
+
+        self._error_message = "Update driver failed."
+        self._success_message = "Driver updated successfully."
 
     async def handle(self, request: UpdateDriverCommand) -> BaseResponse[DriverDto]:
         dto_validator = UpdateDriverDtoValidator().validate(request.dto)
 
         if not dto_validator.is_valid:
             return BaseResponse[DriverDto].error(
-                "Update driver failed.", dto_validator.errors
+                self._error_message, dto_validator.errors
             )
 
         async with self._uow.transaction():
-            driver = await self._uow.driver_repository.get(id=request.driver_id)
-            if driver is None:
+            updated_driver = await self._driver_service.update(
+                request.driver_id, request.dto
+            )
+
+            if updated_driver is None:
                 raise ApplicationException(
                     Exceptions.NotFoundException,
-                    "Driver update failed.",
-                    ["Driver not found."],
+                    self._error_message,
+                    [f"Driver with id: {request.driver_id} was not found."],
                 )
 
-            updated_driver = await request.dto.update_driver(driver, self._uow)
+            updated_driver_dto = await self._driver_service.to_dto(updated_driver)
 
         return BaseResponse[DriverDto].success(
-            "Driver updated successfully.",
-            DriverDto.from_driver(updated_driver),
+            self._success_message,
+            updated_driver_dto,
         )

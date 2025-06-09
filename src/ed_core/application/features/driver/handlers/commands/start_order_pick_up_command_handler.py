@@ -1,4 +1,3 @@
-from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.entities.otp import OtpType
 from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
     ABCAsyncUnitOfWork
@@ -8,12 +7,12 @@ from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
-from ed_core.application.features.common.helpers import (create_otp,
-                                                         get_business,
-                                                         get_order,
-                                                         send_notification)
+from ed_core.application.features.common.helpers import send_notification
 from ed_core.application.features.driver.requests.commands import \
     StartOrderPickUpCommand
+from ed_core.application.services import (BusinessService, DriverService,
+                                          OrderService, OtpService)
+from ed_core.application.services.otp_service import CreateOtpDto
 
 
 @request_handler(StartOrderPickUpCommand, BaseResponse[None])
@@ -23,24 +22,31 @@ class StartOrderPickUpCommandHandler(RequestHandler):
         self._api = api
         self._otp = otp
 
+        self._driver_service = DriverService(uow)
+        self._business_service = BusinessService(uow)
+        self._order_service = OrderService(uow)
+        self._otp_service = OtpService(uow)
+
         self._success_message = "Order picked up initiated successfully."
         self._error_message = "Order pick up was not  successfully."
 
     async def handle(self, request: StartOrderPickUpCommand) -> BaseResponse[None]:
         async with self._uow.transaction():
-            order = await get_order(request.order_id, self._uow, self._error_message)
-            if request.driver_id != order.driver_id:
-                raise ApplicationException(
-                    Exceptions.BadRequestException,
-                    "Order not picked up.",
-                    ["Bad request. Order driver is different."],
+            order = await self._order_service.get(request.order_id)
+            assert order is not None
+
+            driver = await self._driver_service.get(request.driver_id)
+            assert driver is not None
+
+            business = await self._business_service.get(order.business_id)
+            assert business is not None
+
+            otp = await self._otp_service.create(
+                CreateOtpDto(
+                    user_id=driver.user_id,
+                    value=self._otp.generate(),
+                    otp_type=OtpType.PICK_UP,
                 )
-
-            business_id = order.business.id
-            business = await get_business(business_id, self._uow, self._error_message)
-
-            otp = await create_otp(
-                request.driver_id, OtpType.DROP_OFF, self._uow, self._otp
             )
 
         await send_notification(

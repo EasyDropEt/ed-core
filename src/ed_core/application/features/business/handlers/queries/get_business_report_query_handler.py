@@ -11,6 +11,8 @@ from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.business.dtos import BusinessReportDto
+from ed_core.application.features.business.dtos.business_report_dto import \
+    DeliveryPerformanceData
 from ed_core.application.features.business.requests.queries import \
     GetBusinessReportQuery
 from ed_core.application.services.order_service import OrderService
@@ -20,6 +22,7 @@ from ed_core.application.services.order_service import OrderService
 class GetBusinessReportQueryHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
+        self._order_service = OrderService(uow)
 
     async def handle(
         self, request: GetBusinessReportQuery
@@ -34,7 +37,6 @@ class GetBusinessReportQueryHandler(RequestHandler):
                 orders, request.report_start_date, request.report_end_date
             )
 
-        report = self._generate_report(orders)
         return BaseResponse[BusinessReportDto].success(
             "Business report generated successfully.", report
         )
@@ -171,6 +173,9 @@ class GetBusinessReportQueryHandler(RequestHandler):
             report_end_date = end_date
 
         return BusinessReportDto(
+            orders=[
+                await self._order_service.to_dto(order) for order in filtered_orders
+            ],
             total_orders=total_orders,
             completed_deliveries=completed_deliveries,
             cancelled_deliveries=cancelled_deliveries,
@@ -191,11 +196,8 @@ class GetBusinessReportQueryHandler(RequestHandler):
             peak_delivery_days=dict(peak_delivery_days),
             customer_retention_rate=customer_retention_rate,
             delivery_success_rate=delivery_success_rate,
-            delivery_performance_data=self._generate_delivery_performance_data(
+            delivery_performance_data=self.generate_delivery_performance_data(
                 orders),
-            orders=[
-                await self._order_service.to_dto(order) for order in filtered_orders
-            ],
         )
 
     def _count(self, orders: list[Order], fn: Callable[[Order], bool]) -> int:
@@ -227,10 +229,10 @@ class GetBusinessReportQueryHandler(RequestHandler):
             filtered.append(order)
         return filtered
 
-    def _generate_delivery_performance_data(
+    def generate_delivery_performance_data(
         self,
         orders: list[Order],
-    ) -> list[tuple[datetime, Optional[float], Optional[float]]]:
+    ) -> DeliveryPerformanceData:
         performance_data: list[tuple[datetime,
                                      Optional[float], Optional[float]]] = []
 

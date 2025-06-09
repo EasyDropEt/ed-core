@@ -9,6 +9,7 @@ from ed_core.application.features.business.dtos.validators import \
 from ed_core.application.features.business.requests.commands import \
     CreateBusinessCommand
 from ed_core.application.features.common.dtos.business_dto import BusinessDto
+from ed_core.application.services.business_service import BusinessService
 
 LOG = get_logger()
 
@@ -17,6 +18,7 @@ LOG = get_logger()
 class CreateBusinessCommandHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
+        self._business_service = BusinessService(uow)
 
     async def handle(self, request: CreateBusinessCommand) -> BaseResponse[BusinessDto]:
         dto_validator = CreateBusinessDtoValidator().validate(request.dto)
@@ -27,10 +29,10 @@ class CreateBusinessCommandHandler(RequestHandler):
             )
 
         async with self._uow.transaction():
-            business = await request.dto.create_business(self._uow)
+            business = await self._business_service.create(request.dto)
+            business_dto = await self._business_service.to_dto(business)
 
         print(business)
         return BaseResponse[BusinessDto].success(
-            "Business created successfully.",
-            BusinessDto.from_business(business),
+            "Business created successfully.", business_dto
         )
