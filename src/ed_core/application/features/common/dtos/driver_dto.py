@@ -28,5 +28,5 @@ class DriverDto(BaseModel):
             phone_number=driver.phone_number,
             email=driver.email or None,
             car=CarDto(**driver.car.__dict__),
-            location=LocationDto(**driver.current_location.__dict__),
+            location=LocationDto(**driver.location.__dict__),
         )

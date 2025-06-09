@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from ed_domain.core.aggregate_roots.waypoint import Waypoint, WaypointType
+from ed_domain.core.entities.waypoint import Waypoint, WaypointType
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos.order_dto import OrderDto

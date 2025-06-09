@@ -12,12 +12,14 @@ from ed_core.application.features.business.dtos import BusinessReportDto
 from ed_core.application.features.business.requests.queries import \
     GetBusinessReportQuery
 from ed_core.application.features.common.dtos.order_dto import OrderDto
+from ed_core.application.services.order_service import OrderService
 
 
 @request_handler(GetBusinessReportQuery, BaseResponse[BusinessReportDto])
 class GetBusinessReportQueryHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
+        self._order_service = OrderService(uow)
 
     async def handle(
         self, request: GetBusinessReportQuery
@@ -26,14 +28,13 @@ class GetBusinessReportQueryHandler(RequestHandler):
             orders = await self._uow.order_repository.get_all(
                 business_id=request.business_id
             )
+            report = await self._generate_report(orders)
 
-        report = self._generate_report(orders)
         return BaseResponse[BusinessReportDto].success(
-            "Business fetched successfully.",
-            report,
+            "Business fetched successfully.", report
         )
 
-    def _generate_report(self, orders: list[Order]) -> BusinessReportDto:
+    async def _generate_report(self, orders: list[Order]) -> BusinessReportDto:
         total_orders = len(orders)
         completed_deliveries = self._count(
             orders, lambda x: x.order_status == OrderStatus.COMPLETED
@@ -49,7 +50,7 @@ class GetBusinessReportQueryHandler(RequestHandler):
         )
 
         return BusinessReportDto(
-            orders=[OrderDto.from_order(order) for order in orders],
+            orders=[await self._order_service.to_dto(order) for order in orders],
             total_orders=total_orders,
             completed_deliveries=completed_deliveries,
             cancelled_deliveries=cancelled_deliveries,

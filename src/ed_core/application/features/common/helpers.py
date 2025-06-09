@@ -1,10 +1,9 @@
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
-from ed_domain.common.exceptions import (EXCEPTION_NAMES, ApplicationException,
-                                         Exceptions)
-from ed_domain.core.aggregate_roots import Business, Consumer, Order, Waypoint
-from ed_domain.core.entities import Otp
+from ed_domain.common.exceptions import ApplicationException, Exceptions
+from ed_domain.core.aggregate_roots import Consumer, Order
+from ed_domain.core.entities import Otp, Waypoint
 from ed_domain.core.entities.notification import NotificationType
 from ed_domain.core.entities.otp import OtpType
 from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
@@ -82,38 +81,6 @@ async def get_order(
         )
 
     return order
-
-
-async def get_business(
-    business_id: UUID,
-    uow: ABCAsyncUnitOfWork,
-    error_message: str,
-) -> Business:
-    business = await uow.business_repository.get(id=business_id)
-    if not business:
-        raise ApplicationException(
-            Exceptions.NotFoundException,
-            error_message,
-            [f"Business with id {business_id} not found."],
-        )
-
-    return business
-
-
-async def get_consumer(
-    consumer_id: UUID,
-    uow: ABCAsyncUnitOfWork,
-    error_message: str,
-) -> Consumer:
-    consumer = await uow.consumer_repository.get(id=consumer_id)
-    if not consumer:
-        raise ApplicationException(
-            Exceptions.NotFoundException,
-            error_message,
-            [f"Consumer with id {consumer_id} not found."],
-        )
-
-    return consumer
 
 
 async def get_order_waypoint(

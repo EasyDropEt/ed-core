@@ -1,4 +1,3 @@
-from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.aggregate_roots import Order
 from ed_domain.core.entities.bill import BillStatus
 from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
@@ -7,16 +6,18 @@ from rmediator.decorators import request_handler
 from rmediator.types import RequestHandler
 
 from ed_core.application.common.responses.base_response import BaseResponse
-from ed_core.application.features.common.dtos.order_dto import OrderDto
 from ed_core.application.features.driver.dtos import DriverPaymentSummaryDto
 from ed_core.application.features.driver.requests.queries import \
     GetDriverPaymentSummaryQuery
+from ed_core.application.services import OrderService
 
 
 @request_handler(GetDriverPaymentSummaryQuery, BaseResponse[DriverPaymentSummaryDto])
 class GetDriverPaymentSummaryQueryHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
+
+        self._order_service = OrderService(uow)
 
     async def handle(
         self, request: GetDriverPaymentSummaryQuery
@@ -27,13 +28,15 @@ class GetDriverPaymentSummaryQueryHandler(RequestHandler):
             )
             total, debt = await self._get_total_and_outstanding_payment_sum(orders)
 
+            order_dtos = [await self._order_service.to_dto(order) for order in orders]
+
         return BaseResponse[DriverPaymentSummaryDto].success(
             "Driver payment summary fetched successfully.",
             DriverPaymentSummaryDto(
                 total_revenue=total,
                 debt=debt,
                 net_revenue=total - debt,
-                orders=[OrderDto.from_order(order) for order in orders],
+                orders=order_dtos,
             ),
         )
 

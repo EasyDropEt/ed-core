@@ -10,6 +10,7 @@ from ed_core.application.features.common.dtos.validators.update_location_dto_val
     UpdateLocationDtoValidator
 from ed_core.application.features.driver.requests.commands import \
     UpdateDriverCurrentLocationCommand
+from ed_core.application.services import DriverService, LocationService
 
 LOG = get_logger()
 
@@ -19,31 +20,30 @@ class UpdateDriverCurrentLocationCommandHandler(RequestHandler):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         self._uow = uow
 
+        self._driver_service = DriverService(uow)
+        self._location_service = LocationService(uow)
+
+        self._error_message = "Driver current location was not updated successfully."
+        self._success_message = "Driver current location updated successfully."
+
     async def handle(
         self, request: UpdateDriverCurrentLocationCommand
     ) -> BaseResponse[DriverDto]:
         dto_validator = UpdateLocationDtoValidator().validate(request.dto)
 
         if not dto_validator.is_valid:
-            return BaseResponse[DriverDto].error(
-                "Update driver current location failed.", dto_validator.errors
+            raise ApplicationException(
+                Exceptions.BadRequestException,
+                self._error_message,
+                dto_validator.errors,
             )
 
         async with self._uow.transaction():
-            driver = await self._uow.driver_repository.get(id=request.driver_id)
-            if driver is None:
-                raise ApplicationException(
-                    Exceptions.NotFoundException,
-                    "Driver update failed.",
-                    ["Driver not found."],
-                )
+            driver = await self._driver_service.get(request.driver_id)
+            assert driver is not None
 
-            driver.current_location = await request.dto.update_location(
-                driver.current_location.id, self._uow
-            )
-            await self._uow.driver_repository.update(driver.id, driver)
+            await self._location_service.update(driver.location_id, request.dto)
 
-        return BaseResponse[DriverDto].success(
-            "Driver current location updated successfully.",
-            DriverDto.from_driver(driver),
-        )
+            driver_dto = await self._driver_service.to_dto(driver)
+
+        return BaseResponse[DriverDto].success(self._success_message, driver_dto)
