@@ -34,7 +34,7 @@ class CreateOrderCommandHandler(RequestHandler):
         self._order_service = OrderService(uow)
         self._consumer_service = ConsumerService(uow)
 
-        self._error_message = ""
+        self._error_message = "Failed to create order"
 
     async def handle(self, request: CreateOrderCommand) -> BaseResponse[OrderDto]:
         dto, business_id, consumer_id = (
@@ -47,7 +47,7 @@ class CreateOrderCommandHandler(RequestHandler):
         if not dto_validator.is_valid:
             raise ApplicationException(
                 Exceptions.ValidationException,
-                "Failed to create order",
+                self._error_message,
                 dto_validator.errors,
             )
 

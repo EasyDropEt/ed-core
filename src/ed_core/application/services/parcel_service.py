@@ -1,6 +1,4 @@
 from datetime import UTC, datetime
-from typing import Optional
-from uuid import UUID
 
 from ed_domain.common.logging import get_logger
 from ed_domain.core.entities.parcel import Parcel
@@ -8,14 +6,11 @@ from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 
 from ed_core.application.features.business.dtos.create_parcel_dto import \
     CreateParcelDto
+from ed_core.application.features.common.dtos.parcel_dto import ParcelDto
 from ed_core.application.services.abc_service import ABCService
 from ed_core.common.generic_helpers import get_new_id
 
 LOG = get_logger()
-
-
-class ParcelDto(Parcel):
-    ...
 
 
 class ParcelService(ABCService[Parcel, CreateParcelDto, None, ParcelDto]):
@@ -42,9 +37,6 @@ class ParcelService(ABCService[Parcel, CreateParcelDto, None, ParcelDto]):
         parcel = await self._uow.parcel_repository.create(parcel)
         LOG.info(f"Parcel created with ID: {parcel.id}")
         return parcel
-
-    async def update(self, id: UUID, dto: None) -> Optional[Parcel]:
-        raise NotImplementedError()
 
     async def to_dto(self, entity: Parcel) -> ParcelDto:
         return ParcelDto(**entity.__dict__)

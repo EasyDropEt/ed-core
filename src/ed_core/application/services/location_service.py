@@ -69,8 +69,8 @@ class LocationService(
         if dto.postal_code is not None:
             location.postal_code = dto.postal_code
 
-        location.updated_at = datetime.now(UTC)
-        await self._uow.location_repository.update(location.id, location)
+        location.update_datetime = datetime.now(UTC)
+        await self._uow.location_repository.save(location)
         LOG.info(f"Location with ID: {id} updated.")
         return location
 

@@ -1,5 +1,4 @@
 from datetime import UTC, datetime
-from typing import Optional
 from uuid import UUID
 
 from ed_domain.common.logging import get_logger
@@ -41,12 +40,6 @@ class ApiKeyService(ABCService[ApiKey, CreateApiKeyDto, None, ApiKeyDto]):
         api_key = await self._repository.create(api_key)
         LOG.info(f"ApiKey created with ID: {api_key.id}")
         return api_key
-
-    async def create(self, dto: CreateApiKeyDto) -> ApiKeyDto:
-        raise NotImplementedError()
-
-    async def update(self, id: UUID, dto: None) -> Optional[ApiKey]:
-        raise NotImplementedError()
 
     async def to_dto(self, entity: ApiKey) -> ApiKeyDto:
         return ApiKeyDto(**entity.__dict__)

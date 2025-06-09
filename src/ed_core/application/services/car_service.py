@@ -1,6 +1,4 @@
 from datetime import UTC, datetime
-from typing import Optional
-from uuid import UUID
 
 from ed_domain.common.logging import get_logger
 from ed_domain.core.entities import Car
@@ -41,9 +39,6 @@ class CarService(ABCService[Car, CreateCarDto, None, CarDto]):
         car = await self._uow.car_repository.create(car)
         LOG.info(f"Car created with ID: {car.id}")
         return car
-
-    async def update(self, id: UUID, dto: None) -> Optional[Car]:
-        raise NotImplementedError()
 
     async def to_dto(self, entity: Car) -> CarDto:
         return CarDto(**entity.__dict__)

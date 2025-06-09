@@ -1,3 +1,4 @@
+from ed_core.application.services.api_key_service import ApiKeyService
 from ed_core.application.services.bill_service import BillService
 from ed_core.application.services.business_service import BusinessService
 from ed_core.application.services.car_service import CarService
@@ -12,6 +13,7 @@ from ed_core.application.services.parcel_service import ParcelService
 from ed_core.application.services.waypoint_service import WaypointService
 
 __all__ = [
+    "ApiKeyService",
     "BusinessService",
     "DriverService",
     "ConsumerService",

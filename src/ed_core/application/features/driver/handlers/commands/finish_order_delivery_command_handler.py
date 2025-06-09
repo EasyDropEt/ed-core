@@ -48,7 +48,7 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
             waypoint.update_status(WaypointStatus.DONE)
 
             # Update db
-            await self._order_service.update_entity(order)
-            await self._waypoint_service.update_entity(waypoint)
+            await self._order_service.save(order)
+            await self._waypoint_service.save(waypoint)
 
         return BaseResponse[None].success(self._success_message, None)

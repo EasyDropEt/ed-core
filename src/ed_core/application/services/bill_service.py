@@ -1,6 +1,4 @@
 from datetime import UTC, datetime
-from typing import Optional
-from uuid import UUID
 
 from ed_domain.common.logging import get_logger
 from ed_domain.core.entities import Bill
@@ -44,9 +42,6 @@ class BillService(ABCService[Bill, CreateBillDto, None, BillDto]):
         bill = await self._uow.bill_repository.create(bill)
         LOG.info(f"Bill created with ID: {bill.id}")
         return bill
-
-    async def update(self, id: UUID, dto: None) -> Optional[Bill]:
-        raise NotImplementedError()
 
     async def to_dto(self, entity: Bill) -> BillDto:
         return BillDto(**entity.__dict__)

@@ -1,6 +1,4 @@
 from datetime import UTC, datetime
-from typing import Optional
-from uuid import UUID
 
 from ed_domain.common.logging import get_logger
 from ed_domain.core.aggregate_roots import DeliveryJob
@@ -40,7 +38,7 @@ class DeliveryJobService(
             waypoints=[],
             estimated_distance_in_kms=dto.estimated_distance_in_kms,
             estimated_time_in_minutes=dto.estimated_time_in_minutes,
-            status=DeliveryJobStatus.IN_PROGRESS,
+            status=DeliveryJobStatus.AVAILABLE,
             estimated_payment_in_birr=dto.estimated_payment,
             estimated_completion_time=dto.estimated_completion_time,
             create_datetime=datetime.now(UTC),
@@ -51,9 +49,6 @@ class DeliveryJobService(
         delivery_job = await self._repository.create(delivery_job)
         LOG.info(f"DeliveryJob created with ID: {delivery_job.id}")
         return delivery_job
-
-    async def update(self, id: UUID, dto: None) -> Optional[DeliveryJob]:
-        raise NotImplementedError()
 
     async def to_dto(self, entity: DeliveryJob) -> DeliveryJobDto:
         waypoint_dtos = [

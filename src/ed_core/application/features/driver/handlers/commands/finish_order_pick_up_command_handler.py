@@ -47,7 +47,7 @@ class FinishOrderPickUpCommandHandler(RequestHandler):
             order.update_status(OrderStatus.PICKED_UP)
             waypoint.update_status(WaypointStatus.DONE)
 
-            await self._order_service.update_entity(order)
-            await self._waypoint_service.update_entity(waypoint)
+            await self._order_service.save(order)
+            await self._waypoint_service.save(waypoint)
 
         return BaseResponse[None].success(self._success_message, None)

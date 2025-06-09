@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos import BusinessDto, ConsumerDto
 from ed_core.application.features.common.dtos.bill_dto import BillDto
+from ed_core.application.features.common.dtos.parcel_dto import ParcelDto
 
 
 class OrderDto(BaseModel):
@@ -13,6 +14,6 @@ class OrderDto(BaseModel):
     business: BusinessDto
     consumer: ConsumerDto
     latest_time_of_delivery: datetime
-    parcel: Parcel
+    parcel: ParcelDto
     order_status: OrderStatus
     bill: BillDto

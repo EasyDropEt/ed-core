@@ -1,5 +1,4 @@
 from datetime import UTC, datetime
-from typing import Optional
 from uuid import UUID
 
 from ed_domain.common.logging import get_logger
@@ -67,15 +66,6 @@ class OrderService(
         order = await self._uow.order_repository.create(order)
         LOG.info(f"Order created with ID: {order.id}")
         return order
-
-    async def create(self, dto: CreateOrderDto) -> Order:
-        raise NotImplementedError()
-
-    async def update(self, id: UUID, dto: None) -> Optional[Order]:
-        raise NotImplementedError()
-
-    async def update_entity(self, entity: Order) -> bool:
-        return await self._repository.update(entity.id, entity)
 
     async def to_dto(self, entity: Order) -> OrderDto:
         business = await self._business_service.get(entity.business_id)

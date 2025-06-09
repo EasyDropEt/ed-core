@@ -4,16 +4,13 @@ from ed_domain.core.entities.parcel import ParcelSize
 
 from ed_core.application.features.business.dtos.create_order_dto import \
     CreateOrderDto
-from ed_core.application.features.common.dtos.validators import \
-    CreateConsumerDtoValidator
 from ed_core.application.features.common.dtos.validators.abc_dto_validator import (
     ABCDtoValidator, ValidationResponse)
 
 
 class CreateOrderDtoValidator(ABCDtoValidator[CreateOrderDto]):
     def validate(self, dto: CreateOrderDto) -> ValidationResponse:
-        consumer_dto_validation = CreateConsumerDtoValidator().validate(dto.consumer)
-        errors = consumer_dto_validation.errors
+        errors = []
 
         print("DTO", dto)
         if dto.latest_time_of_delivery <= datetime.now(UTC):

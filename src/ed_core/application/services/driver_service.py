@@ -62,7 +62,7 @@ class DriverService(
 
     async def update(self, id: UUID, dto: UpdateDriverDto) -> Optional[Driver]:
         driver = await self._uow.driver_repository.get(id=id)
-        if not driver:
+        if driver is None:
             LOG.error(f"Cannot update: No driver found for ID: {id}")
             return None
 
@@ -74,12 +74,10 @@ class DriverService(
             driver.email = dto.email
 
         if dto.location is not None:
-            await self._location_service.delete(driver.location_id)
-            new_location = await self._location_service.create(dto.location)
-            driver.location_id = new_location.id
+            await self._location_service.update(driver.location_id, dto.location)
 
         driver.update_datetime = datetime.now(UTC)
-        await self._uow.driver_repository.update(driver.id, driver)
+        await self._uow.driver_repository.save(driver)
         LOG.info(f"Driver with ID: {id} updated.")
         return driver
 

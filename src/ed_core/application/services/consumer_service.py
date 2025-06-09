@@ -62,16 +62,15 @@ class ConsumerService(
             return None
 
         if dto.location is not None:
-            await self._location_service.delete(consumer.location_id)
-            new_location = await self._location_service.update(
+            updated_location = await self._location_service.update(
                 consumer.location_id, dto.location
             )
-            assert new_location is not None
+            assert updated_location is not None
 
-            consumer.location_id = new_location.id
+            consumer.location_id = updated_location.id
 
         consumer.update_datetime = datetime.now(UTC)
-        await self._uow.consumer_repository.update(consumer.id, consumer)
+        await self._uow.consumer_repository.save(consumer)
 
         LOG.info(f"Consumer with ID: {id} updated.")
         return consumer

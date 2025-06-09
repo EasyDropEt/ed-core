@@ -14,6 +14,7 @@ from ed_core.application.features.common.dtos.driver_dto import DriverDto
 from ed_core.application.features.common.dtos.notification_dto import \
     NotificationDto
 from ed_core.application.features.common.dtos.order_dto import OrderDto
+from ed_core.application.features.common.dtos.parcel_dto import ParcelDto
 from ed_core.application.features.common.dtos.track_order_dto import \
     TrackOrderDto
 from ed_core.application.features.common.dtos.update_location_dto import \
@@ -35,4 +36,5 @@ __all__ = [
     "NotificationDto",
     "TrackOrderDto",
     "UpdateLocationDto",
+    "ParcelDto",
 ]

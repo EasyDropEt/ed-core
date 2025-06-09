@@ -68,18 +68,17 @@ class BusinessService(
             business.email = dto.email
 
         if dto.location is not None:
-            await self._location_service.delete(business.location_id)
-            new_location = await self._location_service.update(
+            updated_location = await self._location_service.update(
                 business.location_id, dto.location
             )
-            assert new_location is not None
+            assert updated_location is not None
 
-            business.location_id = new_location.id
+            business.location_id = updated_location.id
 
         business.update_datetime = datetime.now(UTC)
-        await self._uow.business_repository.update(business.id, business)
+        updated = await self._uow.business_repository.save(business)
 
-        LOG.info(f"Business with ID: {id} updated.")
+        LOG.info(f"Business with ID: {id} updated {updated}.")
         return business
 
     async def to_dto(self, entity: Business) -> BusinessDto:

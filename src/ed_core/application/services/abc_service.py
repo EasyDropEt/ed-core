@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Generic, Optional, TypeVar
 from uuid import UUID
 
@@ -13,7 +13,7 @@ TDto = TypeVar("TDto")
 TEntity = TypeVar("TEntity")
 
 
-class ABCService(Generic[TEntity, TCreateDto, TUpdateDto, TDto], ABC):
+class ABCService(Generic[TEntity, TCreateDto, TUpdateDto, TDto]):
     def __init__(self, name: str, repository: ABCAsyncGenericRepository) -> None:
         self._name = name
         self._repository = repository
@@ -46,6 +46,9 @@ class ABCService(Generic[TEntity, TCreateDto, TUpdateDto, TDto], ABC):
             LOG.error(
                 f"Cannot delete: No {self._name.lower()} found for ID: {id}")
             return False
+
+    async def save(self, entity: TEntity) -> TEntity:
+        return await self._repository.save(entity)
 
     @abstractmethod
     async def to_dto(self, entity: TEntity) -> TDto: ...

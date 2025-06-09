@@ -10,6 +10,7 @@ from ed_core.application.features.common.dtos.waypoint_dto import WaypointDto
 from ed_core.application.features.delivery_job.dtos.create_waypoint_dto import \
     CreateWaypointDto
 from ed_core.application.services.abc_service import ABCService
+from ed_core.application.services.order_service import OrderService
 from ed_core.common.generic_helpers import get_new_id
 
 LOG = get_logger()
@@ -18,6 +19,8 @@ LOG = get_logger()
 class WaypointService(ABCService[Waypoint, CreateWaypointDto, None, WaypointDto]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Waypoint", uow.waypoint_repository)
+
+        self._order_service = OrderService(uow)
 
         LOG.info("WaypointService initialized with UnitOfWork.")
 
@@ -49,14 +52,13 @@ class WaypointService(ABCService[Waypoint, CreateWaypointDto, None, WaypointDto]
         LOG.info(f"Waypoint created with ID: {waypoint.id}")
         return waypoint
 
-    async def update_entity(self, entity: Waypoint) -> bool:
-        return await self._repository.update(entity.id, entity)
-
-    async def create(self, dto: CreateWaypointDto) -> Waypoint:
-        raise NotImplementedError()
-
-    async def update(self, id: UUID, dto: None) -> Optional[Waypoint]:
-        raise NotImplementedError()
-
     async def to_dto(self, entity: Waypoint) -> WaypointDto:
-        return WaypointDto(**entity.__dict__)
+        order = await self._order_service.get(entity.order_id)
+        assert order is not None
+
+        return WaypointDto(
+            order=await self._order_service.to_dto(order),
+            type=entity.waypoint_type,
+            expected_arrival_time=entity.expected_arrival_time,
+            sequence=entity.sequence,
+        )

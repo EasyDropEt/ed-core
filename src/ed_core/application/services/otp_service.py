@@ -1,5 +1,4 @@
 from datetime import UTC, datetime, timedelta
-from typing import Optional
 from uuid import UUID
 
 from ed_domain.common.logging import get_logger
@@ -40,9 +39,3 @@ class OtpService(ABCService[Otp, CreateOtpDto, None, None]):
         otp = await self._uow.otp_repository.create(otp)
         LOG.info(f"Otp created with ID: {otp.id}")
         return otp
-
-    async def update(self, id: UUID, dto: None) -> Optional[Otp]:
-        raise NotImplementedError()
-
-    async def to_dto(self, entity: Otp) -> None:
-        raise NotImplementedError()
