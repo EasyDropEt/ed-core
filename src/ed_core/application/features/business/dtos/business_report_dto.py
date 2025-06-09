@@ -39,7 +39,6 @@ class BusinessReportDto(BaseModel):
     average_driver_rating: Optional[float]  # Overall average driver rating
     peak_delivery_hours: Optional[dict[str, int]]
     peak_delivery_days: Optional[dict[str, int]]
-
     delivery_performance_data: DeliveryPerformanceData
 
     orders: list[OrderDto]
