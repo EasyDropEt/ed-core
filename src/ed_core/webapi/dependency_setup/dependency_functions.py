@@ -1,6 +1,5 @@
 from typing import Annotated
 
-from ed_auth.documentation.api.auth_api_client import AuthApiClient
 from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
     ABCAsyncUnitOfWork
 from ed_domain.utils.otp.abc_otp_generator import ABCOtpGenerator
@@ -9,12 +8,12 @@ from ed_domain.utils.security.password.abc_password_handler import \
 from ed_infrastructure.persistence.sqlalchemy.unit_of_work import UnitOfWork
 from ed_infrastructure.utils.otp.otp_generator import OtpGenerator
 from ed_infrastructure.utils.password.password_handler import PasswordHandler
-from ed_notification.documentation.api.notification_api_client import \
-    NotificationApiClient
 from fastapi import Depends
 from rmediator.mediator import Mediator
 
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
+from ed_core.application.contracts.infrastructure.email.abc_email_templater import \
+    ABCEmailTemplater
 from ed_core.application.features.business.handlers.commands import (
     CreateApiKeyCommandHandler, CreateBusinessCommandHandler,
     CreateOrderCommandHandler, UpdateBusinessCommandHandler)
@@ -79,6 +78,7 @@ from ed_core.application.features.order.requests.queries import (
 from ed_core.common.generic_helpers import get_config
 from ed_core.common.typing.config import Config, Environment
 from ed_core.infrastructure.api.api_handler import ApiHandler
+from ed_core.infrastructure.email.email_templater import EmailTemplater
 
 
 def get_password(config: Annotated[Config, Depends(get_config)]) -> ABCPasswordHandler:
@@ -92,17 +92,19 @@ def get_otp_generator(
 
 
 def get_api(config: Annotated[Config, Depends(get_config)]) -> ABCApi:
-    return ApiHandler(
-        AuthApiClient(config["auth_api"]),
-        NotificationApiClient(config["notification_api"]),
-    )
+    return ApiHandler(config)
 
 
 def get_uow(config: Annotated[Config, Depends(get_config)]) -> ABCAsyncUnitOfWork:
     return UnitOfWork(config["db"])
 
 
+def email_templater() -> ABCEmailTemplater:
+    return EmailTemplater()
+
+
 def mediator(
+    email_templater: Annotated[ABCEmailTemplater, Depends(email_templater)],
     password: Annotated[ABCPasswordHandler, Depends(get_password)],
     uow: Annotated[ABCAsyncUnitOfWork, Depends(get_uow)],
     api: Annotated[ABCApi, Depends(get_api)],
@@ -142,7 +144,7 @@ def mediator(
         (CancelDeliveryJobCommand, CancelDeliveryJobCommandHandler(uow)),
         # Business handlers
         (CreateBusinessCommand, CreateBusinessCommandHandler(uow)),
-        (CreateOrderCommand, CreateOrderCommandHandler(uow, api)),
+        (CreateOrderCommand, CreateOrderCommandHandler(uow, api, email_templater)),
         (GetBusinessQuery, GetBusinessQueryHandler(uow)),
         (GetBusinessByUserIdQuery, GetBusinessByUserIdQueryHandler(uow)),
         (GetBusinessOrdersQuery, GetBusinessOrdersQueryHandler(uow)),

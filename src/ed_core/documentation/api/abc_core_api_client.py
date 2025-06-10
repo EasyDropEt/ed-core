@@ -188,7 +188,7 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     ) -> ApiResponse[ConsumerDto]: ...
 
     @abstractmethod
-    async def get_consumer_delivery_jobs(
+    async def get_consumer_orders(
         self, consumer_id: str
     ) -> ApiResponse[list[OrderDto]]: ...
 

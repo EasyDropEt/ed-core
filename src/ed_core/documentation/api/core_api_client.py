@@ -317,11 +317,10 @@ class CoreApiClient(ABCCoreApiClient):
 
         return await api_client({"request": create_consumer_dto})
 
-    async def get_consumer_delivery_jobs(
+    async def get_consumer_orders(
         self, consumer_id: str
     ) -> ApiResponse[list[OrderDto]]:
-        endpoint = self._endpoints.get_description(
-            "get_consumer_delivery_jobs")
+        endpoint = self._endpoints.get_description("get_consumer_orders")
         api_client = EndpointClient[list[OrderDto]](endpoint)
         return await api_client({"path_params": {"consumer_id": consumer_id}})
 
