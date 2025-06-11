@@ -198,7 +198,8 @@ class CoreApiClient(ABCCoreApiClient):
     async def create_business(
         self, create_business_dto: CreateBusinessDto
     ) -> ApiResponse[BusinessDto]:
-        endpoint = self._endpoints.get_description("create_business")
+        endpoint = self._endpoints.get_description("create_a_business")
+        print("CREATE BUSINESS ENDPOINT:", endpoint)
         api_client = EndpointClient[BusinessDto](endpoint)
         return await api_client({"request": create_business_dto})
 
