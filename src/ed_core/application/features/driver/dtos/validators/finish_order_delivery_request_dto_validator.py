@@ -16,4 +16,4 @@ class FinishOrderDeliveryRequestDtoValidator(
         value: FinishOrderDeliveryRequestDto,
         location: str = ABCValidator.DEFAULT_ERROR_LOCATION,
     ) -> ValidationResponse:
-        return self._otp_validator.validate(value.otp, "body.otp")
+        return self._otp_validator.validate(value.otp, f"{location}.otp")

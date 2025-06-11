@@ -19,14 +19,7 @@ from ed_core.common.generic_helpers import get_new_id
 LOG = get_logger()
 
 
-class DriverService(
-    ABCService[
-        Driver,
-        CreateDriverDto,
-        UpdateDriverDto,
-        DriverDto,
-    ]
-):
+class DriverService(ABCService[Driver, CreateDriverDto, UpdateDriverDto, DriverDto]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Driver", uow.driver_repository)
 
@@ -37,17 +30,17 @@ class DriverService(
         LOG.info("DriverService initialized with UnitOfWork.")
 
     async def create(self, dto: CreateDriverDto) -> Driver:
-        location = await self._location_service.create(dto.location)
-        car = await self._car_service.create(dto.car)
+        location = await self._location_service.create(dto["location"])
+        car = await self._car_service.create(dto["car"])
 
         driver = Driver(
             id=get_new_id(),
-            user_id=dto.user_id,
-            first_name=dto.first_name,
-            last_name=dto.last_name,
-            profile_image=dto.profile_image,
-            phone_number=dto.phone_number,
-            email=dto.email,
+            user_id=dto["user_id"],
+            first_name=dto["first_name"],
+            last_name=dto["last_name"],
+            profile_image=dto["profile_image"],
+            phone_number=dto["phone_number"],
+            email=dto["email"],
             location_id=location.id,
             car=car,
             available=False,
@@ -66,15 +59,15 @@ class DriverService(
             LOG.error(f"Cannot update: No driver found for ID: {id}")
             return None
 
-        if dto.profile_image is not None:
-            driver.profile_image = dto.profile_image
-        if dto.phone_number is not None:
-            driver.phone_number = dto.phone_number
-        if dto.email is not None:
-            driver.email = dto.email
+        if "profile_image" in dto:
+            driver.profile_image = dto["profile_image"]
+        if "phone_number" in dto:
+            driver.phone_number = dto["phone_number"]
+        if "email" in dto:
+            driver.email = dto["email"]
 
-        if dto.location is not None:
-            await self._location_service.update(driver.location_id, dto.location)
+        if "location" in dto:
+            await self._location_service.update(driver.location_id, dto["location"])
 
         driver.update_datetime = datetime.now(UTC)
         await self._uow.driver_repository.save(driver)

@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from typing import TypedDict
 
 
-class CreateApiKeyDto(BaseModel):
+class CreateApiKeyDto(TypedDict):
     name: str
     description: str

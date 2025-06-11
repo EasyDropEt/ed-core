@@ -1,40 +1,23 @@
-from ed_core.application.features.common.dtos.validators.abc_dto_validator import (
-    ABCDtoValidator, ValidationResponse)
-from ed_core.application.features.consumer.dtos.update_consumer_dto import (
-    UpdateConsumerDto, UpdateLocationDto)
+from ed_domain.validation import ABCValidator, ValidationResponse
+
+from ed_core.application.features.common.dtos.validators.update_location_dto_validator import \
+    UpdateLocationDtoValidator
+from ed_core.application.features.consumer.dtos.update_consumer_dto import \
+    UpdateConsumerDto
 
 
-class UpdateLocationDtoValidator(ABCDtoValidator[UpdateLocationDto]):
-    def validate(self, dto: UpdateLocationDto) -> ValidationResponse:
-        errors = []
+class UpdateConsumerDtoValidator(ABCValidator[UpdateConsumerDto]):
+    def __init__(self) -> None:
+        self._update_location_dto_validator = UpdateLocationDtoValidator()
 
-        if not dto["latitude"]:
-            errors.append("Latitude is required")
-
-        if not dto["longitude"]:
-            errors.append("Longitude is required")
-
-        if not dto["address"]:
-            errors.append("Address is required")
-
-        if not dto["postal_code"]:
-            errors.append("Postal code is required")
-
-        if len(errors):
-            return ValidationResponse.invalid(errors)
-
-        return ValidationResponse.valid()
-
-
-class UpdateConsumerDtoValidator(ABCDtoValidator[UpdateConsumerDto]):
-    def validate(self, dto: UpdateConsumerDto) -> ValidationResponse:
-        errors = []
-        if "location" in dto:
-            errors.extend(
-                UpdateLocationDtoValidator().validate(dto["location"]).errors,
+    def validate(
+        self,
+        value: UpdateConsumerDto,
+        location: str = ABCValidator.DEFAULT_ERROR_LOCATION,
+    ) -> ValidationResponse:
+        if "location" in value:
+            return self._update_location_dto_validator.validate(
+                value["location"], f"{location}.location"
             )
 
-        if len(errors):
-            return ValidationResponse.invalid(errors)
-
-        return ValidationResponse.valid()
+        return ValidationResponse([])

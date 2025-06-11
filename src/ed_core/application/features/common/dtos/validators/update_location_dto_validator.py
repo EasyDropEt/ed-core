@@ -1,25 +1,37 @@
+from ed_domain.validation import ABCValidator, ValidationResponse
+from ed_infrastructure.validation.default import (LatitudeValidator,
+                                                  LongitudeValidator)
+
 from ed_core.application.features.common.dtos import UpdateLocationDto
-from ed_core.application.features.common.dtos.validators.abc_dto_validator import (
-    ABCDtoValidator, ValidationResponse)
 
 
-class UpdateLocationDtoValidator(ABCDtoValidator[UpdateLocationDto]):
-    def validate(self, dto: UpdateLocationDto) -> ValidationResponse:
+class UpdateLocationDtoValidator(ABCValidator[UpdateLocationDto]):
+    def __init__(self) -> None:
+        self._latitude_validator = LatitudeValidator()
+        self._longitude_validator = LongitudeValidator()
+
+    def validate(
+        self,
+        value: UpdateLocationDto,
+        location: str = ABCValidator.DEFAULT_ERROR_LOCATION,
+    ) -> ValidationResponse:
         errors = []
 
-        if not dto.latitude:
-            errors.append("Latitude is required")
+        errors.extend(
+            self._longitude_validator.validate(
+                value["longitude"], f"{location}.longitude"
+            ).errors
+        )
+        errors.extend(
+            self._latitude_validator.validate(
+                value["latitude"], f"{location}.latitude"
+            ).errors
+        )
 
-        if not dto.longitude:
-            errors.append("Longitude is required")
-
-        if not dto.address:
+        if not value["address"]:
             errors.append("Address is required")
 
-        if not dto.postal_code:
+        if not value["postal_code"]:
             errors.append("Postal code is required")
 
-        if len(errors):
-            return ValidationResponse.invalid(errors)
-
-        return ValidationResponse.valid()
+        return ValidationResponse(errors)

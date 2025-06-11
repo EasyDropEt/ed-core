@@ -1,10 +1,7 @@
-from pydantic import BaseModel
-
-CITY = "Addis Ababa"
-COUNTRY = "Ethiopia"
+from typing import TypedDict
 
 
-class UpdateLocationDto(BaseModel):
+class UpdateLocationDto(TypedDict):
     address: str
     latitude: float
     longitude: float

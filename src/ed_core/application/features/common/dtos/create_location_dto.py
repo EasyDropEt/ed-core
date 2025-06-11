@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from typing import TypedDict
 
 
-class CreateLocationDto(BaseModel):
+class CreateLocationDto(TypedDict):
     address: str
     latitude: float
     longitude: float

@@ -17,12 +17,7 @@ LOG = get_logger()
 
 
 class DeliveryJobService(
-    ABCService[
-        DeliveryJob,
-        CreateDeliveryJobDto,
-        None,
-        DeliveryJobDto,
-    ]
+    ABCService[DeliveryJob, CreateDeliveryJobDto, None, DeliveryJobDto]
 ):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("DeliveryJob", uow.delivery_job_repository)
@@ -36,11 +31,11 @@ class DeliveryJobService(
         delivery_job = DeliveryJob(
             id=get_new_id(),
             waypoints=[],
-            estimated_distance_in_kms=dto.estimated_distance_in_kms,
-            estimated_time_in_minutes=dto.estimated_time_in_minutes,
+            estimated_distance_in_kms=dto["estimated_distance_in_kms"],
+            estimated_time_in_minutes=dto["estimated_time_in_minutes"],
+            estimated_payment_in_birr=dto["estimated_payment"],
+            estimated_completion_time=dto["estimated_completion_time"],
             status=DeliveryJobStatus.AVAILABLE,
-            estimated_payment_in_birr=dto.estimated_payment,
-            estimated_completion_time=dto.estimated_completion_time,
             create_datetime=datetime.now(UTC),
             update_datetime=datetime.now(UTC),
             deleted=False,
