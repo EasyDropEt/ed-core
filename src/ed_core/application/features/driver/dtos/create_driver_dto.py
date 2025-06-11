@@ -1,13 +1,12 @@
+from typing import TypedDict
 from uuid import UUID
-
-from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos import CreateLocationDto
 from ed_core.application.features.driver.dtos.create_car_dto import \
     CreateCarDto
 
 
-class CreateDriverDto(BaseModel):
+class CreateDriverDto(TypedDict):
     user_id: UUID
     first_name: str
     last_name: str

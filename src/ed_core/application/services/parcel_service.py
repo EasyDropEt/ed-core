@@ -23,12 +23,12 @@ class ParcelService(ABCService[Parcel, CreateParcelDto, None, ParcelDto]):
     async def create(self, dto: CreateParcelDto) -> Parcel:
         parcel = Parcel(
             id=get_new_id(),
-            size=dto.size,
-            length=dto.length,
-            width=dto.width,
-            height=dto.height,
-            weight=dto.weight,
-            fragile=dto.fragile,
+            size=dto["size"],
+            length=dto["length"],
+            width=dto["width"],
+            height=dto["height"],
+            weight=dto["weight"],
+            fragile=dto["fragile"],
             create_datetime=datetime.now(UTC),
             update_datetime=datetime.now(UTC),
             deleted=False,

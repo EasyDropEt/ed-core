@@ -6,9 +6,8 @@ from ed_domain.core.aggregate_roots import Order
 from ed_domain.core.aggregate_roots.order import OrderStatus
 from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 
-from ed_core.application.features.business.dtos.create_order_dto import \
-    CreateOrderDto
-from ed_core.application.features.common.dtos.order_dto import OrderDto
+from ed_core.application.features.business.dtos import CreateOrderDto
+from ed_core.application.features.common.dtos import OrderDto
 from ed_core.application.services.abc_service import ABCService
 from ed_core.application.services.bill_service import (BillService,
                                                        CreateBillDto)
@@ -20,14 +19,7 @@ from ed_core.common.generic_helpers import get_new_id
 LOG = get_logger()
 
 
-class OrderService(
-    ABCService[
-        Order,
-        CreateOrderDto,
-        None,
-        OrderDto,
-    ]
-):
+class OrderService(ABCService[Order, CreateOrderDto, None, OrderDto]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Order", uow.order_repository)
 
@@ -48,15 +40,15 @@ class OrderService(
         bill = await self._bill_service.create(
             CreateBillDto(amount_in_birr=bill_amount)
         )
-        parcel = await self._parcel_service.create(dto.parcel)
+        parcel = await self._parcel_service.create(dto["parcel"])
 
         order = Order(
             id=get_new_id(),
             order_number=self._generate_order_number(),
             business_id=business_id,
-            consumer_id=dto.consumer_id,
+            consumer_id=dto["consumer_id"],
             bill=bill,
-            latest_time_of_delivery=dto.latest_time_of_delivery,
+            latest_time_of_delivery=dto["latest_time_of_delivery"],
             parcel=parcel,
             order_status=OrderStatus.PENDING,
             create_datetime=datetime.now(UTC),

@@ -19,12 +19,7 @@ LOG = get_logger()
 
 
 class BusinessService(
-    ABCService[
-        Business,
-        CreateBusinessDto,
-        UpdateBusinessDto,
-        BusinessDto,
-    ]
+    ABCService[Business, CreateBusinessDto, UpdateBusinessDto, BusinessDto]
 ):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Business", uow.business_repository)
@@ -35,16 +30,16 @@ class BusinessService(
         LOG.info("BusinessService initialized with UnitOfWork.")
 
     async def create(self, dto: CreateBusinessDto) -> Business:
-        location = await self._location_service.create(dto.location)
+        location = await self._location_service.create(dto["location"])
 
         business = Business(
             id=get_new_id(),
-            user_id=dto.user_id,
-            business_name=dto.business_name,
-            owner_first_name=dto.owner_first_name,
-            owner_last_name=dto.owner_last_name,
-            phone_number=dto.phone_number,
-            email=dto.email,
+            user_id=dto["user_id"],
+            business_name=dto["business_name"],
+            owner_first_name=dto["owner_first_name"],
+            owner_last_name=dto["owner_last_name"],
+            phone_number=dto["phone_number"],
+            email=dto["email"],
             create_datetime=datetime.now(UTC),
             update_datetime=datetime.now(UTC),
             deleted=False,
@@ -62,14 +57,13 @@ class BusinessService(
             LOG.error(f"Cannot update: No business found for ID: {id}")
             return None
 
-        if dto.phone_number is not None:
-            business.phone_number = dto.phone_number
-        if dto.email is not None:
-            business.email = dto.email
-
-        if dto.location is not None:
+        if "phone_number" in dto:
+            business.phone_number = dto["phone_number"]
+        if "email" in dto:
+            business.email = dto["email"]
+        if "location" in dto:
             updated_location = await self._location_service.update(
-                business.location_id, dto.location
+                business.location_id, dto["location"]
             )
             assert updated_location is not None
 

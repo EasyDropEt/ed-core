@@ -20,12 +20,7 @@ LOG = get_logger()
 
 
 class LocationService(
-    ABCService[
-        Location,
-        CreateLocationDto,
-        UpdateLocationDto,
-        LocationDto,
-    ]
+    ABCService[Location, CreateLocationDto, UpdateLocationDto, LocationDto]
 ):
     def __init__(self, uow: ABCAsyncUnitOfWork) -> None:
         super().__init__("Location", uow.location_repository)
@@ -37,10 +32,10 @@ class LocationService(
     async def create(self, dto: CreateLocationDto) -> Location:
         location = Location(
             id=get_new_id(),
-            address=dto.address,
-            latitude=dto.latitude,
-            longitude=dto.longitude,
-            postal_code=dto.postal_code,
+            address=dto["address"],
+            latitude=dto["latitude"],
+            longitude=dto["longitude"],
+            postal_code=dto["postal_code"],
             city=CITY,
             country=COUNTRY,
             last_used=datetime.now(UTC),
@@ -60,14 +55,14 @@ class LocationService(
             return None
 
         # Apply updates from the DTO
-        if dto.address is not None:
-            location.address = dto.address
-        if dto.latitude is not None:
-            location.latitude = dto.latitude
-        if dto.longitude is not None:
-            location.longitude = dto.longitude
-        if dto.postal_code is not None:
-            location.postal_code = dto.postal_code
+        if "address" in dto:
+            location.address = dto["address"]
+        if "latitude" in dto:
+            location.latitude = dto["latitude"]
+        if "longitude" in dto:
+            location.longitude = dto["longitude"]
+        if "postal_code" in dto:
+            location.postal_code = dto["postal_code"]
 
         location.update_datetime = datetime.now(UTC)
         await self._uow.location_repository.save(location)

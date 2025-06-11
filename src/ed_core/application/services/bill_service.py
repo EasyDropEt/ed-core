@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from typing import TypedDict
 
 from ed_domain.common.logging import get_logger
 from ed_domain.core.entities import Bill
@@ -13,7 +14,7 @@ from ed_core.common.generic_helpers import get_new_id
 LOG = get_logger()
 
 
-class CreateBillDto(BaseModel):
+class CreateBillDto(TypedDict):
     amount_in_birr: float
 
 
@@ -31,7 +32,7 @@ class BillService(ABCService[Bill, CreateBillDto, None, BillDto]):
     async def create(self, dto: CreateBillDto) -> Bill:
         bill = Bill(
             id=get_new_id(),
-            amount_in_birr=dto.amount_in_birr,
+            amount_in_birr=dto["amount_in_birr"],
             bill_status=BillStatus.PENDING,
             due_date=datetime.now(UTC),
             create_datetime=datetime.now(UTC),

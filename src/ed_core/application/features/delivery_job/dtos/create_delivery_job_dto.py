@@ -1,12 +1,11 @@
 from datetime import datetime
-
-from pydantic import BaseModel
+from typing import TypedDict
 
 from ed_core.application.features.delivery_job.dtos.create_waypoint_dto import \
     CreateWaypointDto
 
 
-class CreateDeliveryJobDto(BaseModel):
+class CreateDeliveryJobDto(TypedDict):
     waypoints: list[CreateWaypointDto]
     estimated_distance_in_kms: float
     estimated_time_in_minutes: int

@@ -1,12 +1,11 @@
+from typing import TypedDict
 from uuid import UUID
-
-from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos.create_location_dto import \
     CreateLocationDto
 
 
-class CreateConsumerDto(BaseModel):
+class CreateConsumerDto(TypedDict):
     user_id: UUID
     first_name: str
     last_name: str

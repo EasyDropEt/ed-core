@@ -19,12 +19,7 @@ LOG = get_logger()
 
 
 class ConsumerService(
-    ABCService[
-        Consumer,
-        CreateConsumerDto,
-        UpdateConsumerDto,
-        ConsumerDto,
-    ]
+    ABCService[Consumer, CreateConsumerDto, UpdateConsumerDto, ConsumerDto]
 ):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Consumer", uow.consumer_repository)
@@ -35,15 +30,15 @@ class ConsumerService(
         LOG.info("ConsumerService initialized with UnitOfWork.")
 
     async def create(self, dto: CreateConsumerDto) -> Consumer:
-        location = await self._location_service.create(dto.location)
+        location = await self._location_service.create(dto["location"])
 
         consumer = Consumer(
             id=get_new_id(),
-            user_id=dto.user_id,
-            first_name=dto.first_name,
-            last_name=dto.last_name,
-            phone_number=dto.phone_number,
-            email=dto.email,
+            user_id=dto["user_id"],
+            first_name=dto["first_name"],
+            last_name=dto["last_name"],
+            phone_number=dto["phone_number"],
+            email=dto["email"],
             profile_image_url="",
             location_id=location.id,
             create_datetime=datetime.now(UTC),
@@ -61,9 +56,9 @@ class ConsumerService(
             LOG.error(f"Cannot update: No consumer found for ID: {id}")
             return None
 
-        if dto.location is not None:
+        if "location" in dto:
             updated_location = await self._location_service.update(
-                consumer.location_id, dto.location
+                consumer.location_id, dto["location"]
             )
             assert updated_location is not None
 

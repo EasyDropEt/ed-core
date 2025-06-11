@@ -27,8 +27,8 @@ class ApiKeyService(ABCService[ApiKey, CreateApiKeyDto, None, ApiKeyDto]):
         api_key = ApiKey(
             id=get_new_id(),
             business_id=business_id,
-            name=dto.name,
-            description=dto.description,
+            name=dto["name"],
+            description=dto["description"],
             prefix=prefix,
             key_hash=key_hash,
             status=ApiKeyStatus.ACTIVE,
