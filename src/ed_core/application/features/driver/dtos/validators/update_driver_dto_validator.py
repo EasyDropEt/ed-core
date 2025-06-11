@@ -1,20 +1,44 @@
-from ed_core.application.features.common.dtos.validators import \
-    CreateLocationDtoValidator
-from ed_core.application.features.common.dtos.validators.abc_dto_validator import (
-    ABCDtoValidator, ValidationResponse)
+from ed_domain.validation import ABCValidator, ValidationResponse
+from ed_infrastructure.validation.default import (EmailValidator,
+                                                  PhoneNumberValidator)
+
+from ed_core.application.features.common.dtos.validators.update_location_dto_validator import \
+    UpdateLocationDtoValidator
 from ed_core.application.features.driver.dtos.update_driver_dto import \
     UpdateDriverDto
 
 
-class UpdateDriverDtoValidator(ABCDtoValidator[UpdateDriverDto]):
-    def validate(self, dto: UpdateDriverDto) -> ValidationResponse:
+class UpdateDriverDtoValidator(ABCValidator[UpdateDriverDto]):
+    def __init__(self) -> None:
+        self._location_validator = UpdateLocationDtoValidator()
+        self._phone_number_validator = PhoneNumberValidator()
+        self._email_validator = EmailValidator()
+
+    def validate(
+        self,
+        value: UpdateDriverDto,
+        location: str = ABCValidator.DEFAULT_ERROR_LOCATION,
+    ) -> ValidationResponse:
         errors = []
-        if dto.location:
+        if "location" in value:
             errors.extend(
-                CreateLocationDtoValidator().validate(dto.location).errors,
+                self._location_validator.validate(
+                    value["location"], f"{location}.location"
+                ).errors
             )
 
-        if len(errors):
-            return ValidationResponse.invalid(errors)
+        if "email" in value:
+            errors.extend(
+                self._email_validator.validate(
+                    value["email"], f"{location}.email"
+                ).errors
+            )
 
-        return ValidationResponse.valid()
+        if "phone_number" in value:
+            errors.extend(
+                self._phone_number_validator.validate(
+                    value["phone_number"], f"{location}.phone_number"
+                ).errors
+            )
+
+        return ValidationResponse(errors)

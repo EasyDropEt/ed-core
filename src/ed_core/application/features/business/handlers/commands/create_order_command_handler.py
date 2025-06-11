@@ -50,7 +50,7 @@ class CreateOrderCommandHandler(RequestHandler):
         dto, business_id, consumer_id = (
             request.dto,
             request.business_id,
-            request.dto.consumer_id,
+            request.dto["consumer_id"],
         )
         dto_validator = CreateOrderDtoValidator().validate(request.dto)
 

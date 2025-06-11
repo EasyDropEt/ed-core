@@ -1,29 +1,44 @@
+from ed_domain.validation import ABCValidator, ValidationResponse
+from ed_infrastructure.validation.default import (NameValidator,
+                                                  PhoneNumberValidator)
+
 from ed_core.application.features.common.dtos.create_consumer_dto import \
     CreateConsumerDto
-from ed_core.application.features.common.dtos.validators.abc_dto_validator import (
-    ABCDtoValidator, ValidationResponse)
 from ed_core.application.features.common.dtos.validators.create_location_dto_validator import \
     CreateLocationDtoValidator
 
 
-class CreateConsumerDtoValidator(ABCDtoValidator[CreateConsumerDto]):
-    def validate(self, dto: CreateConsumerDto) -> ValidationResponse:
+class CreateConsumerDtoValidator(ABCValidator[CreateConsumerDto]):
+    def __init__(self) -> None:
+        self._location_validator = CreateLocationDtoValidator()
+        self._name_validator = NameValidator()
+        self._phone_number_validator = PhoneNumberValidator()
+
+    def validate(
+        self,
+        value: CreateConsumerDto,
+        location: str = ABCValidator.DEFAULT_ERROR_LOCATION,
+    ) -> ValidationResponse:
         errors = []
-
-        if not dto.first_name:
-            errors.append("First name of consumer is required.")
-
-        if not dto.last_name:
-            errors.append("Last name of consumer is required.")
-
-        if not dto.phone_number:
-            errors.append("Phone number of consumer is required")
-
         errors.extend(
-            CreateLocationDtoValidator().validate(dto.location).errors,
+            self._location_validator.validate(
+                value["location"], f"{location}.location"
+            ).errors
+        )
+        errors.extend(
+            self._phone_number_validator.validate(
+                value["phone_number"], f"{location}.phone_number"
+            ).errors
+        )
+        errors.extend(
+            self._name_validator.validate(
+                value["first_name"], f"{location}.first_name"
+            ).errors
+        )
+        errors.extend(
+            self._name_validator.validate(
+                value["last_name"], f"{location}.last_name"
+            ).errors
         )
 
-        if len(errors):
-            return ValidationResponse.invalid(errors)
-
-        return ValidationResponse.valid()
+        return ValidationResponse(errors)

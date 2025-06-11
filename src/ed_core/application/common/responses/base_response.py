@@ -5,7 +5,7 @@ T = TypeVar("T")
 
 class BaseResponse(Generic[T]):
     def __init__(
-        self, is_success: bool, message: str, data: Optional[T], errors: list[str]
+        self, is_success: bool, message: str, data: Optional[T], errors: list[Any]
     ):
         self.is_success = is_success
         self.message = message
@@ -25,5 +25,5 @@ class BaseResponse(Generic[T]):
         return cls(is_success=True, message=message, data=data, errors=[])
 
     @classmethod
-    def error(cls, message: str, errors: list[str] = []) -> "BaseResponse[T]":
+    def error(cls, message: str, errors: list[Any] = []) -> "BaseResponse[T]":
         return cls(is_success=False, message=message, data=None, errors=errors)
