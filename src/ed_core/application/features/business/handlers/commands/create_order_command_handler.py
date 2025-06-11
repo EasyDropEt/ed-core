@@ -97,7 +97,7 @@ class CreateOrderCommandHandler(RequestHandler):
             "%B %d, %Y")
 
         email = self._email_templater.order_placed(
-            str(order.id),
+            order.order_number,
             consumer.first_name,
             formatted_create_datetime,
             business.business_name,

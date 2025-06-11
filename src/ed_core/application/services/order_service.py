@@ -52,6 +52,7 @@ class OrderService(
 
         order = Order(
             id=get_new_id(),
+            order_number=self._generate_order_number(),
             business_id=business_id,
             consumer_id=dto.consumer_id,
             bill=bill,
@@ -83,3 +84,8 @@ class OrderService(
             order_status=entity.order_status,
             bill=await self._bill_service.to_dto(entity.bill),
         )
+
+    def _generate_order_number(self):
+        now = datetime.now(UTC)
+        date_time_segment = now.strftime("%m%H%M%S")
+        return f"easy-{now.year}-{date_time_segment}"
