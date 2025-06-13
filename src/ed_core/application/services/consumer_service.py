@@ -64,6 +64,9 @@ class ConsumerService(
 
             consumer.location_id = updated_location.id
 
+        if "profile_image_url" in dto:
+            consumer.profile_image_url = dto["profile_image_url"]
+
         consumer.update_datetime = datetime.now(UTC)
         await self._uow.consumer_repository.save(consumer)
 
