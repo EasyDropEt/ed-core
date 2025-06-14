@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ed-core"
-version = "0.2.47"
+version = "0.2.48"
 description = ""
 authors = ["ffekirnew <ffekirnew0808@gmail.com>"]
 license = "MIT"
@@ -22,7 +22,7 @@ cloudinary = "^1.42.2"
 python-multipart = "^0.0.20"
 ed-domain = "0.4.11"
 twine = "^6.1.0"
-ed-infrastructure = "0.3.32"
+ed-infrastructure = "0.3.33"
 ed-auth = "^0.2.4"
 ed-notification = "^0.1.16"
 faststream = {extras = ["rabbit"], version = "^0.5.42"}
