@@ -1,5 +1,6 @@
 from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.core.aggregate_roots.order import OrderStatus
+from ed_domain.core.entities.otp import OtpType
 from ed_domain.core.entities.waypoint import WaypointStatus, WaypointType
 from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
     ABCAsyncUnitOfWork
@@ -12,6 +13,7 @@ from ed_core.application.features.driver.requests.commands import \
     FinishOrderPickUpCommand
 from ed_core.application.services import (OrderService, OtpService,
                                           WaypointService)
+from src.ed_core.application.services.driver_service import DriverService
 
 
 @request_handler(FinishOrderPickUpCommand, BaseResponse[None])
@@ -23,6 +25,7 @@ class FinishOrderPickUpCommandHandler(RequestHandler):
         self._otp_service = OtpService(uow)
         self._order_service = OrderService(uow)
         self._waypoint_service = WaypointService(uow)
+        self._driver_service = DriverService(uow)
 
         self._success_message = "Order picked up successfully."
         self._error_message = "Order was not picked up successfully."
@@ -32,11 +35,29 @@ class FinishOrderPickUpCommandHandler(RequestHandler):
             order = await self._order_service.get(request.order_id)
             assert order is not None
 
+            driver = await self._driver_service.get(request.driver_id)
+            assert driver is not None
+
             if request.driver_id != order.driver_id:
                 raise ApplicationException(
                     Exceptions.BadRequestException,
                     self._error_message,
                     ["Bad request. Order driver is different."],
+                )
+
+            otp = await self._uow.otp_repository.get(user_id=driver.user_id)
+            if otp is None or otp.otp_type != OtpType.PICK_UP:
+                raise ApplicationException(
+                    Exceptions.BadRequestException,
+                    self._error_message,
+                    ["Bad request. Otp was not sent."],
+                )
+
+            if otp.value != request.dto["otp"]:
+                raise ApplicationException(
+                    Exceptions.UnauthorizedException,
+                    self._error_message,
+                    ["Otp value is not correct."],
                 )
 
             waypoint = await self._waypoint_service.get_order_waypoint(

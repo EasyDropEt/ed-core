@@ -3,6 +3,7 @@ from ed_domain.common.exceptions import (EXCEPTION_NAMES, ApplicationException,
 from ed_domain.common.logging import get_logger
 from ed_domain.core.aggregate_roots import Consumer, Driver, Location, Order
 from ed_domain.core.entities.notification import NotificationType
+from ed_domain.core.entities.otp import OtpType
 from ed_domain.core.entities.waypoint import WaypointStatus, WaypointType
 from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
     ABCAsyncUnitOfWork
@@ -56,6 +57,28 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
 
             consumer_location = await self._location_service.get(consumer.location_id)
             assert consumer_location is not None
+
+            if request.driver_id != order.driver_id:
+                raise ApplicationException(
+                    Exceptions.BadRequestException,
+                    self._error_message,
+                    ["Bad request. Order driver is different."],
+                )
+
+            otp = await self._uow.otp_repository.get(user_id=driver.user_id)
+            if otp is None or otp.otp_type != OtpType.DROP_OFF:
+                raise ApplicationException(
+                    Exceptions.BadRequestException,
+                    self._error_message,
+                    ["Bad request. Otp was not sent."],
+                )
+
+            if otp.value != request.dto["otp"]:
+                raise ApplicationException(
+                    Exceptions.UnauthorizedException,
+                    self._error_message,
+                    ["Otp value is not correct."],
+                )
 
             if request.driver_id != order.driver_id:
                 raise ApplicationException(

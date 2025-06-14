@@ -1,5 +1,5 @@
-from pydantic import BaseModel
+from typing import TypedDict
 
 
-class FinishOrderPickUpRequestDto(BaseModel):
+class FinishOrderPickUpRequestDto(TypedDict):
     otp: str
