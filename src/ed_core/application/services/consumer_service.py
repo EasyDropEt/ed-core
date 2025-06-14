@@ -86,4 +86,5 @@ class ConsumerService(
             phone_number=entity.phone_number,
             email=entity.email,
             location=location_dto,
+            profile_image_url=entity.profile_image_url,
         )

@@ -13,3 +13,4 @@ class ConsumerDto(BaseModel):
     phone_number: str
     email: Optional[str]
     location: LocationDto
+    profile_image_url: str
