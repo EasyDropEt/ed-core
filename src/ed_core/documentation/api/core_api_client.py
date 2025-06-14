@@ -235,7 +235,7 @@ class CoreApiClient(ABCCoreApiClient):
     async def create_business_order(
         self, business_id: str, create_order_dto: CreateOrderDto
     ) -> ApiResponse[OrderDto]:
-        endpoint = self._endpoints.get_description("create_business_orders")
+        endpoint = self._endpoints.get_description("create_business_order")
         api_client = EndpointClient[OrderDto](endpoint)
         return await api_client(
             {"path_params": {"business_id": business_id}, "request": create_order_dto}
