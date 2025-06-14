@@ -8,9 +8,30 @@ class EmailTemplater(ABCEmailTemplater):
     def __init__(self) -> None:
         self._file_names: dict[str, str] = {
             "order_placed": "order_placed.html",
+            "delivery_completed": "delivery_completed.html",
+            "delivery_consumer_otp": "delivery_consumer_otp.html",
         }
         self._template_env = Environment(
             loader=FileSystemLoader("./email_templates"))
+
+    def delivery_consumer_otp(
+        self,
+        otp: str,
+        order_number: str,
+        consumer_name: str,
+        delivery_address: str,
+        driver_full_name: str,
+        driver_phone_number: str,
+    ) -> str:
+        template = self._load_template("delivery_consumer_otp")
+        return template.render(
+            otp=otp,
+            order_number=order_number,
+            consumer_name=consumer_name,
+            delivery_address=delivery_address,
+            driver_full_name=driver_full_name,
+            driver_phone_number=driver_phone_number,
+        )
 
     def delivery_completed(
         self,
@@ -20,7 +41,7 @@ class EmailTemplater(ABCEmailTemplater):
         delivery_address: str,
         delivery_time: str,
     ) -> str:
-        template = self._load_template("order_placed")
+        template = self._load_template("delivery_completed")
         return template.render(
             order_number=order_number,
             consumer_name=consumer_name,
