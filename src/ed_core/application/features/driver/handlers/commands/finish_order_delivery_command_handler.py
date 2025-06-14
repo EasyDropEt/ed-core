@@ -153,7 +153,7 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
         email = self._email_templater.delivery_completed(
             order.order_number,
             consumer.first_name,
-            driver.first_name,
+            f"{driver.first_name} {driver.last_name}",
             consumer_location.address,
             formatted_delivery_time,
         )

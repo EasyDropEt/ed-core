@@ -21,7 +21,7 @@ LOG = get_logger()
 
 class OrderService(ABCService[Order, CreateOrderDto, None, OrderDto]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
-        super().__init__("Order", self._repository)
+        super().__init__("Order", uow.order_repository)
 
         self._bill_service = BillService(uow)
         self._business_service = BusinessService(uow)

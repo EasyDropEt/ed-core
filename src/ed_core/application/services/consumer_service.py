@@ -24,7 +24,7 @@ class ConsumerService(
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Consumer", uow.consumer_repository)
 
-        self._location_service = LocationService(self._uow)
+        self._location_service = LocationService(uow)
 
         LOG.info("ConsumerService initialized with UnitOfWork.")
 
