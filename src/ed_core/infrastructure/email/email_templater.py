@@ -12,6 +12,23 @@ class EmailTemplater(ABCEmailTemplater):
         self._template_env = Environment(
             loader=FileSystemLoader("./email_templates"))
 
+    def delivery_completed(
+        self,
+        order_number: str,
+        consumer_name: str,
+        driver_name: str,
+        delivery_address: str,
+        delivery_time: str,
+    ) -> str:
+        template = self._load_template("order_placed")
+        return template.render(
+            order_number=order_number,
+            consumer_name=consumer_name,
+            driver_name=driver_name,
+            delivery_address=delivery_address,
+            delivery_time=delivery_time,
+        )
+
     def order_placed(
         self,
         order_number: str,
