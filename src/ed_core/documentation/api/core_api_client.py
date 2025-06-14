@@ -252,7 +252,7 @@ class CoreApiClient(ABCCoreApiClient):
     async def get_business_report(
         self, business_id: str
     ) -> ApiResponse[BusinessReportDto]:
-        endpoint = self._endpoints.get_description("get_business_api_keys")
+        endpoint = self._endpoints.get_description("get_business_report")
         api_client = EndpointClient[BusinessReportDto](endpoint)
         return await api_client({"path_params": {"business_id": business_id}})
 
