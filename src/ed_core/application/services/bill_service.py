@@ -5,7 +5,6 @@ from ed_domain.common.logging import get_logger
 from ed_domain.core.entities import Bill
 from ed_domain.core.entities.bill import BillStatus
 from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
-from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos.bill_dto import BillDto
 from ed_core.application.services.abc_service import ABCService

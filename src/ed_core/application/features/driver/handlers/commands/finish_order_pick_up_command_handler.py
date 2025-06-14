@@ -11,8 +11,9 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.driver.requests.commands import \
     FinishOrderPickUpCommand
-from ed_core.application.services import (DriverService, OrderService,
-                                          OtpService, WaypointService)
+from ed_core.application.services import (OrderService, OtpService,
+                                          WaypointService)
+from ed_core.application.services.driver_service import DriverService
 
 
 @request_handler(FinishOrderPickUpCommand, BaseResponse[None])
@@ -64,9 +65,18 @@ class FinishOrderPickUpCommandHandler(RequestHandler):
             )
             assert waypoint is not None
 
-            order.update_status(OrderStatus.PICKED_UP)
-            waypoint.update_status(WaypointStatus.DONE)
+            try:
+                otp.delete()
+                order.update_status(OrderStatus.PICKED_UP)
+                waypoint.update_status(WaypointStatus.DONE)
+            except Exception as e:
+                raise ApplicationException(
+                    Exceptions.BadRequestException,
+                    self._error_message,
+                    [f"{e}"],
+                )
 
+            await self._otp_service.save(otp)
             await self._order_service.save(order)
             await self._waypoint_service.save(waypoint)
 

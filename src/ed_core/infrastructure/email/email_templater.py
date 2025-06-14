@@ -10,9 +10,31 @@ class EmailTemplater(ABCEmailTemplater):
             "order_placed": "order_placed.html",
             "delivery_completed": "delivery_completed.html",
             "delivery_consumer_otp": "delivery_consumer_otp.html",
+            "delivery_business_otp": "delivery_business_otp.html",
         }
         self._template_env = Environment(
             loader=FileSystemLoader("./email_templates"))
+
+    def delivery_business_otp(
+        self,
+        otp: str,
+        order_number: str,
+        business_name: str,
+        bill_amount: str,
+        business_address: str,
+        driver_full_name: str,
+        driver_phone_number: str,
+    ) -> str:
+        template = self._load_template("delivery_business_otp")
+        return template.render(
+            otp=otp,
+            order_number=order_number,
+            business_name=business_name,
+            bill_amount=bill_amount,
+            business_address=business_address,
+            driver_full_name=driver_full_name,
+            driver_phone_number=driver_phone_number,
+        )
 
     def delivery_consumer_otp(
         self,
