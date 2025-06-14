@@ -14,7 +14,8 @@ from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
                                                       OrderDto, TrackOrderDto,
                                                       UpdateLocationDto)
 from ed_core.application.features.common.dtos.api_key_dto import ApiKeyDto
-from ed_core.application.features.consumer.dtos import UpdateConsumerDto
+from ed_core.application.features.consumer.dtos import (RateDeliveryDto,
+                                                        UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (
     CreateDriverDto, DriverPaymentSummaryDto, FinishOrderDeliveryRequestDto,
@@ -352,6 +353,18 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("get_consumer_orders")
         api_client = EndpointClient[list[OrderDto]](endpoint)
         return await api_client({"path_params": {"consumer_id": consumer_id}})
+
+    async def rate_delivery(
+        self, consumer_id: str, order_id: str, rate_delivery_dto: RateDeliveryDto
+    ) -> ApiResponse[OrderDto]:
+        endpoint = self._endpoints.get_description("rate_delivery")
+        api_client = EndpointClient[OrderDto](endpoint)
+        return await api_client(
+            {
+                "path_params": {"consumer_id": consumer_id, "order_id": order_id},
+                "request": rate_delivery_dto,
+            }
+        )
 
     async def get_consumer_by_user_id(self, user_id: str) -> ApiResponse[ConsumerDto]:
         endpoint = self._endpoints.get_description("get_consumer_by_user_id")

@@ -78,6 +78,7 @@ class OrderService(ABCService[Order, CreateOrderDto, None, OrderDto]):
             parcel=await self._parcel_service.to_dto(entity.parcel),
             order_status=entity.order_status,
             bill=await self._bill_service.to_dto(entity.bill),
+            customer_rating=entity.customer_rating,
         )
 
     def _generate_order_number(self):

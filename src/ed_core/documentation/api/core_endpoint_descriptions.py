@@ -16,7 +16,8 @@ from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto,
                                                       UpdateLocationDto)
-from ed_core.application.features.consumer.dtos import UpdateConsumerDto
+from ed_core.application.features.consumer.dtos import (RateDeliveryDto,
+                                                        UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (
     CreateDriverDto, DriverPaymentSummaryDto, FinishOrderDeliveryRequestDto,
@@ -318,6 +319,14 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "path": f"{self._base_url}/consumers/{{consumer_id}}/orders",
                 "path_params": {"consumer_id": str},
                 "response_model": list[OrderDto],
+            },
+            {
+                "name": "rate_delivery",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/consumers/{{consumer_id}}/orders/{{order_id}}",
+                "path_params": {"consumer_id": str, "order_id": str},
+                "request_model": RateDeliveryDto,
+                "response_model": OrderDto,
             },
             {
                 "name": "get_consumer",

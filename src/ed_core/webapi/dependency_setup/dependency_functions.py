@@ -31,12 +31,13 @@ from ed_core.application.features.business.requests.queries import (
     GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery,
     VerifyApiKeyQuery)
 from ed_core.application.features.consumer.handlers.commands import (
-    CreateConsumerCommandHandler, UpdateConsumerCommandHandler)
+    CreateConsumerCommandHandler, RateDeliveryCommandHandler,
+    UpdateConsumerCommandHandler)
 from ed_core.application.features.consumer.handlers.queries import (
     GetConsumerByUserIdQueryHandler, GetConsumerOrdersQueryHandler,
     GetConsumerQueryHandler, GetConsumersQueryHandler)
 from ed_core.application.features.consumer.requests.commands import (
-    CreateConsumerCommand, UpdateConsumerCommand)
+    CreateConsumerCommand, RateDeliveryCommand, UpdateConsumerCommand)
 from ed_core.application.features.consumer.requests.queries import (
     GetConsumerByUserIdQuery, GetConsumerOrdersQuery, GetConsumerQuery,
     GetConsumersQuery)
@@ -132,7 +133,7 @@ def mediator(
         (StartOrderDeliveryCommand, StartOrderDeliveryCommandHandler(uow, api, otp)),
         (
             FinishOrderDeliveryCommand,
-            FinishOrderDeliveryCommandHandler(uow, api),
+            FinishOrderDeliveryCommandHandler(uow, api, email_templater),
         ),
         (StartOrderPickUpCommand, StartOrderPickUpCommandHandler(uow, api, otp)),
         (
@@ -170,6 +171,7 @@ def mediator(
         (GetConsumerQuery, GetConsumerQueryHandler(uow)),
         (GetConsumerByUserIdQuery, GetConsumerByUserIdQueryHandler(uow)),
         (GetConsumerOrdersQuery, GetConsumerOrdersQueryHandler(uow)),
+        (RateDeliveryCommand, RateDeliveryCommandHandler(uow)),
         # Notification handlers
         (GetNotificationsQuery, GetNotificationsQueryHandler(uow)),
     ]

@@ -1,7 +1,8 @@
 from datetime import datetime
+from typing import Optional
 from uuid import UUID
 
-from ed_domain.core.aggregate_roots.order import OrderStatus, Parcel
+from ed_domain.core.aggregate_roots.order import OrderStatus
 from pydantic import BaseModel
 
 from ed_core.application.features.common.dtos import BusinessDto, ConsumerDto
@@ -17,3 +18,4 @@ class OrderDto(BaseModel):
     parcel: ParcelDto
     order_status: OrderStatus
     bill: BillDto
+    customer_rating: Optional[int] = None

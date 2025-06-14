@@ -15,7 +15,8 @@ from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto,
                                                       UpdateLocationDto)
-from ed_core.application.features.consumer.dtos import UpdateConsumerDto
+from ed_core.application.features.consumer.dtos import (RateDeliveryDto,
+                                                        UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
 from ed_core.application.features.driver.dtos import (
     CreateDriverDto, DriverPaymentSummaryDto, FinishOrderDeliveryRequestDto,
@@ -196,6 +197,11 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     async def create_consumer(
         self, create_consumer_dto: CreateConsumerDto
     ) -> ApiResponse[ConsumerDto]: ...
+
+    @abstractmethod
+    async def rate_delivery(
+        self, consumer_id: str, order_id: str, rate_delivery_dto: RateDeliveryDto
+    ) -> ApiResponse[OrderDto]: ...
 
     @abstractmethod
     async def get_consumer_orders(

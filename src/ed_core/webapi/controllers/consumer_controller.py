@@ -8,9 +8,10 @@ from rmediator.mediator import Mediator
 from ed_core.application.features.common.dtos import (ConsumerDto,
                                                       CreateConsumerDto,
                                                       OrderDto)
-from ed_core.application.features.consumer.dtos import UpdateConsumerDto
+from ed_core.application.features.consumer.dtos import (RateDeliveryDto,
+                                                        UpdateConsumerDto)
 from ed_core.application.features.consumer.requests.commands import (
-    CreateConsumerCommand, UpdateConsumerCommand)
+    CreateConsumerCommand, RateDeliveryCommand, UpdateConsumerCommand)
 from ed_core.application.features.consumer.requests.queries import (
     GetConsumerByUserIdQuery, GetConsumerOrdersQuery, GetConsumerQuery,
     GetConsumersQuery)
@@ -44,7 +45,20 @@ async def consumer_orders(
     consumer_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetConsumerOrdersQuery(consumer_id=consumer_id))
+    return await mediator.send(GetConsumerOrdersQuery(consumer_id))
+
+
+@router.post(
+    "/{consumer_id}/orders/{order_id}", response_model=GenericResponse[OrderDto]
+)
+@rest_endpoint
+async def rate_delivery(
+    consumer_id: UUID,
+    order_id: UUID,
+    dto: RateDeliveryDto,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(RateDeliveryCommand(consumer_id, order_id, dto))
 
 
 @router.get("/{consumer_id}", response_model=GenericResponse[ConsumerDto])
@@ -53,7 +67,7 @@ async def get_consumer(
     consumer_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetConsumerQuery(consumer_id=consumer_id))
+    return await mediator.send(GetConsumerQuery(consumer_id))
 
 
 @router.put("/{consumer_id}", response_model=GenericResponse[ConsumerDto])
@@ -63,7 +77,7 @@ async def update_consumer(
     dto: UpdateConsumerDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(UpdateConsumerCommand(consumer_id=consumer_id, dto=dto))
+    return await mediator.send(UpdateConsumerCommand(consumer_id, dto))
 
 
 @router.get("/users/{user_id}", response_model=GenericResponse[ConsumerDto])
@@ -72,4 +86,4 @@ async def get_consumer_by_user_id(
     user_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetConsumerByUserIdQuery(user_id=user_id))
+    return await mediator.send(GetConsumerByUserIdQuery(user_id))
