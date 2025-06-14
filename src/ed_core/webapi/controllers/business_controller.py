@@ -128,8 +128,8 @@ async def verify_api_key(
 
 
 @router.delete(
-    "/{business_id}/api-keys/{api_key}",
-    response_model=GenericResponse[BusinessDto],
+    "/{business_id}/api-keys/{api_key_prefix}",
+    response_model=GenericResponse[None],
 )
 @rest_endpoint
 async def delete_api_key(

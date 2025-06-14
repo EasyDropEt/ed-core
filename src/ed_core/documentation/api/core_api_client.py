@@ -265,6 +265,34 @@ class CoreApiClient(ABCCoreApiClient):
                 "request": create_api_key_dto}
         )
 
+    async def verify_business_api_key(
+        self, business_id: str, api_key: str
+    ) -> ApiResponse[BusinessDto]:
+        endpoint = self._endpoints.get_description("verify_business_api_key")
+        api_client = EndpointClient[BusinessDto](endpoint)
+        return await api_client(
+            {
+                "path_params": {
+                    "business_id": business_id,
+                    "api_key": api_key,
+                },
+            }
+        )
+
+    async def delete_business_api_key(
+        self, business_id: str, api_key_prefix: str
+    ) -> ApiResponse[None]:
+        endpoint = self._endpoints.get_description("delete_business_api_key")
+        api_client = EndpointClient[None](endpoint)
+        return await api_client(
+            {
+                "path_params": {
+                    "business_id": business_id,
+                    "api_key_prefix": api_key_prefix,
+                },
+            }
+        )
+
     async def get_delivery_jobs(self) -> ApiResponse[list[DeliveryJobDto]]:
         endpoint = self._endpoints.get_description("get_delivery_jobs")
         api_client = EndpointClient[list[DeliveryJobDto]](endpoint)
