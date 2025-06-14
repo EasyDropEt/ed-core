@@ -18,7 +18,7 @@ from ed_core.application.features.driver.requests.commands import \
     FinishOrderDeliveryCommand
 from ed_core.application.services import (ConsumerService, DriverService,
                                           LocationService, OrderService,
-                                          WaypointService)
+                                          OtpService, WaypointService)
 
 LOG = get_logger()
 
@@ -40,6 +40,7 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
         self._location_service = LocationService(uow)
         self._driver_service = DriverService(uow)
         self._consumer_service = ConsumerService(uow)
+        self._otp_service = OtpService(uow)
 
         self._success_message = "Order delivered successfully."
         self._error_message = "Order was not delivered successfully."
@@ -66,6 +67,7 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
                 )
 
             otp = await self._uow.otp_repository.get(user_id=driver.user_id)
+            print("LOG: got otp", otp)
             if otp is None or otp.otp_type != OtpType.DROP_OFF:
                 raise ApplicationException(
                     Exceptions.BadRequestException,
@@ -92,16 +94,29 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
             )
             assert waypoint is not None
 
-            # Update db
-            order.complete_order()
-            waypoint.update_status(WaypointStatus.DONE)
+            print("Order:", order)
 
             # Update db
+            try:
+                otp.delete()
+                order.complete_order()
+                waypoint.update_status(WaypointStatus.DONE)
+            except Exception as e:
+                raise ApplicationException(
+                    Exceptions.BadRequestException, self._error_message, [
+                        f"{e}"]
+                )
+
+            # Update db
+            await self._otp_service.save(otp)
             await self._order_service.save(order)
             await self._waypoint_service.save(waypoint)
 
-        await self._send_rating_in_app_notificaiton_to_consumer(consumer, order)
-        await self._send_email_to_consumer(consumer, order, driver, consumer_location)
+            # Send notification
+            await self._send_rating_in_app_notificaiton_to_consumer(consumer, order)
+            await self._send_email_to_consumer(
+                consumer, order, driver, consumer_location
+            )
 
         return BaseResponse[None].success(self._success_message, None)
 

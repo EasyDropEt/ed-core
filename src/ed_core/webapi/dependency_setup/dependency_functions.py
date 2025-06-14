@@ -130,7 +130,10 @@ def mediator(
         (GetDriverQuery, GetDriverQueryHandler(uow)),
         (GetDriverByUserIdQuery, GetDriverByUserIdQueryHandler(uow)),
         (GetDriverPaymentSummaryQuery, GetDriverPaymentSummaryQueryHandler(uow)),
-        (StartOrderDeliveryCommand, StartOrderDeliveryCommandHandler(uow, api, otp)),
+        (
+            StartOrderDeliveryCommand,
+            StartOrderDeliveryCommandHandler(uow, api, otp, email_templater),
+        ),
         (
             FinishOrderDeliveryCommand,
             FinishOrderDeliveryCommandHandler(uow, api, email_templater),
