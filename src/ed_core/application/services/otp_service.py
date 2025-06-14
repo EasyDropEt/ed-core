@@ -21,7 +21,7 @@ class CreateOtpDto(TypedDict):
 
 class OtpService(ABCService[Otp, CreateOtpDto, None, None]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
-        self._uow = uow
+        super().__init__("Otp", uow.otp_repository)
         LOG.info("OtpService initialized with UnitOfWork.")
 
     async def create(self, dto: CreateOtpDto) -> Otp:
@@ -36,6 +36,6 @@ class OtpService(ABCService[Otp, CreateOtpDto, None, None]):
             deleted=False,
             deleted_datetime=None,
         )
-        otp = await self._uow.otp_repository.create(otp)
+        otp = await self._repository.create(otp)
         LOG.info(f"Otp created with ID: {otp.id}")
         return otp

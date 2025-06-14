@@ -138,7 +138,10 @@ def mediator(
             FinishOrderDeliveryCommand,
             FinishOrderDeliveryCommandHandler(uow, api, email_templater),
         ),
-        (StartOrderPickUpCommand, StartOrderPickUpCommandHandler(uow, api, otp)),
+        (
+            StartOrderPickUpCommand,
+            StartOrderPickUpCommandHandler(uow, api, otp, email_templater),
+        ),
         (
             FinishOrderPickUpCommand,
             FinishOrderPickUpCommandHandler(uow, api),
