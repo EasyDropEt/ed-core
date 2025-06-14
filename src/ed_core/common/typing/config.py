@@ -21,10 +21,15 @@ class DbConfig(TypedDict):
     host: str
 
 
+class ApiConfig(TypedDict):
+    auth: str
+    notification: str
+    optimization: str
+
+
 class Config(TypedDict):
     db: DbConfig
+    api: ApiConfig
     rabbitmq: RabbitMQConfig
-    auth_api: str
-    notification_api: str
     environment: Environment
     hash_scheme: str

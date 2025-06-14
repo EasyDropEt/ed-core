@@ -28,8 +28,11 @@ def get_config() -> Config:
                 )
             },
         },
-        "auth_api": _get_env_variable("AUTH_API"),
-        "notification_api": _get_env_variable("NOTIFICATION_API"),
+        "api": {
+            "auth": _get_env_variable("AUTH_API"),
+            "notification": _get_env_variable("NOTIFICATION_API"),
+            "optimization": _get_env_variable("OPTIMIZATION_API"),
+        },
         "environment": (
             Environment.PROD
             if _get_env_variable("ENVIRONMENT") == "production"
