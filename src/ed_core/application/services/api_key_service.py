@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from typing import Optional
 from uuid import UUID
 
 from ed_domain.common.logging import get_logger
@@ -17,9 +18,10 @@ class ApiKeyService(ABCService[ApiKey, CreateApiKeyDto, None, ApiKeyDto]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("ApiKey", uow.api_key_repository)
 
-        self._uow = uow
-
         LOG.info("ApiKeyService initialized with UnitOfWork.")
+
+    async def get_api_key_by_prefix(self, prefix: str) -> Optional[ApiKey]:
+        return await self._repository.get(prefix=prefix)
 
     async def create_api_key(
         self, dto: CreateApiKeyDto, business_id: UUID, prefix: str, key_hash: str

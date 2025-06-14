@@ -155,6 +155,10 @@ class GetBusinessReportQueryHandler(RequestHandler):
             100 if total_orders > 0 else 0
         )
 
+        average_delivery_distance_km = self._average(
+            [order.distance_in_km for order in filtered_orders]
+        )
+
         # Determine report start and end dates based on filtered orders
         report_start_date = (
             min([order.latest_time_of_delivery for order in filtered_orders])
@@ -198,6 +202,7 @@ class GetBusinessReportQueryHandler(RequestHandler):
             delivery_success_rate=delivery_success_rate,
             delivery_performance_data=self.generate_delivery_performance_data(
                 orders),
+            average_delivery_distance_km=average_delivery_distance_km,
         )
 
     def _count(self, orders: list[Order], fn: Callable[[Order], bool]) -> int:

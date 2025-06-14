@@ -36,7 +36,9 @@ class OrderService(ABCService[Order, CreateOrderDto, None, OrderDto]):
         dto: CreateOrderDto,
         business_id: UUID,
         bill_amount: float,
+        distance_in_km: float,
     ) -> Order:
+
         bill = await self._bill_service.create(
             CreateBillDto(amount_in_birr=bill_amount)
         )
@@ -50,6 +52,7 @@ class OrderService(ABCService[Order, CreateOrderDto, None, OrderDto]):
             bill=bill,
             latest_time_of_delivery=dto["latest_time_of_delivery"],
             parcel=parcel,
+            distance_in_km=distance_in_km,
             order_status=OrderStatus.PENDING,
             create_datetime=datetime.now(UTC),
             update_datetime=datetime.now(UTC),

@@ -16,17 +16,20 @@ from ed_core.application.contracts.infrastructure.email.abc_email_templater impo
     ABCEmailTemplater
 from ed_core.application.features.business.handlers.commands import (
     CreateApiKeyCommandHandler, CreateBusinessCommandHandler,
-    CreateOrderCommandHandler, UpdateBusinessCommandHandler)
+    CreateOrderCommandHandler, DeleteApiKeyCommandHandler,
+    UpdateBusinessCommandHandler)
 from ed_core.application.features.business.handlers.queries import (
     GetAllBusinessesQueryHandler, GetBusinessApiKeysQueryHandler,
     GetBusinessByUserIdQueryHandler, GetBusinessOrdersQueryHandler,
-    GetBusinessQueryHandler, GetBusinessReportQueryHandler)
+    GetBusinessQueryHandler, GetBusinessReportQueryHandler,
+    VerifyApiKeyQueryHandler)
 from ed_core.application.features.business.requests.commands import (
     CreateApiKeyCommand, CreateBusinessCommand, CreateOrderCommand,
-    UpdateBusinessCommand)
+    DeleteApiKeyCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
-    GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery)
+    GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery,
+    VerifyApiKeyQuery)
 from ed_core.application.features.consumer.handlers.commands import (
     CreateConsumerCommandHandler, UpdateConsumerCommandHandler)
 from ed_core.application.features.consumer.handlers.queries import (
@@ -154,6 +157,8 @@ def mediator(
         (GetBusinessApiKeysQuery, GetBusinessApiKeysQueryHandler(uow)),
         (CreateApiKeyCommand, CreateApiKeyCommandHandler(uow, password)),
         (GetBusinessReportQuery, GetBusinessReportQueryHandler(uow)),
+        (VerifyApiKeyQuery, VerifyApiKeyQueryHandler(uow, password)),
+        (DeleteApiKeyCommand, DeleteApiKeyCommandHandler(uow)),
         # Order handlers
         (GetOrdersQuery, GetOrdersQueryHandler(uow)),
         (GetOrderQuery, GetOrderQueryHandler(uow)),

@@ -43,7 +43,7 @@ class CreateApiKeyCommandHandler(RequestHandler):
                 request.dto, request.business_id, prefix, key_hash
             )
             api_key_dto = await self._api_key_service.to_dto(api_key)
-            api_key_dto.key = key_hash
+            api_key_dto.key = key
 
         return BaseResponse[ApiKeyDto].success(
             self._success_message,

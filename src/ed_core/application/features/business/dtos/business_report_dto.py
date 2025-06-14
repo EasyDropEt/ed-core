@@ -27,7 +27,7 @@ class BusinessReportDto(BaseModel):
 
     average_delivery_time_minutes: float
 
-    # average_delivery_distance_km: float
+    average_delivery_distance_km: float
     on_time_delivery_rate: float
     late_deliveries: int
 

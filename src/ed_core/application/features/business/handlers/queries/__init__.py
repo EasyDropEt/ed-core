@@ -10,6 +10,8 @@ from ed_core.application.features.business.handlers.queries.get_business_query_h
     GetBusinessQueryHandler
 from ed_core.application.features.business.handlers.queries.get_business_report_query_handler import \
     GetBusinessReportQueryHandler
+from ed_core.application.features.business.handlers.queries.verify_api_key_query_handler import \
+    VerifyApiKeyQueryHandler
 
 __all__ = [
     "GetBusinessQueryHandler",
@@ -18,4 +20,5 @@ __all__ = [
     "GetBusinessByUserIdQueryHandler",
     "GetBusinessApiKeysQueryHandler",
     "GetBusinessReportQueryHandler",
+    "VerifyApiKeyQueryHandler",
 ]

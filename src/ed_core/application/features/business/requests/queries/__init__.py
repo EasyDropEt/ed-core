@@ -10,6 +10,8 @@ from ed_core.application.features.business.requests.queries.get_business_query i
     GetBusinessQuery
 from ed_core.application.features.business.requests.queries.get_business_report_query import \
     GetBusinessReportQuery
+from ed_core.application.features.business.requests.queries.verify_api_key_query import \
+    VerifyApiKeyQuery
 
 __all__ = [
     "GetBusinessQuery",
@@ -18,4 +20,5 @@ __all__ = [
     "GetBusinessByUserIdQuery",
     "GetBusinessApiKeysQuery",
     "GetBusinessReportQuery",
+    "VerifyApiKeyQuery",
 ]

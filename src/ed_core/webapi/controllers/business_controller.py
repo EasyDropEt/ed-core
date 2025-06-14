@@ -14,9 +14,12 @@ from ed_core.application.features.business.dtos import (BusinessReportDto,
 from ed_core.application.features.business.requests.commands import (
     CreateApiKeyCommand, CreateBusinessCommand, CreateOrderCommand,
     UpdateBusinessCommand)
+from ed_core.application.features.business.requests.commands.delete_api_key_commaand import \
+    DeleteApiKeyCommand
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
-    GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery)
+    GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery,
+    VerifyApiKeyQuery)
 from ed_core.application.features.common.dtos import BusinessDto, OrderDto
 from ed_core.application.features.common.dtos.api_key_dto import ApiKeyDto
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
@@ -109,6 +112,32 @@ async def create_api_key(
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
     return await mediator.send(CreateApiKeyCommand(business_id=business_id, dto=dto))
+
+
+@router.get(
+    "/{business_id}/api-keys/verify/{api_key}",
+    response_model=GenericResponse[BusinessDto],
+)
+@rest_endpoint
+async def verify_api_key(
+    business_id: UUID,
+    api_key: str,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(VerifyApiKeyQuery(business_id, api_key))
+
+
+@router.delete(
+    "/{business_id}/api-keys/{api_key}",
+    response_model=GenericResponse[BusinessDto],
+)
+@rest_endpoint
+async def delete_api_key(
+    business_id: UUID,
+    api_key_prefix: str,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(DeleteApiKeyCommand(business_id, api_key_prefix))
 
 
 @router.get("/{business_id}/report", response_model=GenericResponse[BusinessReportDto])

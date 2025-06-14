@@ -71,8 +71,27 @@ class CreateOrderCommandHandler(RequestHandler):
             business = await self._business_service.get(business_id)
             assert business is not None
 
+            LOG.info("Sending api call to optimizaiton api")
+            route_information = (
+                await self._api.optimization_api.calcualte_order_details(
+                    {
+                        "business_location_id": business.location_id,
+                        "consumer_location_id": consumer.location_id,
+                    }
+                )
+            )
+            if not route_information["is_success"]:
+                raise ApplicationException(
+                    EXCEPTION_NAMES[route_information["http_status_code"]],
+                    self._error_message,
+                    route_information["errors"],
+                )
+
+            LOG.info(
+                f"Got response from optimization api: {route_information}")
+
             order = await self._order_service.create_order(
-                dto, business_id, BILL_AMOUNT
+                dto, business_id, BILL_AMOUNT, route_information["data"]["distance_kms"]
             )
             order_dto = await self._order_service.to_dto(order)
 
