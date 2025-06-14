@@ -22,7 +22,6 @@ class DeliveryJobService(
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("DeliveryJob", uow.delivery_job_repository)
 
-        self._uow = uow
         self._waypoint_service = WaypointService(uow)
 
         LOG.info("DeliveryJobService initialized with UnitOfWork.")

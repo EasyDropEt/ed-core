@@ -21,13 +21,12 @@ LOG = get_logger()
 
 class OrderService(ABCService[Order, CreateOrderDto, None, OrderDto]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
-        super().__init__("Order", uow.order_repository)
+        super().__init__("Order", self._repository)
 
-        self._uow = uow
-        self._bill_service = BillService(self._uow)
-        self._business_service = BusinessService(self._uow)
-        self._consumer_service = ConsumerService(self._uow)
-        self._parcel_service = ParcelService(self._uow)
+        self._bill_service = BillService(uow)
+        self._business_service = BusinessService(uow)
+        self._consumer_service = ConsumerService(uow)
+        self._parcel_service = ParcelService(uow)
 
         LOG.info("OrderService initialized with UnitOfWork.")
 
@@ -59,7 +58,7 @@ class OrderService(ABCService[Order, CreateOrderDto, None, OrderDto]):
             deleted=False,
             deleted_datetime=None,
         )
-        order = await self._uow.order_repository.create(order)
+        order = await self._repository.create(order)
         LOG.info(f"Order created with ID: {order.id}")
         return order
 

@@ -17,8 +17,6 @@ class CarService(ABCService[Car, CreateCarDto, None, CarDto]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Car", uow.car_repository)
 
-        self._uow = uow
-
         LOG.info("CarService initialized with UnitOfWork.")
 
     async def create(self, dto: CreateCarDto) -> Car:
@@ -36,7 +34,7 @@ class CarService(ABCService[Car, CreateCarDto, None, CarDto]):
             deleted=False,
             deleted_datetime=None,
         )
-        car = await self._uow.car_repository.create(car)
+        car = await self._repository.create(car)
         LOG.info(f"Car created with ID: {car.id}")
         return car
 

@@ -24,8 +24,6 @@ class BillService(ABCService[Bill, CreateBillDto, None, BillDto]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Bill", uow.bill_repository)
 
-        self._uow = uow
-
         LOG.info("BillService initialized with UnitOfWork.")
 
     async def create(self, dto: CreateBillDto) -> Bill:
@@ -39,7 +37,7 @@ class BillService(ABCService[Bill, CreateBillDto, None, BillDto]):
             deleted=False,
             deleted_datetime=None,
         )
-        bill = await self._uow.bill_repository.create(bill)
+        bill = await self._repository.create(bill)
         LOG.info(f"Bill created with ID: {bill.id}")
         return bill
 

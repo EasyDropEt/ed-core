@@ -24,8 +24,7 @@ class BusinessService(
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Business", uow.business_repository)
 
-        self._uow = uow
-        self._location_service = LocationService(self._uow)
+        self._location_service = LocationService(uow)
 
         LOG.info("BusinessService initialized with UnitOfWork.")
 
@@ -47,12 +46,12 @@ class BusinessService(
             location_id=location.id,
             api_keys=[],
         )
-        business = await self._uow.business_repository.create(business)
+        business = await self._repository.create(business)
         LOG.info(f"Business created with ID: {business.id}")
         return business
 
     async def update(self, id: UUID, dto: UpdateBusinessDto) -> Optional[Business]:
-        business = await self._uow.business_repository.get(id=id)
+        business = await self._repository.get(id=id)
         if not business:
             LOG.error(f"Cannot update: No business found for ID: {id}")
             return None
@@ -70,7 +69,7 @@ class BusinessService(
             business.location_id = updated_location.id
 
         business.update_datetime = datetime.now(UTC)
-        updated = await self._uow.business_repository.save(business)
+        updated = await self._repository.save(business)
 
         LOG.info(f"Business with ID: {id} updated {updated}.")
         return business

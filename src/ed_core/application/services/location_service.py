@@ -25,8 +25,6 @@ class LocationService(
     def __init__(self, uow: ABCAsyncUnitOfWork) -> None:
         super().__init__("Location", uow.location_repository)
 
-        self._uow = uow
-
         LOG.info("LocationService initialized with UnitOfWork.")
 
     async def create(self, dto: CreateLocationDto) -> Location:
@@ -44,12 +42,12 @@ class LocationService(
             deleted=False,
             deleted_datetime=None,
         )
-        location = await self._uow.location_repository.create(location)
+        location = await self._repository.create(location)
         LOG.info(f"Location created with ID: {location.id}")
         return location
 
     async def update(self, id: UUID, dto: UpdateLocationDto) -> Optional[Location]:
-        location = await self._uow.location_repository.get(id=id)
+        location = await self._repository.get(id=id)
         if not location:
             LOG.error(f"Cannot update: No location found for ID: {id}")
             return None
@@ -65,7 +63,7 @@ class LocationService(
             location.postal_code = dto["postal_code"]
 
         location.update_datetime = datetime.now(UTC)
-        await self._uow.location_repository.save(location)
+        await self._repository.save(location)
         LOG.info(f"Location with ID: {id} updated.")
         return location
 

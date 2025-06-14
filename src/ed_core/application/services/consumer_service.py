@@ -24,7 +24,6 @@ class ConsumerService(
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Consumer", uow.consumer_repository)
 
-        self._uow = uow
         self._location_service = LocationService(self._uow)
 
         LOG.info("ConsumerService initialized with UnitOfWork.")
@@ -46,12 +45,12 @@ class ConsumerService(
             deleted=False,
             deleted_datetime=None,
         )
-        consumer = await self._uow.consumer_repository.create(consumer)
+        consumer = await self._repository.create(consumer)
         LOG.info(f"Consumer created with ID: {consumer.id}")
         return consumer
 
     async def update(self, id: UUID, dto: UpdateConsumerDto) -> Optional[Consumer]:
-        consumer = await self._uow.consumer_repository.get(id=id)
+        consumer = await self._repository.get(id=id)
         if not consumer:
             LOG.error(f"Cannot update: No consumer found for ID: {id}")
             return None
@@ -68,7 +67,7 @@ class ConsumerService(
             consumer.profile_image_url = dto["profile_image_url"]
 
         consumer.update_datetime = datetime.now(UTC)
-        await self._uow.consumer_repository.save(consumer)
+        await self._repository.save(consumer)
 
         LOG.info(f"Consumer with ID: {id} updated.")
         return consumer

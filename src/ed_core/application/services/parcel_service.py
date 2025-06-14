@@ -17,7 +17,6 @@ class ParcelService(ABCService[Parcel, CreateParcelDto, None, ParcelDto]):
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Parcel", uow.parcel_repository)
 
-        self._uow = uow
         LOG.info("ParcelService initialized with UnitOfWork.")
 
     async def create(self, dto: CreateParcelDto) -> Parcel:
@@ -34,7 +33,7 @@ class ParcelService(ABCService[Parcel, CreateParcelDto, None, ParcelDto]):
             deleted=False,
             deleted_datetime=None,
         )
-        parcel = await self._uow.parcel_repository.create(parcel)
+        parcel = await self._repository.create(parcel)
         LOG.info(f"Parcel created with ID: {parcel.id}")
         return parcel
 

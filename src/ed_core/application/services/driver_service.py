@@ -23,7 +23,6 @@ class DriverService(ABCService[Driver, CreateDriverDto, UpdateDriverDto, DriverD
     def __init__(self, uow: ABCAsyncUnitOfWork):
         super().__init__("Driver", uow.driver_repository)
 
-        self._uow = uow
         self._location_service = LocationService(uow)
         self._car_service = CarService(uow)
 
@@ -49,12 +48,12 @@ class DriverService(ABCService[Driver, CreateDriverDto, UpdateDriverDto, DriverD
             deleted=False,
             deleted_datetime=None,
         )
-        driver = await self._uow.driver_repository.create(driver)
+        driver = await self._repository.create(driver)
         LOG.info(f"Driver created with ID: {driver.id}")
         return driver
 
     async def update(self, id: UUID, dto: UpdateDriverDto) -> Optional[Driver]:
-        driver = await self._uow.driver_repository.get(id=id)
+        driver = await self._repository.get(id=id)
         if driver is None:
             LOG.error(f"Cannot update: No driver found for ID: {id}")
             return None
@@ -70,7 +69,7 @@ class DriverService(ABCService[Driver, CreateDriverDto, UpdateDriverDto, DriverD
             await self._location_service.update(driver.location_id, dto["location"])
 
         driver.update_datetime = datetime.now(UTC)
-        await self._uow.driver_repository.save(driver)
+        await self._repository.save(driver)
         LOG.info(f"Driver with ID: {id} updated.")
         return driver
 
