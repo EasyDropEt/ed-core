@@ -11,9 +11,8 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.driver.requests.commands import \
     FinishOrderPickUpCommand
-from ed_core.application.services import (OrderService, OtpService,
-                                          WaypointService)
-from src.ed_core.application.services.driver_service import DriverService
+from ed_core.application.services import (DriverService, OrderService,
+                                          OtpService, WaypointService)
 
 
 @request_handler(FinishOrderPickUpCommand, BaseResponse[None])
