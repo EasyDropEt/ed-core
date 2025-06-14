@@ -89,7 +89,7 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
             {
                 "user_id": consumer.user_id,
                 "notification_type": NotificationType.IN_APP,
-                "message": f"RATE_DRIVER: {order.order_number}",
+                "message": f"RATE_DELIVERY: {order.id}",
             }
         )
 
