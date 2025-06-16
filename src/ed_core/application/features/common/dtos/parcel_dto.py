@@ -1,8 +1,8 @@
 from ed_domain.core.entities.parcel import ParcelSize
-from pydantic import BaseModel
+from typing import TypedDict
 
 
-class ParcelDto(BaseModel):
+class ParcelDto(TypedDict):
     size: ParcelSize
     length: float
     width: float

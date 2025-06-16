@@ -1,5 +1,5 @@
-from pydantic import BaseModel
+from typing import TypedDict
 
 
-class WebhookDto(BaseModel):
+class WebhookDto(TypedDict):
     url: str

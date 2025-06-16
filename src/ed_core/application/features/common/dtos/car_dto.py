@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from typing import TypedDict
 
 
-class CarDto(BaseModel):
+class CarDto(TypedDict):
     make: str
     model: str
     year: int

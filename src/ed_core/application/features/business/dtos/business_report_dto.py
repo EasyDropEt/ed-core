@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Annotated, Optional
 
-from pydantic import BaseModel
+from typing import TypedDict
 
 from ed_core.application.features.common.dtos.order_dto import OrderDto
 
@@ -11,7 +11,7 @@ DeliveryPerformanceData = Annotated[
 ]
 
 
-class BusinessReportDto(BaseModel):
+class BusinessReportDto(TypedDict):
     total_orders: int
     completed_deliveries: int
     cancelled_deliveries: int

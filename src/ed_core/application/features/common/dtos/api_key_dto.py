@@ -1,8 +1,8 @@
 from ed_domain.core.entities.api_key import ApiKeyStatus
-from pydantic import BaseModel
+from typing import TypedDict
 
 
-class ApiKeyDto(BaseModel):
+class ApiKeyDto(TypedDict):
     name: str
     description: str
     prefix: str

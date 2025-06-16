@@ -2,13 +2,13 @@ from typing import Optional
 from uuid import UUID
 
 from ed_domain.core.aggregate_roots import Driver
-from pydantic import BaseModel
+from typing import TypedDict
 
 from ed_core.application.features.common.dtos.business_dto import LocationDto
 from ed_core.application.features.common.dtos.car_dto import CarDto
 
 
-class DriverDto(BaseModel):
+class DriverDto(TypedDict):
     id: UUID
     first_name: str
     last_name: str

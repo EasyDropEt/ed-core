@@ -45,6 +45,7 @@ class BusinessService(
             deleted_datetime=None,
             location_id=location.id,
             api_keys=[],
+            webhook=None,
         )
         business = await self._repository.create(business)
         LOG.info(f"Business created with ID: {business.id}")

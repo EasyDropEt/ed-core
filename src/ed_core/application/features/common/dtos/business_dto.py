@@ -1,11 +1,11 @@
 from uuid import UUID
 
-from pydantic import BaseModel
+from typing import TypedDict
 
 from ed_core.application.features.common.dtos.location_dto import LocationDto
 
 
-class BusinessDto(BaseModel):
+class BusinessDto(TypedDict):
     id: UUID
     business_name: str
     owner_first_name: str
