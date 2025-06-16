@@ -367,6 +367,14 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "path_params": {"user_id": str},
                 "response_model": list[NotificationDto],
             },
+            # API key features
+            {
+                "name": "get_api_key_by_prefix",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/api-keys/{{api_key_prefix}}",
+                "path_params": {"api_key_prefix": str},
+                "response_model": ApiKeyDto,
+            },
         ]
 
     @property

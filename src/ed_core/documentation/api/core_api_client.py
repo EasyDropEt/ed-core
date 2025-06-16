@@ -414,6 +414,13 @@ class CoreApiClient(ABCCoreApiClient):
         api_client = EndpointClient[list[NotificationDto]](endpoint)
         return await api_client({"path_params": {"user_id": user_id}})
 
+    async def get_api_key_by_prefix(
+        self, api_key_prefix: str
+    ) -> ApiResponse[ApiKeyDto]:
+        endpoint = self._endpoints.get_description("get_api_key_by_prefix")
+        api_client = EndpointClient[ApiKeyDto](endpoint)
+        return await api_client({"path_params": {"api_key_prefix": api_key_prefix}})
+
 
 if __name__ == "__main__":
     CoreApiClient("")

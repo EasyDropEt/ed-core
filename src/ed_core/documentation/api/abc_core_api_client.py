@@ -239,3 +239,9 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     async def get_user_notifications(
         self, user_id: str
     ) -> ApiResponse[list[NotificationDto]]: ...
+
+    # API key featuers
+    @abstractmethod
+    async def get_api_key_by_prefix(
+        self, api_key_prefix: str
+    ) -> ApiResponse[ApiKeyDto]: ...
