@@ -131,19 +131,6 @@ async def create_api_key(
     return await mediator.send(CreateApiKeyCommand(business_id, dto))
 
 
-@router.get(
-    "/{business_id}/api-keys/verify/{api_key}",
-    response_model=GenericResponse[BusinessDto],
-)
-@rest_endpoint
-async def verify_api_key(
-    business_id: UUID,
-    api_key: str,
-    mediator: Annotated[Mediator, Depends(mediator)],
-):
-    return await mediator.send(VerifyApiKeyQuery(business_id, api_key))
-
-
 @router.delete(
     "/{business_id}/api-keys/{api_key_prefix}",
     response_model=GenericResponse[None],

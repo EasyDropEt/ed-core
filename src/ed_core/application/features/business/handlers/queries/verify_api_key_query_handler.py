@@ -30,7 +30,7 @@ class VerifyApiKeyQueryHandler(RequestHandler):
         self._api_key_service = ApiKeyService(uow)
         self._business_service = BusinessService(uow)
 
-        self._error_message = "Invalid or inactive API key."
+        self._error_message = "API key was not verified successfully."
         self._success_message = "API key verified successfully."
 
     async def handle(self, request: VerifyApiKeyQuery) -> BaseResponse[BusinessDto]:
@@ -39,6 +39,7 @@ class VerifyApiKeyQueryHandler(RequestHandler):
 
         async with self._uow.transaction():
             api_key = await self._api_key_service.get_api_key_by_prefix(prefix)
+            print("API key", api_key)
 
             if not api_key:
                 LOG.error(f"API key record not found for prefix: {prefix}")
