@@ -1,14 +1,16 @@
 from ed_domain.documentation.api.definitions import ApiResponse
 from ed_infrastructure.documentation.api.endpoint_client import EndpointClient
 
+from ed_core.application.features.admin.dtos import (CreateAdminDto,
+                                                     UpdateAdminDto)
 from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateApiKeyDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
                                                         CreateWebhookDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
-                                                      ConsumerDto,
+from ed_core.application.features.common.dtos import (AdminDto, ApiKeyDto,
+                                                      BusinessDto, ConsumerDto,
                                                       CreateConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
@@ -411,6 +413,42 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("verify_api_key")
         api_client = EndpointClient[BusinessDto](endpoint)
         return await api_client({"path_params": {"api_key": api_key}})
+
+    async def get_admins(self) -> ApiResponse[list[AdminDto]]:
+        endpoint = self._endpoints.get_description("get_admins")
+        api_client = EndpointClient[list[AdminDto]](endpoint)
+
+        return await api_client({})
+
+    async def create_admin(
+        self, create_admin_dto: CreateAdminDto
+    ) -> ApiResponse[AdminDto]:
+        endpoint = self._endpoints.get_description("create_admin")
+        api_client = EndpointClient[AdminDto](endpoint)
+
+        return await api_client({"request": create_admin_dto})
+
+    async def get_admin_by_user_id(self, user_id: str) -> ApiResponse[AdminDto]:
+        endpoint = self._endpoints.get_description("get_admin_by_user_id")
+        api_client = EndpointClient[AdminDto](endpoint)
+        return await api_client({"path_params": {"user_id": user_id}})
+
+    async def get_admin(self, admin_id: str) -> ApiResponse[AdminDto]:
+        endpoint = self._endpoints.get_description("get_admin")
+        api_client = EndpointClient[AdminDto](endpoint)
+        return await api_client({"path_params": {"admin_id": admin_id}})
+
+    async def update_admin(
+        self, admin_id: str, update_admin_dto: UpdateAdminDto
+    ) -> ApiResponse[AdminDto]:
+        endpoint = self._endpoints.get_description("update_admin")
+        api_client = EndpointClient[AdminDto](endpoint)
+        return await api_client(
+            {
+                "path_params": {"admin_id": admin_id},
+                "request": update_admin_dto,
+            }
+        )
 
 
 if __name__ == "__main__":

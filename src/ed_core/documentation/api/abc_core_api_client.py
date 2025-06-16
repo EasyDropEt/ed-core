@@ -2,14 +2,16 @@ from abc import ABCMeta, abstractmethod
 
 from ed_domain.documentation.api.definitions import ApiResponse
 
+from ed_core.application.features.admin.dtos import (CreateAdminDto,
+                                                     UpdateAdminDto)
 from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateApiKeyDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
                                                         CreateWebhookDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
-                                                      ConsumerDto,
+from ed_core.application.features.common.dtos import (AdminDto, ApiKeyDto,
+                                                      BusinessDto, ConsumerDto,
                                                       CreateConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
@@ -244,3 +246,24 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     @abstractmethod
     async def verify_api_key(
         self, api_key: str) -> ApiResponse[BusinessDto]: ...
+
+    # Admin features
+    @abstractmethod
+    async def get_admins(self) -> ApiResponse[list[AdminDto]]: ...
+
+    @abstractmethod
+    async def create_admin(
+        self, create_admin_dto: CreateAdminDto
+    ) -> ApiResponse[AdminDto]: ...
+
+    @abstractmethod
+    async def get_admin(self, admin_id: str) -> ApiResponse[AdminDto]: ...
+
+    @abstractmethod
+    async def update_admin(
+        self, admin_id: str, update_admin_dto: UpdateAdminDto
+    ) -> ApiResponse[AdminDto]: ...
+
+    @abstractmethod
+    async def get_admin_by_user_id(
+        self, user_id: str) -> ApiResponse[AdminDto]: ...

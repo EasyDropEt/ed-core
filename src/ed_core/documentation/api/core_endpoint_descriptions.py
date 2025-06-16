@@ -3,14 +3,16 @@ from ed_domain.documentation.api.abc_endpoint_descriptions import \
 from ed_domain.documentation.api.definitions import (EndpointDescription,
                                                      HttpMethod)
 
+from ed_core.application.features.admin.dtos import (CreateAdminDto,
+                                                     UpdateAdminDto)
 from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateApiKeyDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
                                                         CreateWebhookDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
-                                                      ConsumerDto,
+from ed_core.application.features.common.dtos import (AdminDto, ApiKeyDto,
+                                                      BusinessDto, ConsumerDto,
                                                       CreateConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
@@ -374,6 +376,42 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "path": f"{self._base_url}/api-keys/{{api_key}}/verify",
                 "path_params": {"api_key": str},
                 "response_model": BusinessDto,
+            },
+            # Admin endpoints
+            {
+                "name": "get_admins",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/admins",
+                "response_model": list[AdminDto],
+            },
+            {
+                "name": "create_admin",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/admins",
+                "request_model": CreateAdminDto,
+                "response_model": AdminDto,
+            },
+            {
+                "name": "update_admin",
+                "method": HttpMethod.PUT,
+                "path": f"{self._base_url}/admins/{{admin_id}}",
+                "path_params": {"admin_id": str},
+                "request_model": UpdateAdminDto,
+                "response_model": AdminDto,
+            },
+            {
+                "name": "get_admin",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/admins/{{admin_id}}",
+                "path_params": {"admin_id": str},
+                "response_model": AdminDto,
+            },
+            {
+                "name": "get_admin_by_user_id",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/admins/users/{{user_id}}",
+                "path_params": {"user_id": str},
+                "response_model": AdminDto,
             },
         ]
 
