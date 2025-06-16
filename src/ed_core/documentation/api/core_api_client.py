@@ -5,15 +5,17 @@ from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateApiKeyDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
+                                                        CreateWebhookDto,
                                                         UpdateBusinessDto)
-from ed_core.application.features.common.dtos import (BusinessDto, ConsumerDto,
+from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
+                                                      ConsumerDto,
                                                       CreateConsumerDto,
                                                       DeliveryJobDto,
                                                       DriverDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto,
-                                                      UpdateLocationDto)
-from ed_core.application.features.common.dtos.api_key_dto import ApiKeyDto
+                                                      UpdateLocationDto,
+                                                      WebhookDto)
 from ed_core.application.features.consumer.dtos import (RateDeliveryDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
@@ -23,9 +25,6 @@ from ed_core.application.features.driver.dtos import (
 from ed_core.documentation.api.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.api.core_endpoint_descriptions import \
     CoreEndpointDescriptions
-from src.ed_core.application.features.business.dtos.create_webhook_dto import \
-    CreateWebhookDto
-from src.ed_core.application.features.common.dtos.webhook_dto import WebhookDto
 
 
 class CoreApiClient(ABCCoreApiClient):
