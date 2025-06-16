@@ -44,4 +44,4 @@ class ApiKeyService(ABCService[ApiKey, CreateApiKeyDto, None, ApiKeyDto]):
         return api_key
 
     async def to_dto(self, entity: ApiKey) -> ApiKeyDto:
-        return ApiKeyDto(**entity.__dict__)
+        return ApiKeyDto(**entity.__dict__, key=None)
