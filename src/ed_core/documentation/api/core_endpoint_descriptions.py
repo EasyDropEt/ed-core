@@ -7,6 +7,7 @@ from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateApiKeyDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
+                                                        CreateWebhookDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
                                                       ConsumerDto,
@@ -15,7 +16,8 @@ from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
                                                       DriverDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto,
-                                                      UpdateLocationDto)
+                                                      UpdateLocationDto,
+                                                      WebhookDto)
 from ed_core.application.features.consumer.dtos import (RateDeliveryDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
@@ -85,6 +87,21 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "path_params": {"business_id": str},
                 "request_model": CreateOrderDto,
                 "response_model": OrderDto,
+            },
+            {
+                "name": "get_business_webhook",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/businesses/{{business_id}}/webhook",
+                "path_params": {"business_id": str},
+                "response_model": WebhookDto,
+            },
+            {
+                "name": "create_business_webhook",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/businesses/{{business_id}}/webhook",
+                "path_params": {"business_id": str},
+                "request_model": CreateWebhookDto,
+                "response_model": WebhookDto,
             },
             {
                 "name": "get_business_api_keys",

@@ -6,6 +6,7 @@ from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateApiKeyDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
+                                                        CreateWebhookDto,
                                                         UpdateBusinessDto)
 from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
                                                       ConsumerDto,
@@ -14,7 +15,8 @@ from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
                                                       DriverDto,
                                                       NotificationDto,
                                                       OrderDto, TrackOrderDto,
-                                                      UpdateLocationDto)
+                                                      UpdateLocationDto,
+                                                      WebhookDto)
 from ed_core.application.features.consumer.dtos import (RateDeliveryDto,
                                                         UpdateConsumerDto)
 from ed_core.application.features.delivery_job.dtos import CreateDeliveryJobDto
@@ -135,6 +137,16 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     async def create_business_order(
         self, business_id: str, create_order_dto: CreateOrderDto
     ) -> ApiResponse[OrderDto]: ...
+
+    @abstractmethod
+    async def get_business_webhook(
+        self, business_id: str
+    ) -> ApiResponse[WebhookDto]: ...
+
+    @abstractmethod
+    async def create_business_webhook(
+        self, business_id: str, create_webhook_dto: CreateWebhookDto
+    ) -> ApiResponse[WebhookDto]: ...
 
     @abstractmethod
     async def get_business_api_keys(

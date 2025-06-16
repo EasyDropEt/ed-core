@@ -23,6 +23,9 @@ from ed_core.application.features.driver.dtos import (
 from ed_core.documentation.api.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.api.core_endpoint_descriptions import \
     CoreEndpointDescriptions
+from src.ed_core.application.features.business.dtos.create_webhook_dto import \
+    CreateWebhookDto
+from src.ed_core.application.features.common.dtos.webhook_dto import WebhookDto
 
 
 class CoreApiClient(ABCCoreApiClient):
@@ -242,18 +245,35 @@ class CoreApiClient(ABCCoreApiClient):
             {"path_params": {"business_id": business_id}, "request": create_order_dto}
         )
 
-    async def get_business_api_keys(
-        self, business_id: str
-    ) -> ApiResponse[list[ApiKeyDto]]:
-        endpoint = self._endpoints.get_description("get_business_api_keys")
-        api_client = EndpointClient[list[ApiKeyDto]](endpoint)
-        return await api_client({"path_params": {"business_id": business_id}})
-
     async def get_business_report(
         self, business_id: str
     ) -> ApiResponse[BusinessReportDto]:
         endpoint = self._endpoints.get_description("get_business_report")
         api_client = EndpointClient[BusinessReportDto](endpoint)
+        return await api_client({"path_params": {"business_id": business_id}})
+
+    async def get_business_webhook(self, business_id: str) -> ApiResponse[WebhookDto]:
+        endpoint = self._endpoints.get_description("get_business_webhook")
+        api_client = EndpointClient[WebhookDto](endpoint)
+        return await api_client({"path_params": {"business_id": business_id}})
+
+    async def create_business_webhook(
+        self, business_id: str, create_webhook_dto: CreateWebhookDto
+    ) -> ApiResponse[WebhookDto]:
+        endpoint = self._endpoints.get_description("create_business_webhook")
+        api_client = EndpointClient[WebhookDto](endpoint)
+        return await api_client(
+            {
+                "path_params": {"business_id": business_id},
+                "request": create_webhook_dto,
+            }
+        )
+
+    async def get_business_api_keys(
+        self, business_id: str
+    ) -> ApiResponse[list[ApiKeyDto]]:
+        endpoint = self._endpoints.get_description("get_business_api_keys")
+        api_client = EndpointClient[list[ApiKeyDto]](endpoint)
         return await api_client({"path_params": {"business_id": business_id}})
 
     async def create_business_api_key(
