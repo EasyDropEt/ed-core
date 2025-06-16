@@ -6,7 +6,7 @@ from starlette.responses import JSONResponse
 
 from ed_core.common.singleton_helpers import SingletonMeta
 from ed_core.webapi.common.helpers import GenericResponse
-from ed_core.webapi.controllers import (api_key_controller,
+from ed_core.webapi.controllers import (admin_controller, api_key_controller,
                                         business_controller,
                                         consumer_controller,
                                         delivery_job_controller,
@@ -22,6 +22,7 @@ class API(FastAPI, metaclass=SingletonMeta):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._routers = [
+            admin_controller.router,
             business_controller.router,
             consumer_controller.router,
             delivery_job_controller.router,

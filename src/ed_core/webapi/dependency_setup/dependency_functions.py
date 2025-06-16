@@ -14,6 +14,14 @@ from rmediator.mediator import Mediator
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.contracts.infrastructure.email.abc_email_templater import \
     ABCEmailTemplater
+from ed_core.application.features.admin.handlers.commands import (
+    CreateAdminCommandHandler, UpdateAdminCommandHandler)
+from ed_core.application.features.admin.handlers.queries import (
+    GetAdminByUserIdQueryHandler, GetAdminQueryHandler, GetAdminsQueryHandler)
+from ed_core.application.features.admin.requests.commands import (
+    CreateAdminCommand, UpdateAdminCommand)
+from ed_core.application.features.admin.requests.queries import (
+    GetAdminByUserIdQuery, GetAdminQuery, GetAdminsQuery)
 from ed_core.application.features.business.handlers.commands import (
     CreateApiKeyCommandHandler, CreateBusinessCommandHandler,
     CreateOrderCommandHandler, CreateWebhookCommandHandler,
@@ -186,6 +194,12 @@ def mediator(
         (GetNotificationsQuery, GetNotificationsQueryHandler(uow)),
         # API key handlers
         (GetBusinessApiKeyByPrefixQuery, GetBusinessApiKeyByPrefixQueryHandler(uow)),
+        # Admin handlers
+        (CreateAdminCommand, CreateAdminCommandHandler(uow)),
+        (UpdateAdminCommand, UpdateAdminCommandHandler(uow)),
+        (GetAdminByUserIdQuery, GetAdminByUserIdQueryHandler(uow)),
+        (GetAdminQuery, GetAdminQueryHandler(uow)),
+        (GetAdminsQuery, GetAdminsQueryHandler(uow)),
     ]
 
     for command, handler in handlers:

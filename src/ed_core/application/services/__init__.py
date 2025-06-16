@@ -1,3 +1,4 @@
+from ed_core.application.services.admin_service import AdminService
 from ed_core.application.services.api_key_service import ApiKeyService
 from ed_core.application.services.bill_service import BillService
 from ed_core.application.services.business_service import BusinessService
@@ -14,6 +15,7 @@ from ed_core.application.services.waypoint_service import WaypointService
 from ed_core.application.services.webhook_service import WebhookService
 
 __all__ = [
+    "AdminService",
     "ApiKeyService",
     "BusinessService",
     "DriverService",
