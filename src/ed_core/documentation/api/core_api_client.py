@@ -285,20 +285,6 @@ class CoreApiClient(ABCCoreApiClient):
                 "request": create_api_key_dto}
         )
 
-    async def verify_business_api_key(
-        self, business_id: str, api_key: str
-    ) -> ApiResponse[BusinessDto]:
-        endpoint = self._endpoints.get_description("verify_business_api_key")
-        api_client = EndpointClient[BusinessDto](endpoint)
-        return await api_client(
-            {
-                "path_params": {
-                    "business_id": business_id,
-                    "api_key": api_key,
-                },
-            }
-        )
-
     async def delete_business_api_key(
         self, business_id: str, api_key_prefix: str
     ) -> ApiResponse[None]:
@@ -420,6 +406,11 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("get_api_key_by_prefix")
         api_client = EndpointClient[ApiKeyDto](endpoint)
         return await api_client({"path_params": {"api_key_prefix": api_key_prefix}})
+
+    async def verify_api_key(self, api_key: str) -> ApiResponse[BusinessDto]:
+        endpoint = self._endpoints.get_description("verify_api_key")
+        api_client = EndpointClient[BusinessDto](endpoint)
+        return await api_client({"path_params": {"api_key": api_key}})
 
 
 if __name__ == "__main__":

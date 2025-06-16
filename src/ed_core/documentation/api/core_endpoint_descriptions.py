@@ -119,13 +119,6 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "response_model": ApiKeyDto,
             },
             {
-                "name": "verify_business_api_key",
-                "method": HttpMethod.GET,
-                "path": f"{self._base_url}/businesses/{{business_id}}/api-keys/verify/{{api_key}}",
-                "path_params": {"business_id": str, "api_key": str},
-                "response_model": BusinessDto,
-            },
-            {
                 "name": "delete_business_api_key",
                 "method": HttpMethod.DELETE,
                 "path": f"{self._base_url}/businesses/{{business_id}}/api-keys/{{api_key_prefix}}",
@@ -374,6 +367,13 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "path": f"{self._base_url}/api-keys/{{api_key_prefix}}",
                 "path_params": {"api_key_prefix": str},
                 "response_model": ApiKeyDto,
+            },
+            {
+                "name": "verify_api_key",
+                "method": HttpMethod.GET,
+                "path": f"{self._base_url}/api-keys/{{api_key}}/verify",
+                "path_params": {"api_key": str},
+                "response_model": BusinessDto,
             },
         ]
 

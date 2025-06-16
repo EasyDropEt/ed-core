@@ -159,11 +159,6 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     ) -> ApiResponse[ApiKeyDto]: ...
 
     @abstractmethod
-    async def verify_business_api_key(
-        self, business_id: str, api_key: str
-    ) -> ApiResponse[BusinessDto]: ...
-
-    @abstractmethod
     async def delete_business_api_key(
         self, business_id: str, api_key_prefix: str
     ) -> ApiResponse[None]: ...
@@ -245,3 +240,7 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     async def get_api_key_by_prefix(
         self, api_key_prefix: str
     ) -> ApiResponse[ApiKeyDto]: ...
+
+    @abstractmethod
+    async def verify_api_key(
+        self, api_key: str) -> ApiResponse[BusinessDto]: ...
