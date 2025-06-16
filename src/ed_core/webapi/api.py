@@ -6,7 +6,8 @@ from starlette.responses import JSONResponse
 
 from ed_core.common.singleton_helpers import SingletonMeta
 from ed_core.webapi.common.helpers import GenericResponse
-from ed_core.webapi.controllers import (business_controller,
+from ed_core.webapi.controllers import (api_key_controller,
+                                        business_controller,
                                         consumer_controller,
                                         delivery_job_controller,
                                         delivery_job_rabbitmq_controller,
@@ -27,6 +28,7 @@ class API(FastAPI, metaclass=SingletonMeta):
             driver_controller.router,
             notification_controller.router,
             order_controller.router,
+            api_key_controller.router,
         ]
 
     @property

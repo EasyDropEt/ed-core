@@ -1,5 +1,7 @@
 from ed_core.application.features.business.requests.queries.get_all_businesses_query import \
     GetAllBusinessQuery
+from ed_core.application.features.business.requests.queries.get_business_api_key_by_prefix_query import \
+    GetBusinessApiKeyByPrefixQuery
 from ed_core.application.features.business.requests.queries.get_business_api_keys_query import \
     GetBusinessApiKeysQuery
 from ed_core.application.features.business.requests.queries.get_business_by_user_id_query import \
@@ -21,6 +23,7 @@ __all__ = [
     "GetAllBusinessQuery",
     "GetBusinessByUserIdQuery",
     "GetBusinessApiKeysQuery",
+    "GetBusinessApiKeyByPrefixQuery",
     "GetBusinessReportQuery",
     "GetBusinessWebhookQuery",
     "VerifyApiKeyQuery",

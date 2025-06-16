@@ -1,5 +1,7 @@
 from ed_core.application.features.business.handlers.queries.get_all_businesses_query_handler import \
     GetAllBusinessesQueryHandler
+from ed_core.application.features.business.handlers.queries.get_business_api_key_by_prefix_query_handler import \
+    GetBusinessApiKeyByPrefixQueryHandler
 from ed_core.application.features.business.handlers.queries.get_business_api_keys_query_handler import \
     GetBusinessApiKeysQueryHandler
 from ed_core.application.features.business.handlers.queries.get_business_by_user_id_query_handler import \
@@ -23,5 +25,6 @@ __all__ = [
     "GetBusinessApiKeysQueryHandler",
     "GetBusinessReportQueryHandler",
     "GetBusinessWebhookQueryHandler",
+    "GetBusinessApiKeyByPrefixQueryHandler",
     "VerifyApiKeyQueryHandler",
 ]

@@ -19,17 +19,19 @@ from ed_core.application.features.business.handlers.commands import (
     CreateOrderCommandHandler, CreateWebhookCommandHandler,
     DeleteApiKeyCommandHandler, UpdateBusinessCommandHandler)
 from ed_core.application.features.business.handlers.queries import (
-    GetAllBusinessesQueryHandler, GetBusinessApiKeysQueryHandler,
-    GetBusinessByUserIdQueryHandler, GetBusinessOrdersQueryHandler,
-    GetBusinessQueryHandler, GetBusinessReportQueryHandler,
-    GetBusinessWebhookQueryHandler, VerifyApiKeyQueryHandler)
+    GetAllBusinessesQueryHandler, GetBusinessApiKeyByPrefixQueryHandler,
+    GetBusinessApiKeysQueryHandler, GetBusinessByUserIdQueryHandler,
+    GetBusinessOrdersQueryHandler, GetBusinessQueryHandler,
+    GetBusinessReportQueryHandler, GetBusinessWebhookQueryHandler,
+    VerifyApiKeyQueryHandler)
 from ed_core.application.features.business.requests.commands import (
     CreateApiKeyCommand, CreateBusinessCommand, CreateOrderCommand,
     CreateWebhookCommand, DeleteApiKeyCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
-    GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
-    GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery,
-    GetBusinessWebhookQuery, VerifyApiKeyQuery)
+    GetAllBusinessQuery, GetBusinessApiKeyByPrefixQuery,
+    GetBusinessApiKeysQuery, GetBusinessByUserIdQuery, GetBusinessOrdersQuery,
+    GetBusinessQuery, GetBusinessReportQuery, GetBusinessWebhookQuery,
+    VerifyApiKeyQuery)
 from ed_core.application.features.consumer.handlers.commands import (
     CreateConsumerCommandHandler, RateDeliveryCommandHandler,
     UpdateConsumerCommandHandler)
@@ -182,6 +184,8 @@ def mediator(
         (RateDeliveryCommand, RateDeliveryCommandHandler(uow)),
         # Notification handlers
         (GetNotificationsQuery, GetNotificationsQueryHandler(uow)),
+        # API key handlers
+        (GetBusinessApiKeyByPrefixQuery, GetBusinessApiKeyByPrefixQueryHandler(uow)),
     ]
 
     for command, handler in handlers:
