@@ -8,6 +8,9 @@ from ed_optimization.documentation.api.abc_optimization_api_client import \
     ABCOptimizationApiClient
 from ed_optimization.documentation.api.optimization_api_client import \
     OptimizationApiClient
+from ed_webhook.documentation.api.abc_webhook_api_client import \
+    ABCWebhookApiClient
+from ed_webhook.documentation.api.webhook_api_client import WebhookApiClient
 
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.common.typing.config import Config
@@ -20,6 +23,7 @@ class ApiHandler(ABCApi):
             config["api"]["notification"])
         self._optimization_api = OptimizationApiClient(
             config["api"]["optimization"])
+        self._webhook_api = WebhookApiClient(config["api"]["webhook"])
 
     @property
     def auth_api(self) -> ABCAuthApiClient:
@@ -32,3 +36,7 @@ class ApiHandler(ABCApi):
     @property
     def optimization_api(self) -> ABCOptimizationApiClient:
         return self._optimization_api
+
+    @property
+    def webhook_api(self) -> ABCWebhookApiClient:
+        return self._webhook_api

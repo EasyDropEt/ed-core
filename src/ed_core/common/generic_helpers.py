@@ -32,6 +32,7 @@ def get_config() -> Config:
             "auth": _get_env_variable("AUTH_API"),
             "notification": _get_env_variable("NOTIFICATION_API"),
             "optimization": _get_env_variable("OPTIMIZATION_API"),
+            "webhook": _get_env_variable("WEBHOOK_API"),
         },
         "environment": (
             Environment.PROD

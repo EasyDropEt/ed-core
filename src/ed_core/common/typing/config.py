@@ -25,6 +25,7 @@ class ApiConfig(TypedDict):
     auth: str
     notification: str
     optimization: str
+    webhook: str
 
 
 class Config(TypedDict):
