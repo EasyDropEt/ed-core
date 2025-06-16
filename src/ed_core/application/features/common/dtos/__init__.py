@@ -19,6 +19,7 @@ from ed_core.application.features.common.dtos.track_order_dto import \
     TrackOrderDto
 from ed_core.application.features.common.dtos.update_location_dto import \
     UpdateLocationDto
+from ed_core.application.features.common.dtos.webhook_dto import WebhookDto
 
 __all__ = [
     "ApiKeyDto",
@@ -37,4 +38,5 @@ __all__ = [
     "TrackOrderDto",
     "UpdateLocationDto",
     "ParcelDto",
+    "WebhookDto",
 ]

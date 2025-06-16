@@ -11,6 +11,7 @@ from ed_core.application.services.order_service import OrderService
 from ed_core.application.services.otp_service import OtpService
 from ed_core.application.services.parcel_service import ParcelService
 from ed_core.application.services.waypoint_service import WaypointService
+from ed_core.application.services.webhook_service import WebhookService
 
 __all__ = [
     "ApiKeyService",
@@ -25,4 +26,5 @@ __all__ = [
     "CarService",
     "ParcelService",
     "WaypointService",
+    "WebhookService",
 ]

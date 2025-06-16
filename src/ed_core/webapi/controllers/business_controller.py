@@ -11,17 +11,17 @@ from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateBusinessDto,
                                                         CreateOrderDto,
                                                         UpdateBusinessDto)
+from ed_core.application.features.business.dtos.create_webhook_dto import \
+    CreateWebhookDto
 from ed_core.application.features.business.requests.commands import (
     CreateApiKeyCommand, CreateBusinessCommand, CreateOrderCommand,
-    UpdateBusinessCommand)
-from ed_core.application.features.business.requests.commands.delete_api_key_commaand import \
-    DeleteApiKeyCommand
+    CreateWebhookCommand, DeleteApiKeyCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
     GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery,
-    VerifyApiKeyQuery)
-from ed_core.application.features.common.dtos import BusinessDto, OrderDto
-from ed_core.application.features.common.dtos.api_key_dto import ApiKeyDto
+    GetBusinessWebhookQuery, VerifyApiKeyQuery)
+from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
+                                                      OrderDto, WebhookDto)
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
 
@@ -53,7 +53,7 @@ async def update_business(
     dto: UpdateBusinessDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(UpdateBusinessCommand(id=business_id, dto=dto))
+    return await mediator.send(UpdateBusinessCommand(business_id, dto))
 
 
 @router.get("/{business_id}", response_model=GenericResponse[BusinessDto])
@@ -62,7 +62,7 @@ async def get_business(
     business_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetBusinessQuery(business_id=business_id))
+    return await mediator.send(GetBusinessQuery(business_id))
 
 
 @router.get("/users/{user_id}", response_model=GenericResponse[BusinessDto])
@@ -80,7 +80,7 @@ async def get_business_orders(
     business_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetBusinessOrdersQuery(business_id=business_id))
+    return await mediator.send(GetBusinessOrdersQuery(business_id))
 
 
 @router.post("/{business_id}/orders", response_model=GenericResponse[OrderDto])
@@ -90,9 +90,26 @@ async def create_order(
     request_dto: CreateOrderDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(
-        CreateOrderCommand(business_id=business_id, dto=request_dto)
-    )
+    return await mediator.send(CreateOrderCommand(business_id, dto=request_dto))
+
+
+@router.get("/{business_id}/webhook", response_model=GenericResponse[WebhookDto])
+@rest_endpoint
+async def get_business_webhook(
+    business_id: UUID,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(GetBusinessWebhookQuery(business_id))
+
+
+@router.post("/{business_id}/webhook", response_model=GenericResponse[WebhookDto])
+@rest_endpoint
+async def create_webhook(
+    business_id: UUID,
+    dto: CreateWebhookDto,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(CreateWebhookCommand(business_id, dto))
 
 
 @router.get("/{business_id}/api-keys", response_model=GenericResponse[list[ApiKeyDto]])
@@ -101,7 +118,7 @@ async def get_business_api_keys(
     business_id: UUID,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(GetBusinessApiKeysQuery(business_id=business_id))
+    return await mediator.send(GetBusinessApiKeysQuery(business_id))
 
 
 @router.post("/{business_id}/api-keys", response_model=GenericResponse[ApiKeyDto])
@@ -111,7 +128,7 @@ async def create_api_key(
     dto: CreateApiKeyDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
-    return await mediator.send(CreateApiKeyCommand(business_id=business_id, dto=dto))
+    return await mediator.send(CreateApiKeyCommand(business_id, dto))
 
 
 @router.get(

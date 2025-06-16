@@ -16,20 +16,20 @@ from ed_core.application.contracts.infrastructure.email.abc_email_templater impo
     ABCEmailTemplater
 from ed_core.application.features.business.handlers.commands import (
     CreateApiKeyCommandHandler, CreateBusinessCommandHandler,
-    CreateOrderCommandHandler, DeleteApiKeyCommandHandler,
-    UpdateBusinessCommandHandler)
+    CreateOrderCommandHandler, CreateWebhookCommandHandler,
+    DeleteApiKeyCommandHandler, UpdateBusinessCommandHandler)
 from ed_core.application.features.business.handlers.queries import (
     GetAllBusinessesQueryHandler, GetBusinessApiKeysQueryHandler,
     GetBusinessByUserIdQueryHandler, GetBusinessOrdersQueryHandler,
     GetBusinessQueryHandler, GetBusinessReportQueryHandler,
-    VerifyApiKeyQueryHandler)
+    GetBusinessWebhookQueryHandler, VerifyApiKeyQueryHandler)
 from ed_core.application.features.business.requests.commands import (
     CreateApiKeyCommand, CreateBusinessCommand, CreateOrderCommand,
-    DeleteApiKeyCommand, UpdateBusinessCommand)
+    CreateWebhookCommand, DeleteApiKeyCommand, UpdateBusinessCommand)
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
     GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery,
-    VerifyApiKeyQuery)
+    GetBusinessWebhookQuery, VerifyApiKeyQuery)
 from ed_core.application.features.consumer.handlers.commands import (
     CreateConsumerCommandHandler, RateDeliveryCommandHandler,
     UpdateConsumerCommandHandler)
@@ -166,6 +166,8 @@ def mediator(
         (GetBusinessReportQuery, GetBusinessReportQueryHandler(uow)),
         (VerifyApiKeyQuery, VerifyApiKeyQueryHandler(uow, password)),
         (DeleteApiKeyCommand, DeleteApiKeyCommandHandler(uow)),
+        (GetBusinessWebhookQuery, GetBusinessWebhookQueryHandler(uow)),
+        (CreateWebhookCommand, CreateWebhookCommandHandler(uow)),
         # Order handlers
         (GetOrdersQuery, GetOrdersQueryHandler(uow)),
         (GetOrderQuery, GetOrderQueryHandler(uow)),
