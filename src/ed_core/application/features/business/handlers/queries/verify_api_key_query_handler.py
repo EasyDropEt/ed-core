@@ -39,10 +39,9 @@ class VerifyApiKeyQueryHandler(RequestHandler):
 
         async with self._uow.transaction():
             api_key = await self._api_key_service.get_api_key_by_prefix(prefix)
-            print("API key", api_key)
+            print("API", api_key)
 
             if not api_key:
-                LOG.error(f"API key record not found for prefix: {prefix}")
                 raise ApplicationException(
                     Exceptions.BadRequestException,
                     self._error_message,
@@ -50,7 +49,6 @@ class VerifyApiKeyQueryHandler(RequestHandler):
                 )
 
             if api_key.status != ApiKeyStatus.ACTIVE:
-                LOG.error(f"API key with prefix {prefix} is inactive.")
                 raise ApplicationException(
                     Exceptions.BadRequestException,
                     self._error_message,
@@ -58,7 +56,6 @@ class VerifyApiKeyQueryHandler(RequestHandler):
                 )
 
             if not self._password.verify(full_api_key, api_key.key_hash):
-                LOG.error(f"API key verification failed for prefix: {prefix}.")
                 raise ApplicationException(
                     Exceptions.BadRequestException,
                     self._error_message,
@@ -67,7 +64,7 @@ class VerifyApiKeyQueryHandler(RequestHandler):
 
             business = await self._business_service.get(api_key.business_id)
             assert business is not None
+
             business_dto = await self._business_service.to_dto(business)
 
-        LOG.info(f"API key with prefix {prefix} successfully verified.")
         return BaseResponse[BusinessDto].success(self._success_message, business_dto)
