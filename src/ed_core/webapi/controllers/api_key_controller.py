@@ -25,7 +25,7 @@ async def get_api_key_by_prefix(
 
 
 @router.get(
-    "/api-keys/{api_key}/verify",
+    "/{api_key}/verify",
     response_model=GenericResponse[BusinessDto],
 )
 @rest_endpoint
