@@ -1,8 +1,8 @@
 from ed_domain.documentation.api.definitions import ApiResponse
 from ed_infrastructure.documentation.api.endpoint_client import EndpointClient
 
-from ed_core.application.features.admin.dtos import (CreateAdminDto,
-                                                     UpdateAdminDto)
+from ed_core.application.features.admin.dtos import (
+    CreateAdminDto, SettleDriverPaymentRequestDto, UpdateAdminDto)
 from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateApiKeyDto,
                                                         CreateBusinessDto,
@@ -27,8 +27,6 @@ from ed_core.application.features.driver.dtos import (
 from ed_core.documentation.api.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.api.core_endpoint_descriptions import \
     CoreEndpointDescriptions
-from src.ed_core.application.features.admin.dtos.settle_driver_payment_request_dto import \
-    SettleDriverPaymentRequestDto
 
 
 class CoreApiClient(ABCCoreApiClient):

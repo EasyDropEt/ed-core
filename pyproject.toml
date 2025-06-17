@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ed-core"
-version = "0.4.0"
+version = "0.4.2"
 description = ""
 authors = ["ffekirnew <ffekirnew0808@gmail.com>"]
 license = "MIT"
