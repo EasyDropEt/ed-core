@@ -1,8 +1,10 @@
 from datetime import UTC, datetime
+from uuid import UUID
 
 from ed_domain.common.logging import get_logger
 from ed_domain.core.aggregate_roots import DeliveryJob
 from ed_domain.core.aggregate_roots.delivery_job import DeliveryJobStatus
+from ed_domain.core.entities.waypoint import WaypointStatus
 from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 
 from ed_core.application.features.common.dtos.delivery_job_dto import \
@@ -60,3 +62,16 @@ class DeliveryJobService(
             estimated_payment_in_birr=entity.estimated_payment_in_birr,
             estimated_completion_time=entity.estimated_completion_time,
         )
+
+    async def check_if_done(self, id: UUID) -> None:
+        delivery_job = await self._repository.get(id=id)
+        assert delivery_job is not None
+
+        is_done = all(
+            waypoint.waypoint_status == WaypointStatus.DONE
+            for waypoint in delivery_job.waypoints
+        )
+
+        if is_done:
+            delivery_job.status = DeliveryJobStatus.COMPLETED
+            await self._repository.save(delivery_job)

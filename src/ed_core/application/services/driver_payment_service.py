@@ -27,12 +27,13 @@ class DriverPaymentService:
         for order in orders:
             bill = order.bill
 
-            total_revenue += bill.amount_in_birr
-            cut_amount = bill.amount_in_birr * 0.25
-            net_revenue += bill.amount_in_birr - cut_amount
+            if bill.bill_status in [BillStatus.WITH_DRIVER, BillStatus.DONE]:
+                total_revenue += bill.amount_in_birr
+                cut_amount = bill.amount_in_birr * 0.25
+                net_revenue += bill.amount_in_birr - cut_amount
 
-            if bill.bill_status == BillStatus.WITH_DRIVER:
-                outstanding_debt += cut_amount
+                if bill.bill_status == BillStatus.WITH_DRIVER:
+                    outstanding_debt += cut_amount
 
         await self._uow.driver_repository.save(driver)
 
