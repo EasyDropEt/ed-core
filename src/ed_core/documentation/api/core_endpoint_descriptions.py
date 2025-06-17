@@ -3,8 +3,8 @@ from ed_domain.documentation.api.abc_endpoint_descriptions import \
 from ed_domain.documentation.api.definitions import (EndpointDescription,
                                                      HttpMethod)
 
-from ed_core.application.features.admin.dtos import (CreateAdminDto,
-                                                     UpdateAdminDto)
+from ed_core.application.features.admin.dtos import (
+    CreateAdminDto, SettleDriverPaymentRequestDto, UpdateAdminDto)
 from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateApiKeyDto,
                                                         CreateBusinessDto,
@@ -412,6 +412,14 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "path": f"{self._base_url}/admins/users/{{user_id}}",
                 "path_params": {"user_id": str},
                 "response_model": AdminDto,
+            },
+            {
+                "name": "settle_driver_payment",
+                "method": HttpMethod.POST,
+                "path": f"{self._base_url}/admins/{{admin_id}}/settle-driver-payment/{{driver_id}}",
+                "path_params": {"admin_id": str, "driver_id": str},
+                "request_model": SettleDriverPaymentRequestDto,
+                "response_model": DriverPaymentSummaryDto,
             },
         ]
 

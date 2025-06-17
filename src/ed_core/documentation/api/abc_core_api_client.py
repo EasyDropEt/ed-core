@@ -2,8 +2,8 @@ from abc import ABCMeta, abstractmethod
 
 from ed_domain.documentation.api.definitions import ApiResponse
 
-from ed_core.application.features.admin.dtos import (CreateAdminDto,
-                                                     UpdateAdminDto)
+from ed_core.application.features.admin.dtos import (
+    CreateAdminDto, SettleDriverPaymentRequestDto, UpdateAdminDto)
 from ed_core.application.features.business.dtos import (BusinessReportDto,
                                                         CreateApiKeyDto,
                                                         CreateBusinessDto,
@@ -267,3 +267,11 @@ class ABCCoreApiClient(metaclass=ABCMeta):
     @abstractmethod
     async def get_admin_by_user_id(
         self, user_id: str) -> ApiResponse[AdminDto]: ...
+
+    @abstractmethod
+    async def settle_driver_payment(
+        self,
+        admin_id: str,
+        driver_id,
+        settle_driver_payment_request_dto: SettleDriverPaymentRequestDto,
+    ) -> ApiResponse[DriverPaymentSummaryDto]: ...

@@ -27,6 +27,8 @@ from ed_core.application.features.driver.dtos import (
 from ed_core.documentation.api.abc_core_api_client import ABCCoreApiClient
 from ed_core.documentation.api.core_endpoint_descriptions import \
     CoreEndpointDescriptions
+from src.ed_core.application.features.admin.dtos.settle_driver_payment_request_dto import \
+    SettleDriverPaymentRequestDto
 
 
 class CoreApiClient(ABCCoreApiClient):
@@ -447,6 +449,21 @@ class CoreApiClient(ABCCoreApiClient):
             {
                 "path_params": {"admin_id": admin_id},
                 "request": update_admin_dto,
+            }
+        )
+
+    async def settle_driver_payment(
+        self,
+        admin_id: str,
+        driver_id,
+        settle_driver_payment_request_dto: SettleDriverPaymentRequestDto,
+    ) -> ApiResponse[DriverPaymentSummaryDto]:
+        endpoint = self._endpoints.get_description("update_admin")
+        api_client = EndpointClient[DriverPaymentSummaryDto](endpoint)
+        return await api_client(
+            {
+                "path_params": {"admin_id": admin_id, "driver_id": driver_id},
+                "request": settle_driver_payment_request_dto,
             }
         )
 
