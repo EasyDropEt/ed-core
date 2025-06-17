@@ -20,12 +20,15 @@ class CreateBusinessCommandHandler(RequestHandler):
         self._uow = uow
         self._business_service = BusinessService(uow)
 
+        self._error_message = "Create business failed."
+        self._success_message = "Business created successfully."
+
     async def handle(self, request: CreateBusinessCommand) -> BaseResponse[BusinessDto]:
         dto_validator = CreateBusinessDtoValidator().validate(request.dto)
 
         if not dto_validator.is_valid:
             return BaseResponse[BusinessDto].error(
-                "Create business failed.", dto_validator.errors
+                self._error_message, dto_validator.errors
             )
 
         async with self._uow.transaction():
@@ -33,6 +36,4 @@ class CreateBusinessCommandHandler(RequestHandler):
             business_dto = await self._business_service.to_dto(business)
 
         print(business)
-        return BaseResponse[BusinessDto].success(
-            "Business created successfully.", business_dto
-        )
+        return BaseResponse[BusinessDto].success(self._success_message, business_dto)

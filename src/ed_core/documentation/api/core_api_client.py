@@ -206,7 +206,9 @@ class CoreApiClient(ABCCoreApiClient):
         endpoint = self._endpoints.get_description("create_a_business")
         print("CREATE BUSINESS ENDPOINT:", endpoint)
         api_client = EndpointClient[BusinessDto](endpoint)
-        return await api_client({"request": create_business_dto})
+        response = await api_client({"request": create_business_dto})
+        print("CREATE BUSINESS ENDPOINT RESPONSE:", response)
+        return response
 
     async def get_business_by_user_id(self, user_id: str) -> ApiResponse[BusinessDto]:
         endpoint = self._endpoints.get_description("get_business_by_user_id")
