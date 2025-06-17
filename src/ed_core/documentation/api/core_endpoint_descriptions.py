@@ -47,9 +47,9 @@ class CoreEndpointDescriptions(ABCEndpointDescriptions):
                 "response_model": BusinessDto,
             },
             {
-                "name": "another_create_business",
+                "name": "v2_create_business",
                 "method": HttpMethod.POST,
-                "path": f"{self._base_url}/businesses",
+                "path": f"{self._base_url}/businesses/v2",
                 "request_model": CreateBusinessDto,
                 "response_model": BusinessDto,
             },

@@ -1,3 +1,4 @@
+from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.common.logging import get_logger
 from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
@@ -28,8 +29,10 @@ class CreateDriverCommandHandler(RequestHandler):
         dto_validator = CreateDriverDtoValidator().validate(request.dto)
 
         if not dto_validator.is_valid:
-            return BaseResponse[DriverDto].error(
-                self._error_message, dto_validator.errors
+            raise ApplicationException(
+                Exceptions.ValidationException,
+                self._error_message,
+                dto_validator.errors,
             )
 
         async with self._uow.transaction():

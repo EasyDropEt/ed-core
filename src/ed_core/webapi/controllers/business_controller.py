@@ -19,7 +19,7 @@ from ed_core.application.features.business.requests.commands import (
 from ed_core.application.features.business.requests.queries import (
     GetAllBusinessQuery, GetBusinessApiKeysQuery, GetBusinessByUserIdQuery,
     GetBusinessOrdersQuery, GetBusinessQuery, GetBusinessReportQuery,
-    GetBusinessWebhookQuery, VerifyApiKeyQuery)
+    GetBusinessWebhookQuery)
 from ed_core.application.features.common.dtos import (ApiKeyDto, BusinessDto,
                                                       OrderDto, WebhookDto)
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
@@ -27,6 +27,15 @@ from ed_core.webapi.dependency_setup import mediator
 
 LOG = get_logger()
 router = APIRouter(prefix="/businesses", tags=["Business Feature"])
+
+
+@router.post("/v2/", response_model=GenericResponse[BusinessDto])
+@rest_endpoint
+async def create_business_v2(
+    request_dto: CreateBusinessDto,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(CreateBusinessCommand(dto=request_dto))
 
 
 @router.post("/", response_model=GenericResponse[BusinessDto])

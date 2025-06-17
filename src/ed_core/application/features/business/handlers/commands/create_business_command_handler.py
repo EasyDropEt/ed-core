@@ -1,3 +1,4 @@
+from ed_domain.common.exceptions import ApplicationException, Exceptions
 from ed_domain.common.logging import get_logger
 from ed_domain.persistence.async_repositories import ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
@@ -27,13 +28,14 @@ class CreateBusinessCommandHandler(RequestHandler):
         dto_validator = CreateBusinessDtoValidator().validate(request.dto)
 
         if not dto_validator.is_valid:
-            return BaseResponse[BusinessDto].error(
-                self._error_message, dto_validator.errors
+            raise ApplicationException(
+                Exceptions.ValidationException,
+                self._error_message,
+                dto_validator.errors,
             )
 
         async with self._uow.transaction():
             business = await self._business_service.create(request.dto)
             business_dto = await self._business_service.to_dto(business)
 
-        print(business)
         return BaseResponse[BusinessDto].success(self._success_message, business_dto)
