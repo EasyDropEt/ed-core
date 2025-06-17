@@ -6,6 +6,8 @@ from ed_core.application.services.car_service import CarService
 from ed_core.application.services.consumer_service import ConsumerService
 from ed_core.application.services.delivery_job_service import \
     DeliveryJobService
+from ed_core.application.services.driver_payment_service import \
+    DriverPaymentService
 from ed_core.application.services.driver_service import DriverService
 from ed_core.application.services.location_service import LocationService
 from ed_core.application.services.order_service import OrderService
@@ -17,15 +19,16 @@ from ed_core.application.services.webhook_service import WebhookService
 __all__ = [
     "AdminService",
     "ApiKeyService",
+    "BillService",
     "BusinessService",
-    "DriverService",
+    "CarService",
     "ConsumerService",
     "DeliveryJobService",
+    "DriverPaymentService",
+    "DriverService",
+    "LocationService",
     "OrderService",
     "OtpService",
-    "LocationService",
-    "BillService",
-    "CarService",
     "ParcelService",
     "WaypointService",
     "WebhookService",

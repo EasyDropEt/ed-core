@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Generic, Optional, TypeVar
+from typing import Any, Generic, Optional, TypeVar
 from uuid import UUID
 
 from ed_domain.common.logging import get_logger
@@ -24,7 +24,7 @@ class ABCService(Generic[TEntity, TCreateDto, TUpdateDto, TDto]):
     @abstractmethod
     async def update(self, id: UUID, dto: TUpdateDto) -> Optional[TEntity]: ...
 
-    async def get(self, id: UUID) -> Optional[TEntity]:
+    async def get_by_id(self, id: UUID) -> Optional[TEntity]:
         entity = await self._repository.get(id=id)
         if entity:
             LOG.info(f"{self._name} found for ID: {id}")
@@ -32,8 +32,16 @@ class ABCService(Generic[TEntity, TCreateDto, TUpdateDto, TDto]):
             LOG.info(f"No {self._name.lower()} found for ID: {id}")
         return entity
 
-    async def get_all(self) -> list[TEntity]:
-        entities = await self._repository.get_all()
+    async def get(self, **filters: Any) -> Optional[TEntity]:
+        entity = await self._repository.get(**filters)
+        if entity:
+            LOG.info(f"{self._name} found for ID: {id}")
+        else:
+            LOG.info(f"No {self._name.lower()} found for ID: {id}")
+        return entity
+
+    async def get_all(self, **filters: Any) -> list[TEntity]:
+        entities = await self._repository.get_all(**filters)
         LOG.info(f"Retrieving all {len(entities)} {self._name.lower()}s.")
         return entities
 

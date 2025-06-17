@@ -5,10 +5,10 @@ from ed_domain.common.logging import get_logger
 from fastapi import APIRouter, Depends
 from rmediator.mediator import Mediator
 
-from ed_core.application.features.admin.dtos import (CreateAdminDto,
-                                                     UpdateAdminDto)
+from ed_core.application.features.admin.dtos import (
+    CreateAdminDto, SettleDriverPaymentRequestDto, UpdateAdminDto)
 from ed_core.application.features.admin.requests.commands import (
-    CreateAdminCommand, UpdateAdminCommand)
+    CreateAdminCommand, SettleDriverPaymentCommand, UpdateAdminCommand)
 from ed_core.application.features.admin.requests.queries import (
     GetAdminByUserIdQuery, GetAdminQuery, GetAdminsQuery)
 from ed_core.application.features.common.dtos import AdminDto
@@ -52,7 +52,22 @@ async def update_admin(
     dto: UpdateAdminDto,
     mediator: Annotated[Mediator, Depends(mediator)],
 ):
+
     return await mediator.send(UpdateAdminCommand(admin_id, dto))
+
+
+@router.post(
+    "/{admin_id}/settle-driver-payment/{driver_id}",
+    response_model=GenericResponse[AdminDto],
+)
+@rest_endpoint
+async def settle_driver_payment(
+    admin_id: UUID,
+    driver_id: UUID,
+    dto: SettleDriverPaymentRequestDto,
+    mediator: Annotated[Mediator, Depends(mediator)],
+):
+    return await mediator.send(SettleDriverPaymentCommand(admin_id, driver_id, dto))
 
 
 @router.get("/users/{user_id}", response_model=GenericResponse[AdminDto])

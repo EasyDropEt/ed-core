@@ -15,11 +15,12 @@ from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.contracts.infrastructure.email.abc_email_templater import \
     ABCEmailTemplater
 from ed_core.application.features.admin.handlers.commands import (
-    CreateAdminCommandHandler, UpdateAdminCommandHandler)
+    CreateAdminCommandHandler, SettleDriverPaymentCommandHandler,
+    UpdateAdminCommandHandler)
 from ed_core.application.features.admin.handlers.queries import (
     GetAdminByUserIdQueryHandler, GetAdminQueryHandler, GetAdminsQueryHandler)
 from ed_core.application.features.admin.requests.commands import (
-    CreateAdminCommand, UpdateAdminCommand)
+    CreateAdminCommand, SettleDriverPaymentCommand, UpdateAdminCommand)
 from ed_core.application.features.admin.requests.queries import (
     GetAdminByUserIdQuery, GetAdminQuery, GetAdminsQuery)
 from ed_core.application.features.business.handlers.commands import (
@@ -200,6 +201,7 @@ def mediator(
         (GetAdminByUserIdQuery, GetAdminByUserIdQueryHandler(uow)),
         (GetAdminQuery, GetAdminQueryHandler(uow)),
         (GetAdminsQuery, GetAdminsQueryHandler(uow)),
+        (SettleDriverPaymentCommand, SettleDriverPaymentCommandHandler(uow)),
     ]
 
     for command, handler in handlers:

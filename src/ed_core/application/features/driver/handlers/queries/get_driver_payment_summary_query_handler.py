@@ -9,7 +9,7 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.features.driver.dtos import DriverPaymentSummaryDto
 from ed_core.application.features.driver.requests.queries import \
     GetDriverPaymentSummaryQuery
-from ed_core.application.services import OrderService
+from ed_core.application.services import DriverPaymentService, OrderService
 
 
 @request_handler(GetDriverPaymentSummaryQuery, BaseResponse[DriverPaymentSummaryDto])
@@ -18,39 +18,18 @@ class GetDriverPaymentSummaryQueryHandler(RequestHandler):
         self._uow = uow
 
         self._order_service = OrderService(uow)
+        self._driver_payment_service = DriverPaymentService(uow)
+
+        self._success_message = "Driver payment summary fetched successfully."
 
     async def handle(
         self, request: GetDriverPaymentSummaryQuery
     ) -> BaseResponse[DriverPaymentSummaryDto]:
         async with self._uow.transaction():
-            orders = await self._uow.order_repository.get_all(
-                driver_id=request.driver_id
+            payment_summary_dto = await self._driver_payment_service.get_total_and_outstanding_payment_sum(
+                request.driver_id
             )
-            total, debt = await self._get_total_and_outstanding_payment_sum(orders)
-
-            order_dtos = [await self._order_service.to_dto(order) for order in orders]
 
         return BaseResponse[DriverPaymentSummaryDto].success(
-            "Driver payment summary fetched successfully.",
-            DriverPaymentSummaryDto(
-                total_revenue=total,
-                debt=debt,
-                net_revenue=total - debt,
-                orders=order_dtos,
-            ),
+            self._success_message, payment_summary_dto
         )
-
-    async def _get_total_and_outstanding_payment_sum(
-        self, orders: list[Order]
-    ) -> tuple[float, float]:
-        total_sum: float = 0
-        outstanding_sum: float = 0
-
-        for order in orders:
-            bill = order.bill
-
-            total_sum += bill.amount_in_birr
-            if bill.bill_status == BillStatus.WITH_DRIVER:
-                outstanding_sum += bill.amount_in_birr
-
-        return total_sum, outstanding_sum
