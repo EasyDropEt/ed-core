@@ -22,7 +22,9 @@ class GetDeliveryJobQueryHandler(RequestHandler):
         self, request: GetDeliveryJobQuery
     ) -> BaseResponse[DeliveryJobDto]:
         async with self._uow.transaction():
-            delivery_job = await self._delivery_job_service.get(request.delivery_job_id)
+            delivery_job = await self._delivery_job_service.get(
+                id=request.delivery_job_id
+            )
 
             if delivery_job is None:
                 raise ApplicationException(

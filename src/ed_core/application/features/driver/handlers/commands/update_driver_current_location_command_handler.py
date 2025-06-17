@@ -39,7 +39,7 @@ class UpdateDriverCurrentLocationCommandHandler(RequestHandler):
             )
 
         async with self._uow.transaction():
-            driver = await self._driver_service.get(request.driver_id)
+            driver = await self._driver_service.get(id=request.driver_id)
             assert driver is not None
 
             await self._location_service.update(driver.location_id, request.dto)

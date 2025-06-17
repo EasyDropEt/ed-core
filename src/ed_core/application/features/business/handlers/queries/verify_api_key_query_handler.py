@@ -62,7 +62,7 @@ class VerifyApiKeyQueryHandler(RequestHandler):
                     [f"API key verification failed for prefix: {prefix}."],
                 )
 
-            business = await self._business_service.get(api_key.business_id)
+            business = await self._business_service.get_by_id(api_key.business_id)
             assert business is not None
 
             business_dto = await self._business_service.to_dto(business)

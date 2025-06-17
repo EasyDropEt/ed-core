@@ -1,5 +1,4 @@
 from ed_domain.common.exceptions import ApplicationException, Exceptions
-from ed_domain.core.aggregate_roots.order import OrderStatus
 from ed_domain.core.entities.waypoint import WaypointType
 from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
     ABCAsyncUnitOfWork
@@ -30,7 +29,9 @@ class ClaimDeliveryJobCommandHandler(RequestHandler):
         self, request: ClaimDeliveryJobCommand
     ) -> BaseResponse[DeliveryJobDto]:
         async with self._uow.transaction():
-            delivery_job = await self._delivery_job_service.get(request.delivery_job_id)
+            delivery_job = await self._delivery_job_service.get_by_id(
+                request.delivery_job_id
+            )
 
             if delivery_job is None:
                 raise ApplicationException(
@@ -51,7 +52,7 @@ class ClaimDeliveryJobCommandHandler(RequestHandler):
                 if waypoint.waypoint_type is WaypointType.DROP_OFF:
                     continue
 
-                order = await self._order_service.get(waypoint.order_id)
+                order = await self._order_service.get_by_id(waypoint.order_id)
                 assert order is not None
 
                 try:

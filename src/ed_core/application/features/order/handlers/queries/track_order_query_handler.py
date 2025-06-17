@@ -1,8 +1,7 @@
 from typing import Optional
 
 from ed_domain.common.exceptions import ApplicationException, Exceptions
-from ed_domain.core.aggregate_roots import DeliveryJob, Driver, Order
-from ed_domain.core.entities.waypoint import Waypoint
+from ed_domain.core.aggregate_roots import Driver, Order
 from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
     ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
@@ -43,7 +42,7 @@ class TrackOrderQueryHandler(RequestHandler):
 
             driver = None
             if order.driver_id is not None:
-                driver = await self._driver_service.get(order.driver_id)
+                driver = await self._driver_service.get(id=order.driver_id)
                 assert driver is not None
 
             dto = await self._create_dto(order, driver)

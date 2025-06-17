@@ -24,7 +24,7 @@ class RateDeliveryCommandHandler(RequestHandler):
 
     async def handle(self, request: RateDeliveryCommand) -> BaseResponse[OrderDto]:
         async with self._uow.transaction():
-            order = await self._order_service.get(request.order_id)
+            order = await self._order_service.get_by_id(request.order_id)
             assert order is not None
 
             order.set_customer_rating(request.dto["rating"])

@@ -74,7 +74,7 @@ class DriverService(ABCService[Driver, CreateDriverDto, UpdateDriverDto, DriverD
         return driver
 
     async def to_dto(self, entity: Driver) -> DriverDto:
-        location = await self._location_service.get(entity.location_id)
+        location = await self._location_service.get_by_id(entity.location_id)
         assert location is not None
 
         location_dto = await self._location_service.to_dto(location)

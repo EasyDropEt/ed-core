@@ -76,7 +76,7 @@ class BusinessService(
         return business
 
     async def to_dto(self, entity: Business) -> BusinessDto:
-        location = await self._location_service.get(entity.location_id)
+        location = await self._location_service.get(id=entity.location_id)
         assert location is not None
 
         location_dto = await self._location_service.to_dto(location)

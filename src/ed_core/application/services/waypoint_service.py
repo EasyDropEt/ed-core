@@ -53,7 +53,7 @@ class WaypointService(ABCService[Waypoint, CreateWaypointDto, None, WaypointDto]
         return waypoint
 
     async def to_dto(self, entity: Waypoint) -> WaypointDto:
-        order = await self._order_service.get(entity.order_id)
+        order = await self._order_service.get(id=entity.order_id)
         assert order is not None
 
         return WaypointDto(

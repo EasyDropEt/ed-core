@@ -63,10 +63,10 @@ class OrderService(ABCService[Order, CreateOrderDto, None, OrderDto]):
         return order
 
     async def to_dto(self, entity: Order) -> OrderDto:
-        business = await self._business_service.get(entity.business_id)
+        business = await self._business_service.get(id=entity.business_id)
         assert business is not None
 
-        consumer = await self._consumer_service.get(entity.consumer_id)
+        consumer = await self._consumer_service.get(id=entity.consumer_id)
         assert consumer is not None
 
         return OrderDto(

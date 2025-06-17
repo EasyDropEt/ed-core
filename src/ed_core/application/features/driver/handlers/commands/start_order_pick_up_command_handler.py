@@ -48,16 +48,18 @@ class StartOrderPickUpCommandHandler(RequestHandler):
 
     async def handle(self, request: StartOrderPickUpCommand) -> BaseResponse[None]:
         async with self._uow.transaction():
-            order = await self._order_service.get(request.order_id)
+            order = await self._order_service.get(id=request.order_id)
             assert order is not None
 
-            driver = await self._driver_service.get(request.driver_id)
+            driver = await self._driver_service.get(id=request.driver_id)
             assert driver is not None
 
-            business = await self._business_service.get(order.business_id)
+            business = await self._business_service.get(id=order.business_id)
             assert business is not None
 
-            business_location = await self._location_service.get(business.location_id)
+            business_location = await self._location_service.get(
+                id=business.location_id
+            )
             assert business_location is not None
 
             otp = await self._otp_service.create(

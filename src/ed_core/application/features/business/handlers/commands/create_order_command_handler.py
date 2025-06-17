@@ -62,13 +62,15 @@ class CreateOrderCommandHandler(RequestHandler):
             )
 
         async with self._uow.transaction():
-            consumer = await self._consumer_service.get(consumer_id)
+            consumer = await self._consumer_service.get_by_id(consumer_id)
             assert consumer is not None
 
-            consumer_location = await self._location_service.get(consumer.location_id)
+            consumer_location = await self._location_service.get_by_id(
+                consumer.location_id
+            )
             assert consumer_location is not None
 
-            business = await self._business_service.get(business_id)
+            business = await self._business_service.get_by_id(business_id)
             assert business is not None
 
             LOG.info("Sending api call to optimizaiton api")

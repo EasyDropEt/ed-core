@@ -13,7 +13,6 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.contracts.infrastructure.email.abc_email_templater import \
     ABCEmailTemplater
-from ed_core.application.features.common.helpers import send_notification
 from ed_core.application.features.driver.requests.commands import \
     StartOrderDeliveryCommand
 from ed_core.application.services import (ConsumerService, DriverService,
@@ -49,16 +48,18 @@ class StartOrderDeliveryCommandHandler(RequestHandler):
 
     async def handle(self, request: StartOrderDeliveryCommand) -> BaseResponse[None]:
         async with self._uow.transaction():
-            order = await self._order_service.get(request.order_id)
+            order = await self._order_service.get(id=request.order_id)
             assert order is not None
 
-            driver = await self._driver_service.get(request.driver_id)
+            driver = await self._driver_service.get(id=request.driver_id)
             assert driver is not None
 
-            consumer = await self._consumer_service.get(order.consumer_id)
+            consumer = await self._consumer_service.get(id=order.consumer_id)
             assert consumer is not None
 
-            consumer_location = await self._location_service.get(consumer.location_id)
+            consumer_location = await self._location_service.get(
+                id=consumer.location_id
+            )
             assert consumer_location is not None
 
             otp = await self._otp_service.create(

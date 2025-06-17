@@ -32,10 +32,10 @@ class FinishOrderPickUpCommandHandler(RequestHandler):
 
     async def handle(self, request: FinishOrderPickUpCommand) -> BaseResponse[None]:
         async with self._uow.transaction():
-            order = await self._order_service.get(request.order_id)
+            order = await self._order_service.get(id=request.order_id)
             assert order is not None
 
-            driver = await self._driver_service.get(request.driver_id)
+            driver = await self._driver_service.get(id=request.driver_id)
             assert driver is not None
 
             if request.driver_id != order.driver_id:
