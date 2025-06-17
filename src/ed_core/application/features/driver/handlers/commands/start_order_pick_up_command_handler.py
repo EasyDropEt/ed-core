@@ -62,6 +62,10 @@ class StartOrderPickUpCommandHandler(RequestHandler):
             )
             assert business_location is not None
 
+            if prev_otps := await self._otp_service.get_all(user_id=driver.user_id):
+                for prev_otp in prev_otps:
+                    await self._uow.otp_repository.delete(id=prev_otp.id)
+
             otp = await self._otp_service.create(
                 CreateOtpDto(
                     user_id=driver.user_id,

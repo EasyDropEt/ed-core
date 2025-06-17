@@ -105,8 +105,9 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
                 waypoint.update_status(WaypointStatus.DONE)
             except Exception as e:
                 raise ApplicationException(
-                    Exceptions.BadRequestException, self._error_message, [
-                        f"{e}"]
+                    Exceptions.BadRequestException,
+                    self._error_message,
+                    [f"{e}"],
                 )
 
             # Update db
