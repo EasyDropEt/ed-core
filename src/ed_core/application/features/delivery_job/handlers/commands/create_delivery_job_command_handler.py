@@ -29,7 +29,7 @@ class CreateDeliveryJobCommandHandler(RequestHandler):
         async with self._uow.transaction():
             delivery_job = await self._delivery_job_service.create(request.dto)
 
-            for waypoint_dto in request.dto.waypoints:
+            for waypoint_dto in request.dto["waypoints"]:
                 waypoint = await self._waypoint_service.create_waypoint(
                     waypoint_dto, delivery_job.id
                 )
