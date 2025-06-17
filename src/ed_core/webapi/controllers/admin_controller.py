@@ -12,6 +12,7 @@ from ed_core.application.features.admin.requests.commands import (
 from ed_core.application.features.admin.requests.queries import (
     GetAdminByUserIdQuery, GetAdminQuery, GetAdminsQuery)
 from ed_core.application.features.common.dtos import AdminDto
+from ed_core.application.features.driver.dtos import DriverPaymentSummaryDto
 from ed_core.webapi.common.helpers import GenericResponse, rest_endpoint
 from ed_core.webapi.dependency_setup import mediator
 
@@ -58,7 +59,7 @@ async def update_admin(
 
 @router.post(
     "/{admin_id}/settle-driver-payment/{driver_id}",
-    response_model=GenericResponse[AdminDto],
+    response_model=GenericResponse[DriverPaymentSummaryDto],
 )
 @rest_endpoint
 async def settle_driver_payment(
