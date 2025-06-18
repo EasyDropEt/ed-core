@@ -31,11 +31,6 @@ class CreateBusinessDtoValidator(ABCValidator[CreateBusinessDto]):
 
         errors.extend(
             self._name_validator.validate(
-                value["business_name"], f"{location}.business_name"
-            ).errors
-        )
-        errors.extend(
-            self._name_validator.validate(
                 value["owner_first_name"], f"{location}.owner_first_name"
             ).errors
         )

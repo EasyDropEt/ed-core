@@ -1,5 +1,3 @@
-from ed_domain.core.aggregate_roots import Order
-from ed_domain.core.entities.bill import BillStatus
 from ed_domain.persistence.async_repositories.abc_async_unit_of_work import \
     ABCAsyncUnitOfWork
 from rmediator.decorators import request_handler
