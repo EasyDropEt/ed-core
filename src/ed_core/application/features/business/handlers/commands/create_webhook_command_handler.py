@@ -28,6 +28,11 @@ class CreateWebhookCommandHandler(RequestHandler):
 
     async def handle(self, request: CreateWebhookCommand) -> BaseResponse[WebhookDto]:
         async with self._uow.transaction():
+            if existing_webhook := await self._webhook_service.get(
+                business_id=request.business_id
+            ):
+                await self._webhook_service.delete(existing_webhook.id)
+
             webhook = await self._webhook_service.create_webhook(
                 request.dto, request.business_id
             )
