@@ -897,13 +897,13 @@ dev = ["check-manifest"]
 
 [[package]]
 name = "ed-domain"
-version = "0.5.4"
+version = "0.5.5"
 description = "EasyDrop domain model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_domain-0.5.4-py3-none-any.whl", hash = "sha256:5c37d0d51967606e0b35c375ee31f0728e8ea160795bca5396d82ddbd7551f2e"},
+    {file = "ed_domain-0.5.5-py3-none-any.whl", hash = "sha256:9fd7baf766c905cd7ef1030ce30925be93a2eb0838c215019f16cc6c979d5eb5"},
 ]
 
 [package.extras]
@@ -3755,4 +3755,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "35fc695c224072e4b2b5cbeb9d8f3f82af86763d94d13301e0e377bbad7189bc"
+content-hash = "5e94a198964c4e45aabcdbbd16aae81541758c2f1a17a7bb88a24e50360d7416"
