@@ -9,9 +9,8 @@ from ed_core.application.common.responses.base_response import BaseResponse
 from ed_core.application.contracts.infrastructure.api.abc_api import ABCApi
 from ed_core.application.features.driver.requests.commands import \
     FinishOrderPickUpCommand
-from ed_core.application.services import (DeliveryJobService, DriverService,
-                                          OrderService, OtpService,
-                                          WaypointService)
+from ed_core.application.services import (DriverService, OrderService,
+                                          OtpService, WaypointService)
 
 
 @request_handler(FinishOrderPickUpCommand, BaseResponse[None])
@@ -24,7 +23,6 @@ class FinishOrderPickUpCommandHandler(RequestHandler):
         self._order_service = OrderService(uow)
         self._waypoint_service = WaypointService(uow)
         self._driver_service = DriverService(uow)
-        self._delivery_job_service = DeliveryJobService(uow)
 
         self._success_message = "Order picked up successfully."
         self._error_message = "Order was not picked up successfully."
@@ -78,6 +76,5 @@ class FinishOrderPickUpCommandHandler(RequestHandler):
             await self._otp_service.save(otp)
             await self._order_service.save(order)
             await self._waypoint_service.save(waypoint)
-            await self._delivery_job_service.check_if_done(request.delivery_job_id)
 
         return BaseResponse[None].success(self._success_message, None)

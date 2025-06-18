@@ -16,9 +16,10 @@ from ed_core.application.contracts.infrastructure.email.abc_email_templater impo
     ABCEmailTemplater
 from ed_core.application.features.driver.requests.commands import \
     FinishOrderDeliveryCommand
-from ed_core.application.services import (ConsumerService, DriverService,
-                                          LocationService, OrderService,
-                                          OtpService, WaypointService)
+from ed_core.application.services import (ConsumerService, DeliveryJobService,
+                                          DriverService, LocationService,
+                                          OrderService, OtpService,
+                                          WaypointService)
 
 LOG = get_logger()
 
@@ -41,6 +42,7 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
         self._driver_service = DriverService(uow)
         self._consumer_service = ConsumerService(uow)
         self._otp_service = OtpService(uow)
+        self._delivery_job_service = DeliveryJobService(uow)
 
         self._success_message = "Order delivered successfully."
         self._error_message = "Order was not delivered successfully."
@@ -114,6 +116,7 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
             await self._otp_service.save(otp)
             await self._order_service.save(order)
             await self._waypoint_service.save(waypoint)
+            await self._delivery_job_service.check_if_done(request.delivery_job_id)
 
             # Send notification
             await self._send_rating_in_app_notificaiton_to_consumer(consumer, order)
