@@ -24,8 +24,6 @@ from ed_core.application.services.order_service import OrderService
 
 LOG = get_logger()
 
-BILL_AMOUNT = 10
-
 
 @request_handler(CreateOrderCommand, BaseResponse[OrderDto])
 class CreateOrderCommandHandler(RequestHandler):
@@ -92,8 +90,10 @@ class CreateOrderCommandHandler(RequestHandler):
             LOG.info(
                 f"Got response from optimization api: {route_information}")
 
+            route_data = route_information["data"]
+            bill_amount = route_data["distance_kms"] * 10
             order = await self._order_service.create_order(
-                dto, business_id, BILL_AMOUNT, route_information["data"]["distance_kms"]
+                dto, business_id, bill_amount, route_data["distance_kms"]
             )
             order_dto = await self._order_service.to_dto(order)
 
