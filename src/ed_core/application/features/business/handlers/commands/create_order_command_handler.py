@@ -98,6 +98,7 @@ class CreateOrderCommandHandler(RequestHandler):
             order_dto = await self._order_service.to_dto(order)
 
         await self._send_notification(order, consumer, consumer_location, business)
+        await self._api.optimization_api.create_order()
 
         return BaseResponse[OrderDto].success(
             "Order created successfully.",
