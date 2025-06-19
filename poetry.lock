@@ -939,13 +939,13 @@ dev = ["check-manifest"]
 
 [[package]]
 name = "ed-optimization-service"
-version = "0.1.9"
+version = "0.2.2"
 description = "EasyDrop auth model Package"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ed_optimization_service-0.1.9-py3-none-any.whl", hash = "sha256:611459402540d9da198a2f3ecdf9c52b72c2fa874f66e0a91a40e5ff333a8b40"},
+    {file = "ed_optimization_service-0.2.2-py3-none-any.whl", hash = "sha256:b3bbb999ca0496c13c4f84fff7790a639d4d4ec4971f3979ab4e1b6f31795f69"},
 ]
 
 [package.extras]
@@ -3755,4 +3755,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "bd4ef009f12836fe26ea519a221dbdb992a0453dc5cad428f4501133ec956a9b"
+content-hash = "33f0f5a4f1eb1c56f5b549c2e0d073ff9641f5ea159f9a481eb163d58b39ae6d"

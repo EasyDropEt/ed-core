@@ -26,7 +26,7 @@ ed-infrastructure = "0.4.6"
 ed-auth = "^0.2.4"
 ed-notification = "^0.1.16"
 faststream = {extras = ["rabbit"], version = "^0.5.42"}
-ed-optimization-service = "0.1.9"
+ed-optimization-service = "0.2.2"
 aiohttp = "^3.12.12"
 psycopg = "^3.2.9"
 passlib = "^1.7.4"
