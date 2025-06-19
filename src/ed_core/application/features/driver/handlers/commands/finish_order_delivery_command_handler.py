@@ -98,13 +98,21 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
             )
             assert waypoint is not None
 
-            print("Order:", order)
+            delivery_job = await self._delivery_job_service.get(
+                id=waypoint.delivery_job_id
+            )
+            assert delivery_job is not None
 
             # Update db
             try:
                 otp.delete()
                 order.complete_order()
                 waypoint.update_status(WaypointStatus.DONE)
+                if waypoint.sequence == max(
+                    waypoint.sequence for waypoint in delivery_job.waypoints
+                ):
+                    delivery_job.complete_job()
+
             except Exception as e:
                 raise ApplicationException(
                     Exceptions.BadRequestException,
@@ -116,7 +124,7 @@ class FinishOrderDeliveryCommandHandler(RequestHandler):
             await self._otp_service.save(otp)
             await self._order_service.save(order)
             await self._waypoint_service.save(waypoint)
-            await self._delivery_job_service.check_if_done(request.delivery_job_id)
+            await self._delivery_job_service.save(delivery_job)
 
             # Send notification
             await self._send_rating_in_app_notificaiton_to_consumer(consumer, order)
